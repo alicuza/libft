@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:01:58 by sancuta           #+#    #+#             */
-/*   Updated: 2025/09/29 19:37:42 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/10/02 15:49:50 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 	if (!size)
 		return (src_len);
 	i = 0;
-	while (i < size && src[i])
+	while (i < size - 1 && src[i])
 	{
 		dst[i] = src[i];
 		i++;

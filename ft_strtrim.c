@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:11:35 by sancuta           #+#    #+#             */
-/*   Updated: 2025/09/30 15:49:16 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/10/03 02:58:26 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ char	*ft_strtrim(const char *s1, const char *set)
 	size_t	len;
 	size_t	start;
 
+	if (!s1 || !set)
+		return (NULL);
 	start = ft_front_trim(s1, set);
 	len = ft_back_trim(s1, set, start);
 	return (ft_substr(s1, start, len));

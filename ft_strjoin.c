@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 13:58:40 by sancuta           #+#    #+#             */
-/*   Updated: 2025/09/30 14:10:42 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/10/03 02:44:08 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char	*ft_strjoin(const char *s1, const char *s2)
 	size_t	len1;
 	size_t	len2;
 
+	if (!s1 || !s2)
+		return (NULL);
 	len1 = ft_strlen(s1);
 	len2 = ft_strlen(s2);
 	res = malloc(len1 + len2 + 1);
