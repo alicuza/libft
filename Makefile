@@ -1,7 +1,7 @@
 NAME = libft.a
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-DFLAGS = -g 
+DFLAGS = -g
 AFLAGS = rcs
 CRITFLAG = -lcriterion
 SRCS =	ft_isalpha.c \

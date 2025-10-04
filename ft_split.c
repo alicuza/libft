@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 18:01:28 by sancuta           #+#    #+#             */
-/*   Updated: 2025/10/02 15:56:00 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/10/04 03:13:22 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,8 @@ static size_t	word_len(const char *s, char del)
 
 static char	**on_alloc_fail_free_str_arr(char **arr, size_t ind)
 {
-	while (ind > 0)
-	{
-		ind--;
+	while (ind-- > 0)
 		free(arr[ind]);
-	}
 	free(arr);
 	return (NULL);
 }
@@ -54,6 +51,7 @@ char	**ft_split(const char *s, char c)
 	char	**res;
 	size_t	i;
 	size_t	word_nr;
+	size_t	len;
 
 	if (!s)
 		return (NULL);
@@ -64,13 +62,16 @@ char	**ft_split(const char *s, char c)
 	i = 0;
 	while (i < word_nr)
 	{
-		while (!word_len(s, c))
+		len = word_len(s, c);
+		while (*s == c)
 			s++;
-		res[i] = malloc((word_len(s, c) + 1) * sizeof (char));
+		len = word_len(s, c);
+		res[i] = malloc((len + 1) * sizeof (char));
 		if (!res[i])
 			return (on_alloc_fail_free_str_arr(res, i));
-		ft_strlcpy(res[i], s, word_len(s, c) + 1);
-		s += word_len(s, c);
+		ft_memcpy(res[i], s, len);
+		res[i][len] = '\0';
+		s += len;
 		i++;
 	}
 	res[word_nr] = NULL;

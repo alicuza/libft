@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 10:51:00 by sancuta           #+#    #+#             */
-/*   Updated: 2025/10/03 02:21:29 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/10/04 03:33:49 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ char	*ft_substr(const char *s, unsigned int start, size_t len)
 	sub = malloc(len + 1);
 	if (!sub)
 		return (NULL);
-	ft_strlcpy(sub, s + start, len);
+	ft_memcpy(sub, s + start, len);
+	sub[len] = '\0';
 	return (sub);
 }

@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:34:59 by sancuta           #+#    #+#             */
-/*   Updated: 2025/10/03 00:27:34 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/10/03 23:01:13 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 
 	dst_len = ft_strlen(dst);
 	src_len = ft_strlen(src);
-	if (dest_len >= size)
+	if (dst_len >= size)
 		return (size + src_len);
 	if (!size)
 		return (dst_len + src_len);
