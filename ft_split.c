@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 18:01:28 by sancuta           #+#    #+#             */
-/*   Updated: 2025/10/04 03:13:22 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/10/04 03:38:47 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,15 +62,12 @@ char	**ft_split(const char *s, char c)
 	i = 0;
 	while (i < word_nr)
 	{
-		len = word_len(s, c);
 		while (*s == c)
 			s++;
 		len = word_len(s, c);
-		res[i] = malloc((len + 1) * sizeof (char));
+		res[i] = ft_substr(s, 0, len);
 		if (!res[i])
 			return (on_alloc_fail_free_str_arr(res, i));
-		ft_memcpy(res[i], s, len);
-		res[i][len] = '\0';
 		s += len;
 		i++;
 	}
