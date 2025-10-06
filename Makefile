@@ -3,7 +3,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror
 DFLAGS = -g
 AFLAGS = rcs
-CRITFLAG = -lcriterion
+CRITFLAGS = --verbose -j1 --filter=$(TEST_SUITE)
 SRCS =	ft_isalpha.c \
 		ft_isdigit.c \
 		ft_isalnum.c \
@@ -39,9 +39,8 @@ SRCS =	ft_isalpha.c \
 		ft_putendl_fd.c \
 		ft_putnbr_fd.c
 OBJS = $(SRCS:.c=.o)
+TEST_SUITE ?= *
 
-ANY_SRCS = $(wildcard *.c)
-ANY_OBJS = $(ANY_SRCS:.c=.o)
 TEST_NAME = test_libft
 TEST_SRC = $(TEST_NAME).c
 TEST_OBJ = $(TEST_NAME).o
@@ -68,10 +67,13 @@ debug: fclean all
 any: $(ANY_OBJS)
 		ar $(AFLAGS) $@ $^
 
-test: $(TEST_NAME)
+test: run
+
+run: $(TEST_NAME)
+		./$(TEST_NAME) $(CRITFLAGS)
 
 $(TEST_NAME): $(TEST_OBJ) $(NAME)
-		$(CC) $(CFLAGS) $(CRITFLAG) $^ -o $@
+		$(CC) $(CFLAGS) -lbsd -lcriterion $^ -o $@
 
 tclean:
 		rm -f $(TEST_NAME)

@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 19:34:59 by sancuta           #+#    #+#             */
-/*   Updated: 2025/10/03 23:01:13 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/10/06 18:36:16 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 	if (!size)
 		return (dst_len + src_len);
 	i = 0;
-	while (i + dst_len < size && src[i])
+	while (i + dst_len < size - 1 && src[i])
 	{
 		dst[dst_len + i] = src[i];
 		i++;
