@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:11:35 by sancuta           #+#    #+#             */
-/*   Updated: 2025/10/03 02:58:26 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/10/13 21:04:12 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static size_t	ft_back_trim(const char *s1, const char *set, size_t start)
 	size_t	j;
 	size_t	end;
 
-	end = ft_strlen(s1);
+	end = ft_strlen(s1) - 1;
 	i = end;
 	while (i > start)
 	{

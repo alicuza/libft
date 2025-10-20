@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/30 10:51:00 by sancuta           #+#    #+#             */
-/*   Updated: 2025/10/04 03:33:49 by sancuta          ###   ########.fr       */
+/*   Created: 2025/10/13 16:13:29 by sancuta           #+#    #+#             */
+/*   Updated: 2025/10/20 16:33:46 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,19 @@
 char	*ft_substr(const char *s, unsigned int start, size_t len)
 {
 	char	*sub;
+	size_t	sub_len;
 
-	if ((size_t)start >= len)
+	if (!s)
 		return (NULL);
-	sub = malloc(len + 1);
+	if (ft_strlen(s) < (size_t)start)
+		return (ft_calloc(1, 1));
+	else
+		sub_len = ft_strlen(s) - (size_t)start;
+	if (sub_len > len)
+		sub_len = len;
+	sub = malloc(sub_len + 1);
 	if (!sub)
 		return (NULL);
-	ft_memcpy(sub, s + start, len);
-	sub[len] = '\0';
+	ft_strlcpy(sub, s + start, sub_len + 1);
 	return (sub);
 }

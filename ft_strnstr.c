@@ -6,36 +6,24 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 21:34:38 by sancuta           #+#    #+#             */
-/*   Updated: 2025/09/29 22:17:10 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/10/12 12:59:37 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	ft_strcmp(const char *s1, const char *s2)
+char	*ft_strnstr(const char *big, const char *little, size_t len)
 {
 	size_t	i;
+	size_t	little_len;
 
-	i = 0;
-	while (s1[i] && s2[i])
-	{
-		if (s1[i] != s2[i])
-			return ((int)s1[i] - (int)s2[i]);
-		i++;
-	}
-	return ((int)s1[i] - (int)s2[i]);
-}
-
-char	*strnstr(const char *big, const char *little, size_t len)
-{
-	size_t	i;
-
-	if (!ft_strlen(little))
+	little_len = ft_strlen(little);
+	if (!little_len)
 		return ((char *)big);
 	i = 0;
-	while (i < len && big[i])
+	while (i + little_len <= len && big[i])
 	{
-		if (!ft_strcmp(big + i, little))
+		if (!ft_strncmp(big + i, little, little_len))
 			return ((char *)(big + i));
 		i++;
 	}

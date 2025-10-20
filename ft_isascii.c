@@ -6,11 +6,9 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 16:23:25 by sancuta           #+#    #+#             */
-/*   Updated: 2025/09/29 17:40:58 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/10/16 16:15:30 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "libft.h"
 
 int	ft_isascii(int c)
 {

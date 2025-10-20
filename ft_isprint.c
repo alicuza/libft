@@ -6,11 +6,9 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 16:27:26 by sancuta           #+#    #+#             */
-/*   Updated: 2025/09/29 17:41:23 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/10/16 16:15:40 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "libft.h"
 
 int	ft_isprint(int c)
 {

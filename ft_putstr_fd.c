@@ -1,16 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isdigit.c                                       :+:      :+:    :+:   */
+/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/29 14:53:46 by sancuta           #+#    #+#             */
-/*   Updated: 2025/10/16 16:15:19 by sancuta          ###   ########.fr       */
+/*   Created: 2025/10/15 22:20:58 by sancuta           #+#    #+#             */
+/*   Updated: 2025/10/16 14:56:47 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_isdigit(int c)
+#include "libft.h"
+
+void	ft_putstr_fd(char *c, int fd)
 {
-	return (c >= 48 && c <= 57);
+	write(fd, c, ft_strlen(c));
+	return ;
 }

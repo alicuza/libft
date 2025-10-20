@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 22:19:28 by sancuta           #+#    #+#             */
-/*   Updated: 2025/09/29 23:02:53 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/10/12 13:48:14 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,12 @@ static int	ft_issign(int c)
 	return (c == '-' || c == '+');
 }
 
+/*	pay attention to the wording in strtol(3):
+		"The  string  may  begin  with an arbitrary amount of
+		white space (as determined by isspace(3)) followed by
+		a single optional '+' or '-' sign.
+	only **one** sign check is needed!*/
+
 int	ft_atoi(const char *nptr)
 {
 	size_t	i;
@@ -33,7 +39,7 @@ int	ft_atoi(const char *nptr)
 	i = 0;
 	while (ft_isspace(nptr[i]))
 		i++;
-	while (ft_issign(nptr[i]))
+	if (ft_issign(nptr[i]))
 	{
 		if (nptr[i] == '-')
 			sign *= -1;
@@ -41,8 +47,8 @@ int	ft_atoi(const char *nptr)
 	}
 	while (ft_isdigit(nptr[i]))
 	{
-		res = res * 10 + ((int)nptr[i] + 32);
+		res = res * 10 + sign * (nptr[i] - 48);
 		i++;
 	}
-	return (sign * res);
+	return (res);
 }

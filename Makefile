@@ -1,9 +1,19 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2025/10/16 23:38:42 by sancuta           #+#    #+#              #
+#    Updated: 2025/10/20 21:14:53 by sancuta          ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME = libft.a
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-DFLAGS = -g
-AFLAGS = rcs
-CRITFLAGS = --verbose -j1 --filter=$(TEST_SUITE)
+AFLAGS = -rcs
 SRCS =	ft_isalpha.c \
 		ft_isdigit.c \
 		ft_isalnum.c \
@@ -31,50 +41,47 @@ SRCS =	ft_isalpha.c \
 		ft_strjoin.c \
 		ft_strtrim.c \
 		ft_split.c \
-#		ft_itoa.c \
+		ft_itoa.c \
 		ft_strmapi.c \
 		ft_striteri.c \
 		ft_putchar_fd.c \
 		ft_putstr_fd.c \
 		ft_putendl_fd.c \
 		ft_putnbr_fd.c
-OBJS = $(SRCS:.c=.o)
-TEST_SUITE ?= *
+BSRCS =	ft_lstnew_bonus.c \
+		ft_lstadd_front_bonus.c \
+		ft_lstadd_back_bonus.c \
+		ft_lstsize_bonus.c \
+		ft_lstlast_bonus.c \
+		ft_lstdelone_bonus.c \
+		ft_lstclear_bonus.c \
+		ft_lstiter_bonus.c \
+		ft_lstmap_bonus.c
 
-TEST_NAME = test_libft
-TEST_SRC = $(TEST_NAME).c
-TEST_OBJ = $(TEST_NAME).o
+OBJS = $(SRCS:.c=.o)
+BOBJS = $(BSRCS:.c=.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-		ar $(AFLAGS) $@ $^
+		ar $(AFLAGS) $@ $?
 
 %.o: %.c
 		$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-		rm -f $(OBJS)
+		rm -f $(OBJS) $(BOBJS)
 
 fclean: clean
 		rm -f $(NAME)
+		rm -f .bonus
 
 re: fclean all
 
-debug: CFLAGS += $(DFLAGS)
-debug: fclean all
+bonus: .bonus
 
-any: $(ANY_OBJS)
-		ar $(AFLAGS) $@ $^
+.bonus: $(OBJS) $(BOBJS)
+		ar $(AFLAGS) $(NAME) $?
+		touch .bonus
 
-test: run
-
-run: $(TEST_NAME)
-		./$(TEST_NAME) $(CRITFLAGS)
-
-$(TEST_NAME): $(TEST_OBJ) $(NAME)
-		$(CC) $(CFLAGS) -lbsd -lcriterion $^ -o $@
-
-tclean:
-		rm -f $(TEST_NAME)
-		rm -f $(TEST_OBJ)
+.PHONY: all clean fclean re bonus

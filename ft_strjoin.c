@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 13:58:40 by sancuta           #+#    #+#             */
-/*   Updated: 2025/10/03 02:44:08 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/10/13 18:17:08 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,17 @@
 char	*ft_strjoin(const char *s1, const char *s2)
 {
 	char	*res;
-	size_t	len1;
-	size_t	len2;
+	size_t	len;
+	size_t	total_len;
 
 	if (!s1 || !s2)
 		return (NULL);
-	len1 = ft_strlen(s1);
-	len2 = ft_strlen(s2);
-	res = malloc(len1 + len2 + 1);
+	len = ft_strlen(s1);
+	total_len = len + ft_strlen(s2);
+	res = malloc(total_len + 1);
 	if (!res)
 		return (NULL);
-	ft_strlcpy(res, s1, len1);
-	ft_strlcat(res, s2, len2);
-	res[len1 + len2 + 1] = '\0';
+	ft_strlcpy(res, s1, total_len + 1);
+	ft_strlcat(res, s2, total_len + 1);
 	return (res);
 }

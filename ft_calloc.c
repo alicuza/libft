@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 22:39:35 by sancuta           #+#    #+#             */
-/*   Updated: 2025/09/30 00:17:20 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/10/20 16:37:54 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,9 @@ void	*ft_calloc(size_t nmemb, size_t size)
 
 	if (!nmemb || !size)
 	{
-		res = malloc(1);
-		if (!res)
-			return (NULL);
-		ft_bzero(res, 1);
-		return (res);
+		return (malloc(0));
 	}
-	if (SIZE_MAX / size < nmemb)
+	if (SIZE_MAX / size <= nmemb)
 	{
 		return (NULL);
 	}

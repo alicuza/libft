@@ -1,16 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isdigit.c                                       :+:      :+:    :+:   */
+/*   ft_lstmap_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/29 14:53:46 by sancuta           #+#    #+#             */
-/*   Updated: 2025/10/16 16:15:19 by sancuta          ###   ########.fr       */
+/*   Created: 2025/10/17 15:56:38 by sancuta           #+#    #+#             */
+/*   Updated: 2025/10/20 18:40:17 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_isdigit(int c)
+#include "libft.h"
+
+t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 {
-	return (c >= 48 && c <= 57);
+	t_list	*map;
+	t_list	*head;
+	void	*tmp;
+
+	if (!(lst && f && del))
+		return (NULL);
+	head = NULL;
+	while (lst)
+	{
+		tmp = f(lst->content);
+		map = ft_lstnew(tmp);
+		if (!map)
+		{
+			ft_lstclear(&head, del);
+			del(tmp);
+			return (NULL);
+		}
+		ft_lstadd_back(&head, map);
+		lst = lst->next;
+	}
+	return (head);
 }
