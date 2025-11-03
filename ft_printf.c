@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 13:55:17 by sancuta           #+#    #+#             */
-/*   Updated: 2025/11/03 13:42:38 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/11/03 21:05:08 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ int	ft_printf(const char *s, ...)
 
 	va_start(args, s);
 	res = 0;
+	if (!s)
+		return (-1);
 	while (*s)
 	{
 		if (*s == '%')
@@ -107,6 +109,47 @@ char	construct_flag_mask(const char **s)
 	}
 	return (ret);
 }
+
+int	get_field_width(char **s)
+{
+	int	ret;
+
+	ret = 0;
+	while (ft_isdigit(**s))
+	{
+		ret *= 10;
+		ret += (*s) - 48;
+		(*s)++;
+	}
+	return (ret);
+}
+
+int	get_precision(char **s)
+{
+	int	ret;
+
+	ret = 0;
+	if (**s == '.')
+		(*s)++;
+	while (ft_isdigit(**s))
+	{
+		ret *= 10;
+		ret += (*s) - 48;
+		(*s)++;
+	}
+	return (ret);
+}
+
+int	get_type_char(char **s)
+{
+	/* not for this functions, but important:
+	   only -0. interact with each other. the
+	   other flags don't interact with them, and
+	   can be handled separately?
+	*/
+}
+
+
 
 /*
 if (s[i] = ' ')
