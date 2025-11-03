@@ -1,39 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memmove.c                                       :+:      :+:    :+:   */
+/*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/29 18:38:23 by sancuta           #+#    #+#             */
-/*   Updated: 2025/10/11 15:19:44 by sancuta          ###   ########.fr       */
+/*   Created: 2025/10/27 12:18:29 by sancuta           #+#    #+#             */
+/*   Updated: 2025/10/27 12:35:38 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include <stdio.h>
 
-void	*ft_memmove(void *dest, const void *src, size_t n)
+int main(void)
 {
-	size_t	i;
+	int c = -1;
 
-	if (dest > src && src + n > dest)
-	{
-		i = n - 1;
-		while (i > 0)
-		{
-			*((char *)dest + i) = *((const char *)src + i);
-			i--;
-		}
-		*((char *)dest + i) = *((const char *)src + i);
-	}
-	else
-	{
-		i = 0;
-		while (i < n)
-		{
-			*((char *)dest + i) = *((const char *)src + i);
-			i++;
-		}
-	}
-	return (dest);
+	while (++c < 256)
+		printf("%d: %c\n", c, c);
+	return 0;
 }

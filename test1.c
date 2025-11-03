@@ -1,16 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isdigit.c                                       :+:      :+:    :+:   */
+/*   test1.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/29 14:53:46 by sancuta           #+#    #+#             */
-/*   Updated: 2025/10/16 16:15:19 by sancuta          ###   ########.fr       */
+/*   Created: 2025/10/27 12:18:29 by sancuta           #+#    #+#             */
+/*   Updated: 2025/10/27 12:49:45 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_isdigit(int c)
+#include <unistd.h>
+#include <stdio.h>
+#include <string.h>
+
+int main(void)
 {
-	return (c >= 48 && c <= 57);
+	int c = -1;
+	char s[4];
+
+	while (++c < 256)
+	{
+		sprintf(s, "%d", c);
+		write(1, s, strlen(s));
+		write(1, ": ", 2);
+		write(1, &c, 1);
+		write(1, "\n", 1);
+	}
+	return 0;
 }
