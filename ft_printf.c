@@ -6,19 +6,37 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 13:55:17 by sancuta           #+#    #+#             */
-/*   Updated: 2025/11/03 21:05:08 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/11/04 20:35:45 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <libft/libft.h>
+#include "libft/libft.h"
 #include <stdarg.h>
+#include <stdio.h>
 
-/*	flags		'-' '0' '#' ' ' '+'
+/*
+	flags		'-' '0' '#' '+' ' '
 				 0   0   0   0   0
 				 0   1   2   3   4
-	type char	'c' 's' 'p' 'd' 'u' 'x' 'X' '%'
-				 0   0   0   0   0   0   0   0
-				 5   6   7   8   9  10  11  12
+	type char	'c' 's' 'p''d/i''u' 'x' 'X'
+				 0   0   0   0   0   0   0
+				 5   6   7   8   9  10  11
+
+	'+'	doesn't work with 'c', 's', 'p', 'u', 'x', 'X'
+	'#' doesn't work with 'c', 's', 'p', 'd/i', 'u'
+	'0' doesn't work with 'c', 's', 'p',
+	' ' doesn't work with 'c', 'p', 's', 'u', 'x', 'X'
+
+	'+' overrides ' '
+	'-' overrides '0'
+	'.' overrides '0'
+
+	precision doesn't work with 'c', 'p'
+	field width works with everything
+
+	only -0. interact with each other.
+	the other flags don't interact with
+	them, and can be handled separately?
 */
 
 typedef struct	s_format_specifier
@@ -29,11 +47,26 @@ typedef struct	s_format_specifier
 	char	type_char;
 }	t_format_specifier;
 
+int	ft_printf(const char *s, ...);
+t_format_specifier	get_format_specifier(const char **s);
+int	get_mask_index(char c, const char *mask_set);
+char	construct_mask(const char **s, const char *mask_set, const char *mask);
+int	get_number(const char **s);
+
+const char	g_flag_mask[6] = {0x10, 0x8, 0x4, 0x2, 0x1, '\0'};
+const char	g_flags[6] = "-0#+ ";
+const char	g_type_char_mask[8] = {0x40, 0x20, 0x10, 0x8, 0x4, 0x2, 0x1, '\0'};
+const char	g_type_chars[8] = "cspduxX";
+
+int main(void)
+{
+	ft_printf("hello %0-+20.10d\n");
+}
 
 int	ft_printf(const char *s, ...)
 {
 	size_t				res;
-	size_t				tmp;
+//	size_t				tmp;
 	va_list				args;
 	t_format_specifier	to_print;
 
@@ -46,9 +79,16 @@ int	ft_printf(const char *s, ...)
 		if (*s == '%')
 		{
 			s++;
+			if (*s == '%')
+			{
+				putchar(*s);
+				s++;
+				continue;
+			}
 			to_print = get_format_specifier(&s);
-			tmp = print_stuff(to_print); // supposed to contain count the number of characters printed
-			res += tmp;
+			printf("flag_mask = %x, type_char_mask = %x, field_width = %d, precision = %d\n", to_print.flag, to_print.type_char, to_print.field_width, to_print.precision);
+//			tmp = print_stuff(to_print); // supposed to contain count the number of characters printed
+//			res += tmp;
 		}
 		else
 		{
@@ -64,53 +104,48 @@ t_format_specifier	get_format_specifier(const char **s)
 	t_format_specifier	res;
 
 	res = (t_format_specifier){0};
-	res.flag = construct_flag_mask(s);
-	res.field_width = get_field_width(s);
-	res.precision = get_precision(s);
-	res.type_char = get_type_char(s);
+	res.flag = construct_mask(s, g_flags, g_flag_mask);
+	res.field_width = get_number(s);
+	if (**s == '.')
+	{
+		(*s)++;
+		res.precision = get_number(s);
+	}
+	res.type_char = construct_mask(s, g_type_chars, g_type_char_mask);
 	return (res);
 }
 
-int	get_flag(const char s)
+int	get_mask_index(char c, const char *mask_set)
 {
-	char	*flags;
 	size_t	i;
 
-	flags = "-0# +";
 	i = 0;
-	while (flags[i])
+	while (mask_set[i])
 	{
-		if (s == flags[i])
+		if (c == mask_set[i])
 			return (i);
 		i++;
 	}
 	return (-1);
 }
 
-char	construct_flag_mask(const char **s)
+char	construct_mask(const char **s, const char *mask_set, const char *mask)
 {
 	char	ret;
 	int		ind;
-	char	mask[5];
-
-	mask[0] = 0x10;
-	mask[1] = 0x8;
-	mask[2] = 0x4;
-	mask[3] = 0x2;
-	mask[4] = 0x1;
 
 	ret = 0;
-	ind = get_flag(**s);
+	ind = get_mask_index(**s, mask_set);
 	while (ind != -1)
 	{
 		ret |= mask[ind];
 		(*s)++;
-		ind = get_flag(**s);
+		ind = get_mask_index(**s, mask_set);
 	}
 	return (ret);
 }
 
-int	get_field_width(char **s)
+int	get_number(const char **s)
 {
 	int	ret;
 
@@ -118,64 +153,8 @@ int	get_field_width(char **s)
 	while (ft_isdigit(**s))
 	{
 		ret *= 10;
-		ret += (*s) - 48;
+		ret += **s - 48;
 		(*s)++;
 	}
 	return (ret);
 }
-
-int	get_precision(char **s)
-{
-	int	ret;
-
-	ret = 0;
-	if (**s == '.')
-		(*s)++;
-	while (ft_isdigit(**s))
-	{
-		ret *= 10;
-		ret += (*s) - 48;
-		(*s)++;
-	}
-	return (ret);
-}
-
-int	get_type_char(char **s)
-{
-	/* not for this functions, but important:
-	   only -0. interact with each other. the
-	   other flags don't interact with them, and
-	   can be handled separately?
-	*/
-}
-
-
-
-/*
-if (s[i] = ' ')
-{
-flag = ;
-i++;
-}
-else
-while (isdigit(s[i]))
-{
-field = 10 * field + s[i];
-i++;
-}
-
-if (s[i] == 'c' || s[i] = '%')
-res += ft_putchar(va_arg(args, int));
-else if (s[i] == 's')
-res += ft_putstr(va_arg(args, char *));
-else if (s[i] == 'p')
-res += ft_putxnbr(va_arg(args, void *), 'u');
-else if (s[i] == 'd' || s[i] == 'i');
-res += ft_putnbr(va_arg(args, int));
-else if (s[i] == 'u');
-res += ft_putunbr(va_arg(args, unsigned int);
-		else if (s[i] == 'x');
-		res += ft_putxnbr(va_arg(args, int), 'l');
-		else if (s[i] == 'X');
-		res += ft_putxnbr(va_arg(args, int, 'u');
-		*/
