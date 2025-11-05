@@ -2,11 +2,29 @@
 
 int main(void)
 {
+	printf("hello % 010#d boys", 2);
+/*
+	printf("%\n");
+
+	int n = 2;
+	printf("%#lx\n", &n);
+	printf("%p\n", &n);
+
+	printf("%-5.2s\n", "h");
+	printf("%-5.2s\n", "hello");
+	printf("%5.2s\n", "h");
+	printf("%5.2s\n", "hello");
+	printf("%-5.8s\n", "h");
+	printf("%-5.8s\n", "hello");
+	printf("%5.8s\n", "h");
+	printf("%5.8s\n", "hello");
+
+
 	printf("%0 5d\n", 2);
 	printf("%0 5d\n", -2);
 	printf("%0+5d\n", 2);
 	printf("%0+5d\n", -2);
-/*	printf("%-+d\n", -2);
+	printf("%-+d\n", -2);
 	printf("%-+d\n", 2);
 	printf("%- d\n", -2);
 	printf("%- d\n", 2);
@@ -140,6 +158,7 @@ int main(void)
 	printf("%#x\n", 2);
 	printf("%X\n", -2);
 	printf("%#X\n", -2);
-	*/
+	
 	return (0);
+*/
 }
