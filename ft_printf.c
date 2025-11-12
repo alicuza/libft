@@ -6,13 +6,15 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 13:55:17 by sancuta           #+#    #+#             */
-/*   Updated: 2025/11/12 15:47:20 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/11/12 16:30:25 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft/libft.h"
 #include <stdarg.h>
 #include <stdio.h>
+
+#define DEFAULT_MIN_FIELD_WIDTH 80
 
 /*
 	flags		'-' '0' '#' '+' ' ' '.' given int n < 0 -> should print '-'
@@ -329,22 +331,31 @@ char	*convert_base(va_list args, )
 	/*
 		think about whether it would make more sense to malloc some stuff,
 		instead of calling a bajillion writes.
+
+		maybe add a char temp[MAX_DEFAULT_PADDING] and if n > MAX_DEFAULT_PADDING
+		use malloc. A good size would maybe be 80, the default width of the terminal?
+
+		should also be conscious of the cases malloc is called in when testing.
 	*/
-int	add_padding(size_t n, char c)
+int	add_padding(size_t n, int c)
 {
 	char	*tmp;
+	char	stack_tmp[DEFAULT_MIN_FIELD_WIDTH];
 	size_t	i;
 
 	if (n = 0)
 		return (0);
+	if (n <= DEFAULT_MIN_FIELD_WIDTH)
+	{
+		stack_tmp = memset(stack_tmp, c, DEFAULT_FIELD_WIDTH);
+		write(1, stack_tmp, n);
+		return (n);
+	}
 	tmp = malloc(n);
 	if (!tmp)
 		return (-1);
 	i = 0;
-	while (i < n)
-	{
-		tmp[i] = c;
-	}
+	ft_memset(tmp, c, n);
 	write(1, tmp, n);
 	free(tmp);
 	return (n);
