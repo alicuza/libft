@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 13:55:17 by sancuta           #+#    #+#             */
-/*   Updated: 2025/11/05 02:22:20 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/11/12 15:47:20 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -343,7 +343,7 @@ int	add_padding(size_t n, char c)
 	i = 0;
 	while (i < n)
 	{
-		tmp[i] = ' ';
+		tmp[i] = c;
 	}
 	write(1, tmp, n);
 	free(tmp);
