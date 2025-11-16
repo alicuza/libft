@@ -1,31 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_memset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/13 13:24:58 by sancuta           #+#    #+#             */
-/*   Updated: 2025/11/16 23:36:20 by sancuta          ###   ########.fr       */
+/*   Created: 2025/09/29 16:44:51 by sancuta           #+#    #+#             */
+/*   Updated: 2025/11/16 14:49:28 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
-# endif
-# include <stdlib.h>
-# include <unistd.h>
+#include "get_next_line.h"
 
-typedef struct		s_stash
+void	*ft_memset(void *s, int c, size_t n)
 {
-	ssize_t			len;
-	ssize_t			offset;
-	struct s_stash	*next;
-	int				fd;
-	char			content[BUFFER_SIZE + 1];
-}					t_stash;
+	size_t	i;
 
-char	*get_next_line(int fd);
-#endif
+	i = 0;
+	while (i < n)
+	{
+		*((unsigned char *)s + i) = (unsigned char) c;
+		i++;
+	}
+	return (s);
+}

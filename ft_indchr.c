@@ -1,31 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_indchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/13 13:24:58 by sancuta           #+#    #+#             */
-/*   Updated: 2025/11/16 23:36:20 by sancuta          ###   ########.fr       */
+/*   Created: 2025/11/16 22:37:08 by sancuta           #+#    #+#             */
+/*   Updated: 2025/11/16 22:37:15 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
-# endif
-# include <stdlib.h>
-# include <unistd.h>
+#include "get_next_line.h"
 
-typedef struct		s_stash
+ssize_t	ft_indchr(const char *s, int c)
 {
-	ssize_t			len;
-	ssize_t			offset;
-	struct s_stash	*next;
-	int				fd;
-	char			content[BUFFER_SIZE + 1];
-}					t_stash;
+	size_t	i;
 
-char	*get_next_line(int fd);
-#endif
+	i = 0;
+	while (s[i])
+	{
+		if ((unsigned char)s[i] == (unsigned char)c)
+			return ((ssize_t)i);
+		i++;
+	}
+	if ((unsigned char)s[i] == (unsigned char)c)
+		return ((ssize_t)i);
+	return (-1);
+}

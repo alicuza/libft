@@ -44,3 +44,5 @@
 			while the first has to be a traditional null terminated string, the second
 			can be a new line terminated string of chars: f strjoin-mod
 	2. if there is a newline char, use strjoin-mod to copy it over, check for failure.
+
+- f 
