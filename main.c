@@ -5,7 +5,7 @@
 
 int	main(void)
 {
-	int fd = open("input.txt", O_RDONLY);
+	int fd = open("input_big.txt", O_RDONLY);
 	if (fd == -1)
 		return(printf("couldn't read file"), 1);
 	char *next_line = get_next_line(fd);

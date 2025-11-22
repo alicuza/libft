@@ -6,29 +6,18 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 14:48:25 by sancuta           #+#    #+#             */
-/*   Updated: 2025/11/21 13:25:27 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/11/22 18:21:56 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	*ft_memset(void *s, int c, size_t n)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < n)
-	{
-		*((unsigned char *)s + i) = (unsigned char) c;
-		i++;
-	}
-	return (s);
-}
-
 ssize_t	ft_indchr(const char *s, int c)
 {
 	size_t	i;
 
+	if (!s)
+		return (-1);
 	i = 0;
 	while (s[i])
 	{
@@ -48,78 +37,76 @@ t_stash	*ft_bufnew(int fd)
 	new = malloc(sizeof(t_stash));
 	if (!new)
 		return (NULL);
-	ft_memset(new, 0, sizeof(t_stash));
 	new->fd = fd;
 	new->len = read(fd, new->content, BUFFER_SIZE);
 	if (new->len <= 0)
 		return (free(new), NULL);
+	new->offset = 0;
+	new->content[new->len] = '\0';
 	new->next = NULL;
 	return (new);
 }
 
-t_stash	*ft_get_buffer_fd(t_stash **head, int fd)
-{
-	t_stash	*buffer;
-
-	if (!(*head))
-	{
-		*head = ft_bufnew(fd);
-		if (!(*head))
-			return (NULL);
-		return (*head);
-	}
-	buffer = *head;
-	while (buffer)
-	{
-		if (buffer->fd == fd)
-			return (buffer);
-		if (!buffer->next)
-		{
-			buffer->next = ft_bufnew(fd);
-			if (!buffer->next)
-				return (NULL);
-			return (buffer->next);
-		}
-		buffer = buffer->next;
-	}
-	return (NULL);
-}
-
-char	*ft_join_to_del(char *nl_buf, t_stash *fd_buf, int del)
+char	*ft_join(char *nl_buf, size_t *nl_len, t_stash *fd_buf, size_t to_cpy)
 {
 	size_t	i;
 	size_t	j;
-	size_t	nl_len;
-	size_t	buf_len;
 	char	*tmp;
 
-	tmp = NULL;
-	nl_len = 0;
-	while (nl_buf[nl_len])
-		nl_len++;
-	buf_len = 0;
-	while (*(fd_buf->content + fd_buf->offset + buf_len)
-			&& *(fd_buf->content + fd_buf->offset + buf_len) != del)
-		buf_len++;
-	if (*(fd_buf->content + fd_buf->offset + buf_len) == del)
-		buf_len++;
-	tmp = malloc(nl_len + buf_len + 1);
+	tmp = malloc(*nl_len + to_cpy + 1);
 	if (!tmp)
 		return (free(nl_buf), NULL);
-	ft_memset(tmp, 0, nl_len + buf_len + 1);
 	i = 0;
-	while (i < nl_len)
+	while (i < *nl_len)
 	{
 		tmp[i] = nl_buf[i];
 		i++;
 	}
 	j = 0;
-	while (j < buf_len)
+	while (j < to_cpy)
 	{
-		tmp[i] = *(fd_buf->content + fd_buf->offset);
-		i++;
+		tmp[i + j] = fd_buf->content[fd_buf->offset];
 		j++;
 		fd_buf->offset++;
 	}
+	*nl_len += to_cpy;
+	tmp[*nl_len] = '\0';
 	return (free(nl_buf), tmp);
+}
+
+void	ft_free_all(t_stash **head)
+{
+	t_stash	*buffer;
+	t_stash	*tmp;
+
+	buffer = *head;
+	while (buffer)
+	{
+		tmp = buffer->next;
+		free(buffer);
+		buffer = tmp;
+	}
+}
+
+void	ft_free_buf(t_stash **head, int fd)
+{
+	t_stash	*current;
+	t_stash	*previous;
+
+	current = *head;
+	previous = NULL;
+	while (current)
+	{
+		if (current->fd == fd)
+		{
+			if (!previous)
+				*head = current->next;
+			else
+				previous->next = current->next;
+			free(current);
+			return ;
+		}
+		previous = current;
+		current = current->next;
+	}
 }
