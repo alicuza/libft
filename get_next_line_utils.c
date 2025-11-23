@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 14:48:25 by sancuta           #+#    #+#             */
-/*   Updated: 2025/11/22 18:21:56 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/11/23 16:29:28 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 ssize_t	ft_indchr(const char *s, int c)
 {
-	size_t	i;
+	ssize_t	i;
 
 	if (!s)
 		return (-1);
@@ -22,11 +22,11 @@ ssize_t	ft_indchr(const char *s, int c)
 	while (s[i])
 	{
 		if ((unsigned char)s[i] == (unsigned char)c)
-			return ((ssize_t)i);
+			return (i);
 		i++;
 	}
 	if ((unsigned char)s[i] == (unsigned char)c)
-		return ((ssize_t)i);
+		return (i);
 	return (-1);
 }
 
@@ -86,6 +86,7 @@ void	ft_free_all(t_stash **head)
 		free(buffer);
 		buffer = tmp;
 	}
+	(*head)->next = NULL;
 }
 
 void	ft_free_buf(t_stash **head, int fd)
