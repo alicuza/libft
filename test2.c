@@ -2,8 +2,10 @@
 
 int main(void)
 {
-	printf("Ich bin der Anton aus Tirol!\n%80s\n", "hello everybody!");
-	printf("Ich bin der Anton aus Tirol!\n%-80s\n", "hello everybody!");
-	printf("%  s\n", "hello everybody!");
+	printf("%%\n");
+	printf("%10%\n");
+	printf("%-10%\n");
+	printf("%010%\n");
+	printf("%-010%\n");
 	return 0;
 }
