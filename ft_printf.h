@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 17:39:27 by sancuta           #+#    #+#             */
-/*   Updated: 2025/11/29 20:46:53 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/11/29 20:59:32 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ typedef struct s_valid_spec
 	unsigned int	allowed_flags;
 }	t_valid_spec;
 
-const char	g_flags[] = "-0# +.";
+/*const char	g_flags[] = "-0# +.";
 
 const t_valid_spec	g_valid_spec[] =
 {
@@ -52,6 +52,7 @@ const t_valid_spec	g_valid_spec[] =
 	{'x', FLAG_MINUS | FLAG_ZERO | FLAG_HASH | FLAG_DOT},
 	{'X', FLAG_MINUS | FLAG_ZERO | FLAG_HASH | FLAG_DOT},
 };
+*/
 
 int					ft_printf(const char *s, ...);
 t_format_specifier	get_format_specifier(const char **s, const char *mask_set);
@@ -69,6 +70,6 @@ int					put_zero(t_format_specifier data, int nb_len, int sign_len);
 int					abs_nbr_len(int n);
 int					put_nbr_base(int n, const char *base);
 int					recurse(int n, const char *base, int base_len, int i);
-int					ft_putchar(const char c);
+int					ft_putchar(int c);
 
 #endif

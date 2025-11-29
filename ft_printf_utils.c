@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 17:38:01 by sancuta           #+#    #+#             */
-/*   Updated: 2025/11/29 20:48:14 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/11/29 20:59:04 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,4 +107,9 @@ int	recurse(int n, const char *base, int base_len, int i)
 		return (recurse(n / base_len, base, base_len, i + 1));
 	ft_putchar(base[(n % base_len) * sign]);
 	return (i + 1);
+}
+
+int ft_putchar(int c)
+{
+	return (write(1, &c, 1));
 }
