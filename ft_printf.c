@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 13:55:17 by sancuta           #+#    #+#             */
-/*   Updated: 2025/11/29 21:42:21 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/11/30 00:09:48 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,13 +112,13 @@ int	print_arg(t_format_specifier data, va_list *args)
 	int		ret;
 
 	ret = 0;
-/*	if (data.conv_spec == 'c')
+	if (data.conv_spec == 'c')
 		ret = print_char(data, va_arg(*args, int));
 	else if (data.conv_spec == 's')
 		ret = print_str(data, va_arg(*args, char *));
-	else if (data.conv_spec == 'p')
+/*	else if (data.conv_spec == 'p')
 		ret = print_uint(data, va_arg(*args, void *));
-	else*/ if (data.conv_spec == 'd' || data.conv_spec == 'i')
+*/	else if (data.conv_spec == 'd' || data.conv_spec == 'i')
 		ret = print_int(data, va_arg(*args, int));
 /*	else if (data.conv_spec == 'u')
 		ret = print_uint(data, va_arg(*args, unsigned int));
@@ -131,47 +131,32 @@ int	print_arg(t_format_specifier data, va_list *args)
 
 int	print_char(t_format_specifier data, int c)
 {
-	if (data.field_width > 1)
-	{
-		if (data.flag & FLAG_MINUS)
-		{
-			write(1, &c, 1);
-			if(!add_padding(data.field_width - 1, ' '))
-				return (-1);
-		}
-		if(!add_padding(data.field_width - 1, ' '))
-			return (-1);
-		write(1, &c, 1);
-		return (data.field_width);
-	}
-	else
-		write(1, &c, 1);
-	return (1);
+	int	ret;
+
+	ret = 0;
+	if (!(data.flag & FLAG_MINUS))
+		ret += put_space(data, 1, 0);
+	ret += write(1, &c, 1);
+	if (data.flag & FLAG_MINUS)
+		ret += put_space(data, 1, 0);
+	return (ret);
 }
 
 int	print_str(t_format_specifier data, char *s)
 {
-	size_t	arg_len;
+	size_t len;
+	int ret;
 
-	arg_len = ft_strlen(s);
-	if (arg_len > data.precision)
-		arg_len = data.precision;
-	if (data.field_width > arg_len)
-	{
-		if (data.flag & FLAG_MINUS)
-		{
-			write(1, s, arg_len);
-			if(!add_padding(data.field_width - arg_len, ' '))
-				return (-1);
-		}
-		if(!add_padding(data.field_width - arg_len, ' '))
-			return (-1);
-		write(1, s, arg_len);
-		return (data.field_width);
-	}
-	else
-		write(1, s, arg_len);
-	return (arg_len);
+	ret = 0;
+	len = ft_strlen(s);
+	if (len > data.precision)
+		len = data.precision;
+	if (!(data.flag & FLAG_MINUS))
+		ret += put_space(data, len, 0);
+	ret += write(1, s, len);
+	if (!(data.flag & FLAG_MINUS))
+		ret += put_space(data, len, 0);
+	return (ret);
 }
 /*
 int	print_uint(t_format_specifier data, unsigned int x, const char *base)

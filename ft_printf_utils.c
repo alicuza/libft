@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 17:38:01 by sancuta           #+#    #+#             */
-/*   Updated: 2025/11/29 21:33:59 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/11/30 00:12:24 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	print_int(t_format_specifier data, int n)
 {
-	int ret;
+	int	ret;
 	int	nb_len;
 	int	sign_len;
 	
@@ -26,27 +26,27 @@ int	print_int(t_format_specifier data, int n)
 		data.flag |= FLAG_NEG;
 		sign_len++;
 	}
-	if (!(data.flag & (FLAG_MINUS | FLAG_ZERO | FLAG_DOT)))
+	if (!(data.flag & (FLAG_MINUS | FLAG_ZERO)))
 		ret += put_space(data, nb_len, sign_len);
 	if (data.flag & FLAG_SIGN)
 		ret += put_sign(data);
 	if (data.flag & FLAG_ZERO | FLAG_DOT)
 		ret += put_zero(data, nb_len, sign_len);
 	ret += put_nbr_base(n, "0123456789");
-	if (data.flag & FLAG_MINUS && !(data.flag & (FLAG_ZERO | FLAG_DOT)))
+	if (data.flag & FLAG_MINUS)
 		ret += put_space(data, nb_len, sign_len);
 	return(ret);
 }
 
-int	put_space(t_format_specifier data, int nb_len, int sign_len)
+int	put_space(t_format_specifier data, int arg_len, int sign_len)
 {
 	int	i;
 	int	len;
 
 	len = sign_len;
-	if (nb_len < data.precision)
-		nb_len = data.precision;
-	len += nb_len;
+	if (arg_len < data.precision)
+		arg_len = data.precision;
+	len += arg_len;
 	i = data.field_width - len;
 	while (i > 0)
 	{
