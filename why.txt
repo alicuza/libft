@@ -1,0 +1,31 @@
+ft_printf.c:35:5: warning: implicit declaration of function 'ft_putchar' is invalid in C99 [-Wimplicit-function-declaration]
+                                ft_putchar(*s);
+                                ^
+ft_printf.c:41:10: warning: implicit declaration of function 'print_arg' is invalid in C99 [-Wimplicit-function-declaration]
+                        cnt = print_arg(format_data, &args);
+                              ^
+ft_printf.c:48:11: warning: implicit declaration of function 'ft_putchar' is invalid in C99 [-Wimplicit-function-declaration]
+                        res += ft_putchar(*s);
+                               ^
+3 warnings generated.
+ft_printf_utils.c:23:11: warning: implicit declaration of function 'abs_nb_len' is invalid in C99 [-Wimplicit-function-declaration]
+        nb_len = abs_nb_len(n);
+                 ^
+ft_printf_utils.c:35:9: warning: implicit declaration of function 'put_nbr' is invalid in C99 [-Wimplicit-function-declaration]
+        ret += put_nbr(n);
+               ^
+ft_printf_utils.c:82:1: warning: non-void function does not return a value in all control paths [-Wreturn-type]
+}
+^
+3 warnings generated.
+/usr/bin/ld: /tmp/ft_printf_utils-912f72.o:(.rodata+0x0): multiple definition of `g_flags'; /tmp/ft_printf-f32d78.o:(.rodata+0x0): first defined here
+/usr/bin/ld: /tmp/ft_printf_utils-912f72.o:(.rodata+0x10): multiple definition of `g_valid_spec'; /tmp/ft_printf-f32d78.o:(.rodata+0x10): first defined here
+/usr/bin/ld: /usr/bin/../lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/crt1.o: in function `_start':
+(.text+0x1b): undefined reference to `main'
+/usr/bin/ld: /tmp/ft_printf-f32d78.o: in function `ft_printf':
+ft_printf.c:(.text+0x1cf): undefined reference to `ft_putchar'
+/usr/bin/ld: ft_printf.c:(.text+0x264): undefined reference to `ft_putchar'
+/usr/bin/ld: /tmp/ft_printf_utils-912f72.o: in function `print_int':
+ft_printf_utils.c:(.text+0x27): undefined reference to `abs_nb_len'
+/usr/bin/ld: ft_printf_utils.c:(.text+0xd4): undefined reference to `put_nbr'
+clang: error: linker command failed with exit code 1 (use -v to see invocation)

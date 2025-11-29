@@ -2,10 +2,19 @@
 
 int main(void)
 {
-	printf("%%\n");
-	printf("%10%\n");
-	printf("%-10%\n");
-	printf("%010%\n");
-	printf("%-010%\n");
+	printf("%0#10x\n", 42);
+	printf("%0#.10x\n", 42);
+	printf("%#20x\n", 42);
+	printf("%#20.10x\n", 42);
+	printf("%0+12d\n", 138098);
+	printf("%0+12d\n", -138098);
+	printf("%+.12d\n", 138098);
+	printf("%+.12d\n", -138098);
+	printf("%+20.12d\n", 138098);
+	printf("%+20.12d\n", -138098);
+	printf("\n");
+
+	printf("%+020d\n", 42);
+	printf("%+.20d\n", 42);
 	return 0;
 }

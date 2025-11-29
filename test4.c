@@ -2,8 +2,44 @@
 
 int main(void)
 {
+	printf("%d\n", 2);
+	printf("%10d\n", 2);
+	printf("%0+10.3d\n", 2);
+	printf("% d\n", 2);
+	printf("% d\n", -2);
+	printf("%d\n", 2);
+	printf("%-10d\n", 2);
+	printf("%-+10d\n", 2);
+	printf("%d\n", -2);
+	printf("%10d\n", -2);
+	printf("%0+10.3d\n", -2);
+	printf("%-10d\n", -2);
+	printf("%-+10d\n", -2);
+	printf("%- 2d\n", 2);
+	printf("%-2d\n", -2);
+
+/*	printf("%0 10d\n", 2);
+	printf("%llu\n", 18446744073709551615);
+	printf("%llu\n", 18446744073709551616);
+
+	printf("1: ");
+	printf("\n%d\n", printf("%d: %trytocatchme%", 2));
+	printf("2: ");
+	printf("\n%d\n", printf("%%", 2));
+	printf("3: ");
+	printf("\n%d\n", printf("%235t%", 2));
+	printf("4: ");
+	printf("\n%d\n", printf("%trz%", 2));
+	printf("5: ");
+	printf("\n%d\n", printf("%d   sfzh.1235t%", 2));
+	printf("6: ");
+	printf("\n%d\n", printf("%d%%%try", 2));
+	printf("7: ");
+	printf("\n%d\n", printf("%d%%%try%", 2));
+	printf("8: ");
+	printf("\n%d\n", printf("%d%try%", 2));
+
 	printf("hello % 010#d boys", 2);
-/*
 	printf("%\n");
 
 	int n = 2;

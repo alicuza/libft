@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 12:18:29 by sancuta           #+#    #+#             */
-/*   Updated: 2025/10/27 12:35:38 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/11/29 12:34:18 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ typedef struct s_conv_spec
 
 static const t_conv_spec	g_conv_specs[] = 
 {
-	{'c', FLAG_MINUS | FLAG_ZERO, 0},
-	{'s', FLAG_MINUS | FLAG_ZERO, 1},
+	{'c', FLAG_MINUS, 0},
+	{'s', FLAG_MINUS, 1},
 	{'d', FLAG_MINUS | FLAG_ZERO | FLAG_PLUS | FLAG_SPACE, 1},
 	{'i', FLAG_MINUS | FLAG_ZERO | FLAG_PLUS | FLAG_SPACE, 1},
 	{'u', FLAG_MINUS | FLAG_ZERO, 1},
-	{'p', FLAG_MINUS | FLAG_ZERO, 0},
+	{'p', FLAG_MINUS, 0},
 	{'x', FLAG_MINUS | FLAG_ZERO | FLAG_HASH, 1},
 	{'X', FLAG_MINUS | FLAG_ZERO | FLAG_HASH, 1},
 };
@@ -96,26 +96,54 @@ int main(void)
 					{
 						if (g_conv_specs[i].spec == 's')
 						{
-							printf("printf(\"Format: |%%%%%s%d.%d%c| \"); ", flag_buf, widths[j], precisions[k], g_conv_specs[i].spec);
-							printf("printf(\"|%%%s%d.%d%c|\\n\", \"hello world!\");\n", flag_buf, widths[j], precisions[k], g_conv_specs[i].spec);
+							printf("printf(\"Format: |%%%%%s%.0d.%.0d%c|		\");		", flag_buf, widths[j], precisions[k], g_conv_specs[i].spec);
+							printf("printf(\"|%%%s%.0d.%.0d%c|\\n\", \"hello world!\");\n", flag_buf, widths[j], precisions[k], g_conv_specs[i].spec);
+							printf("printf(\"Format: |%%%%%s%.0d%c|		\");		", flag_buf, widths[j], g_conv_specs[i].spec);
+							printf("printf(\"|%%%s%.0d%c|\\n\", \"hello world!\");\n", flag_buf, widths[j], g_conv_specs[i].spec);
+							printf("printf(\"Format: |%%%%%s.%.0d%c|		\");		", flag_buf, precisions[k], g_conv_specs[i].spec);
+							printf("printf(\"|%%%s.%.0d%c|\\n\", \"hello world!\");\n", flag_buf, precisions[k], g_conv_specs[i].spec);
+							printf("printf(\"Format: |%%%%%s%c|		\");		", flag_buf, g_conv_specs[i].spec);
+							printf("printf(\"|%%%s%c|\\n\", \"hello world!\");\n", flag_buf, g_conv_specs[i].spec);
 						}
 						else if (g_conv_specs[i].spec != 'c')
 						{
-							printf("printf(\"Format: |%%%%%s%d.%d%c| \"); ", flag_buf, widths[j], precisions[k], g_conv_specs[i].spec);
-							printf("printf(\"|%%%s%d.%d%c|\\n\", 42);\n", flag_buf, widths[j], precisions[k], g_conv_specs[i].spec);
+							printf("printf(\"Format: |%%%%%s%.0d.%.0d%c|		\");		", flag_buf, widths[j], precisions[k], g_conv_specs[i].spec);
+							printf("printf(\"|%%%s%.0d.%.0d%c|\\n\", 42);\n", flag_buf, widths[j], precisions[k], g_conv_specs[i].spec);
+							printf("printf(\"Format: |%%%%%s%.0d.%.0d%c|		\");		", flag_buf, widths[j], precisions[k], g_conv_specs[i].spec);
+							printf("printf(\"|%%%s%.0d.%.0d%c|\\n\", -42);\n", flag_buf, widths[j], precisions[k], g_conv_specs[i].spec);
+							printf("printf(\"Format: |%%%%%s%.0d.%.0d%c|		\");		", flag_buf, widths[j], precisions[k], g_conv_specs[i].spec);
+							printf("printf(\"|%%%s%.0d.%.0d%c|\\n\", 0);\n", flag_buf, widths[j], precisions[k], g_conv_specs[i].spec);
+							printf("printf(\"Format: |%%%%%s%.0d%c|		\");		", flag_buf, widths[j], g_conv_specs[i].spec);
+							printf("printf(\"|%%%s%.0d%c|\\n\", 42);\n", flag_buf, widths[j], g_conv_specs[i].spec);
+							printf("printf(\"Format: |%%%%%s%.0d%c|		\");		", flag_buf, widths[j], g_conv_specs[i].spec);
+							printf("printf(\"|%%%s%.0d%c|\\n\", -42);\n", flag_buf, widths[j], g_conv_specs[i].spec);
+							printf("printf(\"Format: |%%%%%s%.0d%c|		\");		", flag_buf, widths[j], g_conv_specs[i].spec);
+							printf("printf(\"|%%%s%.0d%c|\\n\", 0);\n", flag_buf, widths[j], g_conv_specs[i].spec);
+							printf("printf(\"Format: |%%%%%s.%.0d%c|		\");		", flag_buf, widths[j], g_conv_specs[i].spec);
+							printf("printf(\"|%%%s.%.0d%c|\\n\", 42);\n", flag_buf, precisions[k], g_conv_specs[i].spec);
+							printf("printf(\"Format: |%%%%%s.%.0d%c|		\");		", flag_buf, precisions[k], g_conv_specs[i].spec);
+							printf("printf(\"|%%%s.%.0d%c|\\n\", -42);\n", flag_buf, precisions[k], g_conv_specs[i].spec);
+							printf("printf(\"Format: |%%%%%s.%.0d%c|		\");		", flag_buf, precisions[k], g_conv_specs[i].spec);
+							printf("printf(\"|%%%s.%.0d%c|\\n\", 0);\n", flag_buf, precisions[k], g_conv_specs[i].spec);
+							printf("printf(\"Format: |%%%%%s%c|		\");		", flag_buf, g_conv_specs[i].spec);
+							printf("printf(\"|%%%s%c|\\n\", 42);\n", flag_buf, g_conv_specs[i].spec);
+							printf("printf(\"Format: |%%%%%s%c|		\");		", flag_buf, g_conv_specs[i].spec);
+							printf("printf(\"|%%%s%c|\\n\", -42);\n", flag_buf, g_conv_specs[i].spec);
+							printf("printf(\"Format: |%%%%%s%c|		\");		", flag_buf, g_conv_specs[i].spec);
+							printf("printf(\"|%%%s%c|\\n\", 0);\n", flag_buf, g_conv_specs[i].spec);
 						}
 						k++;
 					}
 				}
 				if (g_conv_specs[i].spec == 'c')
 				{
-					printf("printf(\"Format: |%%%%%s%d%c| \"); ", flag_buf, widths[j], g_conv_specs[i].spec);
-					printf("printf(\"|%%%s%d%c|\\n\", 'a');\n", flag_buf, widths[j], g_conv_specs[i].spec);
+					printf("printf(\"Format: |%%%%%s%.0d%c|		\");		", flag_buf, widths[j], g_conv_specs[i].spec);
+					printf("printf(\"|%%%s%.0d%c|\\n\", 'a');\n", flag_buf, widths[j], g_conv_specs[i].spec);
 				}
 				else if (g_conv_specs[i].spec == 'p')
 				{
-					printf("printf(\"Format: |%%%%%s%d%c| \"); ", flag_buf, widths[j], g_conv_specs[i].spec);
-					printf("printf(\"|%%%s%d%c|\\n\", (int *)4200);\n", flag_buf, widths[j], g_conv_specs[i].spec);
+					printf("printf(\"Format: |%%%%%s%.0d%c|		\");		", flag_buf, widths[j], g_conv_specs[i].spec);
+					printf("printf(\"|%%%s%.0d%c|\\n\", (int *)4200);\n", flag_buf, widths[j], g_conv_specs[i].spec);
 				}
 				j++;
 			}
