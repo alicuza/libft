@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 17:38:01 by sancuta           #+#    #+#             */
-/*   Updated: 2025/11/29 20:59:04 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/11/29 21:14:54 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,17 @@ int	put_sign(t_format_specifier data)
 
 int	put_zero(t_format_specifier data, int nb_len, int sign_len)
 {
+	int	len;
+	int	i;
+
 	if ((data.flag & FLAG_ZERO) && data.field_width > nb_len + sign_len)
-		return (write(1, "0", data.field_width - nb_len - sign_len));
+		len = data.field_width - nb_len - sign_len;
 	else if ((data.flag & FLAG_DOT) && data.precision > nb_len)
-		return (write(1, "0", data.precision - nb_len));
-	else
-		return (0);
+		len = data.precision - nb_len;
+	i = 0;
+	while (i++ < len)
+		write(1, "0", 1);
+	return (len);
 }
 
 int	put_nbr_base(int n, const char *base)

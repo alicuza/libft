@@ -2,5 +2,5 @@
 
 int main(void)
 {
-	return (ft_printf("%d\n", 2));
+	return (ft_printf("%010d\n", 2));
 }
