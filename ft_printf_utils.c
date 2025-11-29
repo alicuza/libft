@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 17:38:01 by sancuta           #+#    #+#             */
-/*   Updated: 2025/11/29 21:14:54 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/11/29 21:33:59 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,11 @@ int	put_zero(t_format_specifier data, int nb_len, int sign_len)
 	else if ((data.flag & FLAG_DOT) && data.precision > nb_len)
 		len = data.precision - nb_len;
 	i = 0;
-	while (i++ < len)
+	while (i < len)
+	{
 		write(1, "0", 1);
+		i++;
+	}
 	return (len);
 }
 

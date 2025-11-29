@@ -6,11 +6,12 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 13:55:17 by sancuta           #+#    #+#             */
-/*   Updated: 2025/11/29 20:34:47 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/11/29 21:42:21 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
+#include <stdio.h>
 
 int	ft_printf(const char *s, ...)
 {
@@ -37,7 +38,8 @@ int	ft_printf(const char *s, ...)
 				res++;
 				continue ;
 			}
-			format_data = get_format_specifier(&s, "-0# +.");
+			format_data = get_format_specifier(&s, "-0# +");
+			printf("%u, %u, %u, %u\n", format_data.field_width, format_data.precision, format_data.flag, format_data.conv_spec);
 			cnt = print_arg(format_data, &args);
 			if (cnt == -1)
 				return (-1);
@@ -73,6 +75,7 @@ t_format_specifier	get_format_specifier(const char **s, const char *mask_set)
 		res.precision = get_number(s);
 	}
 	res.conv_spec = **s;
+	(*s)++;
 	return (res);
 }
 
@@ -265,6 +268,8 @@ int	abs_nbr_len(int n)
 {
 	int	i;
 	
+	if (!n)
+		return (1);
 	i = 0;
 	while (n)
 	{
