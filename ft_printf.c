@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 13:55:17 by sancuta           #+#    #+#             */
-/*   Updated: 2025/11/30 00:09:48 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/11/30 13:00:40 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int	get_number(const char **s)
 	return (ret);
 }
 
-int	print_arg(t_format_specifier data, va_list *args)
+int	print_arg(t_format_specifier *data, va_list *args)
 {
 	int		ret;
 
@@ -116,9 +116,12 @@ int	print_arg(t_format_specifier data, va_list *args)
 		ret = print_char(data, va_arg(*args, int));
 	else if (data.conv_spec == 's')
 		ret = print_str(data, va_arg(*args, char *));
-/*	else if (data.conv_spec == 'p')
+	else if (data.conv_spec == 'p')
+	{
+		data.
 		ret = print_uint(data, va_arg(*args, void *));
-*/	else if (data.conv_spec == 'd' || data.conv_spec == 'i')
+	}
+	else if (data.conv_spec == 'd' || data.conv_spec == 'i')
 		ret = print_int(data, va_arg(*args, int));
 /*	else if (data.conv_spec == 'u')
 		ret = print_uint(data, va_arg(*args, unsigned int));
@@ -149,12 +152,12 @@ int	print_str(t_format_specifier data, char *s)
 
 	ret = 0;
 	len = ft_strlen(s);
-	if (len > data.precision)
+	if ((data.flag & FLAG_DOT) && (len > data.precision))
 		len = data.precision;
 	if (!(data.flag & FLAG_MINUS))
 		ret += put_space(data, len, 0);
 	ret += write(1, s, len);
-	if (!(data.flag & FLAG_MINUS))
+	if (data.flag & FLAG_MINUS)
 		ret += put_space(data, len, 0);
 	return (ret);
 }
@@ -278,7 +281,7 @@ char	*convert_base(va_list args, )
 
 		should also be conscious of the cases malloc is called in when testing.
 */
-
+/*
 int	add_padding(int n, int c)
 {
 	char		*tmp;
@@ -302,7 +305,7 @@ int	add_padding(int n, int c)
 	free(tmp);
 	return (n);
 }
-
+*/
 /*
 	while (--n > 0)
 		write(1, &c | FLAG_DOT);

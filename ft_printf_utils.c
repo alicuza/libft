@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 17:38:01 by sancuta           #+#    #+#             */
-/*   Updated: 2025/11/30 00:12:24 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/11/30 12:55:56 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,36 @@ int	print_int(t_format_specifier data, int n)
 	ret = 0;
 	sign_len = 0;
 	nb_len = abs_nbr_len(n);
-	if ((n < 0) || (data.flag & FLAG_SIGN))
-	{
+	if ((n < 0))
 		data.flag |= FLAG_NEG;
+	if (data.flag & FLAG_SIGN)
 		sign_len++;
-	}
 	if (!(data.flag & (FLAG_MINUS | FLAG_ZERO)))
 		ret += put_space(data, nb_len, sign_len);
 	if (data.flag & FLAG_SIGN)
+		ret += put_sign(data);
+	if (data.flag & FLAG_ZERO | FLAG_DOT)
+		ret += put_zero(data, nb_len, sign_len);
+	ret += put_nbr_base(n, "0123456789");
+	if (data.flag & FLAG_MINUS)
+		ret += put_space(data, nb_len, sign_len);
+	return(ret);
+}
+
+int	print_uint(t_format_specifier data, unsigned int n)
+{
+	int	ret;
+	int	nb_len;
+	int	sign_len;
+	
+	ret = 0;
+	sign_len = 0;
+	nb_len = abs_nbr_len(n);
+	if (data.flag & FLAG_HASH)
+		sign_len += 2;
+	if (!(data.flag & (FLAG_MINUS | FLAG_ZERO)))
+		ret += put_space(data, nb_len, sign_len);
+	if ((data.flag & FLAG_HASH) || data.conv_spec == 'p')
 		ret += put_sign(data);
 	if (data.flag & FLAG_ZERO | FLAG_DOT)
 		ret += put_zero(data, nb_len, sign_len);

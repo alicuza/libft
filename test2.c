@@ -2,7 +2,8 @@
 
 int main(void)
 {
-	printf("%c\n", -2);
+	printf("%020d\n", -2);
+	printf("%30.20d\n", -2);
 /*
 	printf("%0#10x\n", 42);
 	printf("%0#.10x\n", 42);

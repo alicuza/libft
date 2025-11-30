@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 17:39:27 by sancuta           #+#    #+#             */
-/*   Updated: 2025/11/29 20:59:32 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/11/30 12:14:15 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # define FLAG_PLUS	(1 << 4) // bits for '+': 00010000 = 16
 # define FLAG_DOT	(1 << 5) // bits for '.': 00100000 = 32
 # define FLAG_NEG	(1 << 6) // bits for n<0: 01000000 = 64
-# define FLAG_SIGN	88		 // bits		: 01011000 = 64 + 32 + 8 = 88
+# define FLAG_SIGN	88		 // bits		: 01011000 = 64 + 16 + 8 = 88
 
 typedef struct s_format_specifier
 {
