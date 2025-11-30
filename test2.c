@@ -2,6 +2,12 @@
 
 int main(void)
 {
+	printf("%10.0s\n", "hello");
+	printf("%20p\n", "hello");
+	printf("%-20p\n", "hello");
+	printf("%020p\n", "hello");
+	printf("%-020p\n", "hello");
+	printf("%20.0d\n", 1);
 	printf("%020d\n", -2);
 	printf("%30.20d\n", -2);
 /*

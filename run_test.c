@@ -2,6 +2,6 @@
 
 int	main(void)
 {
-	#include "test_cases"
+	#include "og_test_cases"
 	return (0);
 }

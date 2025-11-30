@@ -6,12 +6,26 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 13:55:17 by sancuta           #+#    #+#             */
-/*   Updated: 2025/11/30 13:00:40 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/11/30 20:43:07 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-#include <stdio.h>
+//#include <stdio.h>
+
+const char	g_valid_conv_spec[] = "csdiupxX";
+
+const int	g_allowed_flags[] =
+{
+	FLAG_MINUS,
+	FLAG_MINUS | FLAG_DOT,
+	FLAG_MINUS | FLAG_ZERO | FLAG_PLUS | FLAG_SPACE | FLAG_DOT,
+	FLAG_MINUS | FLAG_ZERO | FLAG_PLUS | FLAG_SPACE | FLAG_DOT,
+	FLAG_MINUS | FLAG_ZERO | FLAG_DOT,
+	FLAG_MINUS,
+	FLAG_MINUS | FLAG_ZERO | FLAG_HASH | FLAG_DOT,
+	FLAG_MINUS | FLAG_ZERO | FLAG_HASH | FLAG_DOT,
+};
 
 int	ft_printf(const char *s, ...)
 {
@@ -38,9 +52,9 @@ int	ft_printf(const char *s, ...)
 				res++;
 				continue ;
 			}
-			format_data = get_format_specifier(&s, "-0# +");
-			printf("%u, %u, %u, %u\n", format_data.field_width, format_data.precision, format_data.flag, format_data.conv_spec);
-			cnt = print_arg(format_data, &args);
+			format_data = get_format_specifier(&s, "-0#+ ");
+//			printf("%u, %u, %u, %u\n", format_data.field_width, format_data.precision, format_data.flag, format_data.conv_spec);
+			cnt = print_arg(&format_data, &args);
 			if (cnt == -1)
 				return (-1);
 			res += cnt;
@@ -70,11 +84,12 @@ t_format_specifier	get_format_specifier(const char **s, const char *mask_set)
 	res.field_width = get_number(s);
 	if (**s == '.')
 	{
-		res.flag |= FLAG_DOT;
+		res.flag = (res.flag | FLAG_DOT) & ~FLAG_ZERO;
 		(*s)++;
 		res.precision = get_number(s);
 	}
 	res.conv_spec = **s;
+	res.flag &= g_allowed_flags[ft_indchr(g_valid_conv_spec, res.conv_spec)];
 	(*s)++;
 	return (res);
 }
@@ -112,55 +127,81 @@ int	print_arg(t_format_specifier *data, va_list *args)
 	int		ret;
 
 	ret = 0;
-	if (data.conv_spec == 'c')
+	if (data->conv_spec == 'c')
 		ret = print_char(data, va_arg(*args, int));
-	else if (data.conv_spec == 's')
+	else if (data->conv_spec == 's')
 		ret = print_str(data, va_arg(*args, char *));
-	else if (data.conv_spec == 'p')
+	else if (data->conv_spec == 'p')
 	{
-		data.
-		ret = print_uint(data, va_arg(*args, void *));
+		data->flag |= FLAG_HASH;
+		ret = print_hex(data, (unsigned long)va_arg(*args, void *), "0123456789abcdef");
 	}
-	else if (data.conv_spec == 'd' || data.conv_spec == 'i')
+	else if (data->conv_spec == 'd' || data->conv_spec == 'i')
 		ret = print_int(data, va_arg(*args, int));
-/*	else if (data.conv_spec == 'u')
+	else if (data->conv_spec == 'u')
 		ret = print_uint(data, va_arg(*args, unsigned int));
-	else if (data.conv_spec == 'x')
-		ret = print_uint(data, va_arg(*args, unsigned int));
-	else if (data.conv_spec == 'X')
-		ret = print_uint(data, va_arg(*args, unsigned int));
-*/	return (ret);
+	else if (data->conv_spec == 'x')
+		ret = print_hex(data, va_arg(*args, unsigned int), "0123456789abcdef");
+	else if (data->conv_spec == 'X')
+		ret = print_hex(data, va_arg(*args, unsigned int), "0123456789ABCDEF");
+	return (ret);
 }
 
-int	print_char(t_format_specifier data, int c)
+int	print_char(t_format_specifier *data, int c)
 {
 	int	ret;
 
 	ret = 0;
-	if (!(data.flag & FLAG_MINUS))
+	if (!(data->flag & FLAG_MINUS))
 		ret += put_space(data, 1, 0);
 	ret += write(1, &c, 1);
-	if (data.flag & FLAG_MINUS)
+	if (data->flag & FLAG_MINUS)
 		ret += put_space(data, 1, 0);
 	return (ret);
 }
 
-int	print_str(t_format_specifier data, char *s)
+/*
+	How would a buffer work here? I could fill it from the back
+	with spaces, then zeros and the sign, then the digits.
+	Problem: there is no way to know what size it should be beforehand.
+	So either I have a standard big buffer (maybe on the stack),
+	or I malloc and realloc to the necessary size to write every
+	successive element into the buffer, if it is too small.
+ */
+
+int	print_str(t_format_specifier *data, char *s)
 {
 	size_t len;
 	int ret;
 
 	ret = 0;
-	len = ft_strlen(s);
-	if ((data.flag & FLAG_DOT) && (len > data.precision))
-		len = data.precision;
-	if (!(data.flag & FLAG_MINUS))
+	if ((data->flag & FLAG_DOT))
+		len = data->precision;
+	else
+		len = ft_strlen(s);
+	if (!(data->flag & FLAG_MINUS))
 		ret += put_space(data, len, 0);
 	ret += write(1, s, len);
-	if (data.flag & FLAG_MINUS)
+	if (data->flag & FLAG_MINUS)
 		ret += put_space(data, len, 0);
 	return (ret);
 }
+
+int	abs_nbr_len(unsigned long n, unsigned long base)
+{
+	int	i;
+	
+	if (!n)
+		return (1);
+	i = 0;
+	while (n)
+	{
+		n /= base;
+		i++;
+	}
+	return (i);
+}
+
 /*
 int	print_uint(t_format_specifier data, unsigned int x, const char *base)
 {
@@ -251,21 +292,6 @@ int	has_sign()
 	return (arg_len);
 }
 */
-
-int	abs_nbr_len(int n)
-{
-	int	i;
-	
-	if (!n)
-		return (1);
-	i = 0;
-	while (n)
-	{
-		n /= 10;
-		i++;
-	}
-	return (i);
-}
 
 /*
 char	*convert_base(va_list args, )
