@@ -5,90 +5,52 @@
 #                                                     +:+ +:+         +:+      #
 #    By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/10/16 23:38:42 by sancuta           #+#    #+#              #
-#    Updated: 2025/11/29 14:41:38 by sancuta          ###   ########.fr        #
+#    Created: 2025/12/11 22:29:22 by sancuta           #+#    #+#              #
+#    Updated: 2025/12/12 00:33:53 by sancuta          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-LIBFT = ./libft/libft.a
 NAME = libftprintf.a
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
-AFLAGS = -rcs
-SRCS = $(wildcard *.c)
+CFLAGS = -MMD -MP -Wall -Wextra -Werror
+ARFLAGS = -rcs
+SRCS =	ft_printf.c \
+		ft_printf_utils.c
 OBJS = $(SRCS:.c=.o)
-LIBFT_SRCS =./libft/ft_isalpha.c \
-			./libft/ft_isdigit.c \
-			./libft/ft_isalnum.c \
-			./libft/ft_isascii.c \
-			./libft/ft_isprint.c \
-			./libft/ft_strlen.c \
-			./libft/ft_memset.c \
-			./libft/ft_bzero.c \
-			./libft/ft_memcpy.c \
-			./libft/ft_memmove.c \
-			./libft/ft_strlcpy.c \
-			./libft/ft_strlcat.c \
-			./libft/ft_toupper.c \
-			./libft/ft_tolower.c \
-			./libft/ft_strchr.c \
-			./libft/ft_strrchr.c \
-			./libft/ft_strncmp.c \
-			./libft/ft_memchr.c \
-			./libft/ft_memcmp.c \
-			./libft/ft_strnstr.c \
-			./libft/ft_atoi.c \
-			./libft/ft_calloc.c \
-			./libft/ft_strdup.c \
-			./libft/ft_substr.c \
-			./libft/ft_strjoin.c \
-			./libft/ft_strtrim.c \
-			./libft/ft_split.c \
-			./libft/ft_itoa.c \
-			./libft/ft_strmapi.c \
-			./libft/ft_striteri.c \
-			./libft/ft_putchar_fd.c \
-			./libft/ft_putstr_fd.c \
-			./libft/ft_putendl_fd.c \
-			./libft/ft_putnbr_fd.c \
-			./libft/ft_lstnew_bonus.c \
-			./libft/ft_lstadd_front_bonus.c \
-			./libft/ft_lstadd_back_bonus.c \
-			./libft/ft_lstsize_bonus.c \
-			./libft/ft_lstlast_bonus.c \
-			./libft/ft_lstdelone_bonus.c \
-			./libft/ft_lstclear_bonus.c \
-			./libft/ft_lstiter_bonus.c \
-			./libft/ft_lstmap_bonus.c
-LIBFT_OBJS = $(LIBFT_SRCS:.c=.o)
+DEPS = $(SRCS:.c=.d)
 
-all: $(LIBFT) $(NAME)
+BSRCS =	ft_printf_bonus.c \
+		ft_printf_utils_bonus.c
+BOBJS = $(BSRCS:.c=.o)
+BDEPS = $(BSRCS:.c=.d)
+
+LIBFT_DIR = ./libft
+
+all: libft_check $(NAME)
 
 $(NAME): $(OBJS)
-		ar $(AFLAGS) $@ $?
+		cp $(LIBFT_DIR)/libft.a ./$(NAME)
+		ar $(ARFLAGS) $@ $^
 
-$(LIBFT): $(LIBFT_OBJS)
-		make all -C libft
-		cp $(LIBFT) $(NAME)
-
-%.o: %.c
-		$(CC) $(CFLAGS) -c $< -o $@
+libft_check:
+		make -C $(LIBFT_DIR)
 
 clean:
-		make clean -C libft
-		rm -f $(OBJS)
+		rm -f $(OBJS) $(BOBJS) $(DEPS) $(BDEPS) .bonus
+		make -C $(LIBFT_DIR) clean
 
 fclean: clean
-		make fclean -C libft
 		rm -f $(NAME)
-		rm -f .bonus
+		make -C $(LIBFT_DIR) fclean
 
 re: fclean all
 
-bonus: .bonus
+bonus: libft_check $(NAME) .bonus
 
-.bonus: $(OBJS)
-		ar $(AFLAGS) $(NAME) $?
+.bonus: $(BOBJS)
+		ar $(ARFLAGS) $(NAME) $^
 		touch .bonus
 
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re bonus libft_check
+
+-include $(DEPS) $(BDEPS)

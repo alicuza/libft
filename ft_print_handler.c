@@ -1,16 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isdigit.c                                       :+:      :+:    :+:   */
+/*   ft_print_handler.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/29 14:53:46 by sancuta           #+#    #+#             */
-/*   Updated: 2025/10/16 16:15:19 by sancuta          ###   ########.fr       */
+/*   Created: 2025/12/13 15:49:33 by sancuta           #+#    #+#             */
+/*   Updated: 2025/12/13 16:12:02 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_isdigit(int c)
+#include "ft_printf.h"
+
+int	ft_format_spec_handler(int flag, const char *s)
 {
-	return (c >= 48 && c <= 57);
+	if (flag == -1)
+		return (-1);
+	else if (flag)
+	{
+		format_data = get_format_specifier(&s, g_valid_flags);
+		if (format_data.conv_spec == -1)
+			return (-1);
+		return (print_arg(&format_data, &args));
+	}
+	else
+		return (ft_putchar(*s++));
 }

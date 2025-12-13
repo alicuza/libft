@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf_utils.c                                  :+:      :+:    :+:   */
+/*   ft_printf_utils_bonus.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 17:38:01 by sancuta           #+#    #+#             */
-/*   Updated: 2025/12/13 16:07:29 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/12/12 02:19:46 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,7 @@ int	print_int(t_format_specifier *data, int n)
 	int	ret;
 	int	nb_len;
 	int	sign_len;
-	int	written;
-
+	
 	ret = 0;
 	sign_len = 0;
 	nb_len = abs_nbr_len((unsigned long)n, 10);
@@ -33,7 +32,6 @@ int	print_int(t_format_specifier *data, int n)
 		nb_len = 0;
 	if (data->flag & FLAG_SIGN)
 		sign_len++;
-//TODO maybe split it here, so i have toom to check for the write failures with written = put_functions
 	if (!(data->flag & (FLAG_MINUS | FLAG_ZERO)))
 		ret += put_space(data, nb_len, sign_len);
 	if (data->flag & FLAG_SIGN)
@@ -49,22 +47,20 @@ int	print_int(t_format_specifier *data, int n)
 	}
 	if (data->flag & FLAG_MINUS)
 		ret += put_space(data, nb_len, sign_len);
-	return (ret);
+	return(ret);
 }
 
 int	print_uint(t_format_specifier *data, unsigned int n)
 {
 	int	ret;
 	int	nb_len;
-	int	written;
-
+	
 	ret = 0;
 	nb_len = abs_nbr_len((unsigned long)n, 10);
 	if (data->precision == -1)
 		data->precision = 1;
 	if (!n && !data->precision)
 		nb_len = 0;
-//TODO maybe split it here, so i have toom to check for the write failures with written = put_functions
 	if (!(data->flag & (FLAG_MINUS | FLAG_ZERO)))
 		ret += put_space(data, nb_len, 0);
 	if (data->flag & (FLAG_ZERO | FLAG_DOT))
@@ -73,7 +69,7 @@ int	print_uint(t_format_specifier *data, unsigned int n)
 		ret += put_nbr_base(n, "0123456789");
 	if (data->flag & FLAG_MINUS)
 		ret += put_space(data, nb_len, 0);
-	return (ret);
+	return(ret);
 }
 
 int	print_ptr(t_format_specifier *data, unsigned long n)
@@ -89,8 +85,7 @@ int	print_hex(t_format_specifier *data, unsigned long n, const char *base)
 	int	ret;
 	int	nb_len;
 	int	sign_len;
-	int	written;
-
+	
 	ret = 0;
 	sign_len = 0;
 	nb_len = abs_nbr_len(n, 16);
@@ -100,7 +95,6 @@ int	print_hex(t_format_specifier *data, unsigned long n, const char *base)
 		nb_len = 0;
 	if ((data->flag & FLAG_HASH) && n)
 		sign_len += 2;
-//TODO maybe split it here, so i have toom to check for the write failures with written = put_functions
 	if (!(data->flag & (FLAG_MINUS | FLAG_ZERO)))
 		ret += put_space(data, nb_len, sign_len);
 	if ((data->flag & FLAG_HASH) && n)
@@ -111,15 +105,14 @@ int	print_hex(t_format_specifier *data, unsigned long n, const char *base)
 		ret += put_nbr_base(n, base);
 	if (data->flag & FLAG_MINUS)
 		ret += put_space(data, nb_len, sign_len);
-	return (ret);
+	return(ret);
 }
 
 int	put_space(t_format_specifier *data, int arg_len, int sign_len)
 {
 	int	i;
 	int	len;
-	int	written;
-//TODO extract the first if else i guess
+
 	len = sign_len;
 	if (data->conv_spec == 's')
 	{
@@ -137,9 +130,7 @@ int	put_space(t_format_specifier *data, int arg_len, int sign_len)
 		return (0);
 	while (i > 0)
 	{
-		written = write(1, " ", 1);
-		if (written < 0)
-			return (-1);
+		write(1, " ", 1);
 		i--;
 	}
 	return (data->field_width - len);
@@ -168,7 +159,6 @@ int	put_zero(t_format_specifier *data, int nb_len, int sign_len)
 {
 	int	len;
 	int	i;
-	int	written;
 
 	len = 0;
 	if ((data->flag & FLAG_ZERO) && data->field_width > nb_len + sign_len)
@@ -178,12 +168,31 @@ int	put_zero(t_format_specifier *data, int nb_len, int sign_len)
 	i = 0;
 	while (i < len)
 	{
-		written = write(1, "0", 1);
-		if (written < 0)
-			return (-1);
+		write(1, "0", 1);
 		i++;
 	}
 	return (len);
+}
+
+int	put_nbr_base(unsigned long n, const char *base)
+{
+	unsigned long	base_len;
+
+	base_len = ft_strlen(base);
+	return (recurse(n, base, base_len, 0));
+}
+
+int	recurse(unsigned long n, const char *base, unsigned long base_len, int i)
+{
+	if (n >= base_len)
+		i = recurse(n / base_len, base, base_len, i);
+	ft_putchar(base[n % base_len]);
+	return (i + 1);
+}
+
+int ft_putchar(int c)
+{
+	return (write(1, &c, 1));
 }
 
 ssize_t	ft_indchr(const char *s, int c)

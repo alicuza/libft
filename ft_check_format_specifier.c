@@ -1,19 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar_fd.c                                    :+:      :+:    :+:   */
+/*   ft_check_format_specifier.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/15 20:09:34 by sancuta           #+#    #+#             */
-/*   Updated: 2025/10/15 20:15:00 by sancuta          ###   ########.fr       */
+/*   Created: 2025/12/13 14:18:51 by sancuta           #+#    #+#             */
+/*   Updated: 2025/12/13 16:11:40 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "ft_printf.h"
 
-void	ft_putchar_fd(char c, int fd)
+int	ft_check_format_specifier(const char *s)
 {
-	write(fd, &c, 1);
-	return ;
+	int	written;
+
+	if (*s == '%')
+	{
+		s++;
+		if (!(*s))
+			return (-1);
+		if (*s == '%')
+		{
+			written = ft_putchar(*s);
+			if (written < 0)
+				return (-1);
+			s++;
+		}
+		return (1);
+	}
+	return (0);
 }
