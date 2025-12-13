@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 13:55:17 by sancuta           #+#    #+#             */
-/*   Updated: 2025/12/13 16:05:21 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/12/14 00:05:31 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ int	ft_printf(const char *s, ...)
 	return (res);
 }
 
-//TODO make 1 function for each struct member
 t_format_specifier	get_format_specifier(const char **s, const char *mask_set)
 {
 	int					i;
@@ -56,29 +55,15 @@ t_format_specifier	get_format_specifier(const char **s, const char *mask_set)
 
 	res = (t_format_specifier){0};
 	res.precision = -1;
-	i = ft_indchr(mask_set, **s);
-	while (i != -1)
-	{
-		res.flag |= (1 << i);
-		(*s)++;
-		i = ft_indchr(mask_set, **s);
-	}
+	res.flag = ft_get_flags(s, mask_set);
 	res.field_width = get_number(s);
-	if (**s == '.')
-	{
+	res.precision = ft_get_precision(s, mask_set);
+	if (res.precision != -1)
 		res.flag = (res.flag | FLAG_DOT) & ~FLAG_ZERO;
-		(*s)++;
-		res.precision = get_number(s);
-	}
-	if (ft_indchr(g_valid_conv_spec, **s) != -1)
-	{
-		res.conv_spec = **s;
+	res.conv_spec = ft_get_conv_spec(s, mask_set);
+	if (res.conv_spec != -1)
 		res.flag &= g_allowed_flags[ft_indchr(g_valid_conv_spec,
 				res.conv_spec)];
-		(*s)++;
-	}
-	else
-		res.conv_spec = -1;
 	return (res);
 }
 
