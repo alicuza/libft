@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 13:55:17 by sancuta           #+#    #+#             */
-/*   Updated: 2025/12/14 02:40:06 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/12/14 05:06:50 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,93 +27,64 @@ const int	g_allowed_flags[] = {
 	FLAG_MINUS | FLAG_ZERO | FLAG_HASH | FLAG_DOT
 };
 
+static int	ft_get_str_len(t_form_spec *data, char *s);
+
 int	ft_printf(const char *s, ...)
 {
 	size_t		res;
-	int			cnt;
+	int			written;
 	va_list		args;
-	t_form_spec	format_data;
+	int			flag;
+	t_form_spec	data;
 
 	if (!s)
 		return (-1);
 	va_start(args, s);
 	res = 0;
+	ft_memset(&data, 0, sizeof(data));
 	while (*s)
 	{
-		cnt = ft_format_spec_handler(check_format_specifier(s));
-		if (cnt < 0)
-			retun (-1);
-		res += cnt;
+		flag = ft_check_form_spec(&s);
+		written = ft_form_spec_handler(&data, flag, &s, &args);
+		if (written < 0)
+			return (-1);
+		res += written;
 	}
 	return (res);
 }
 
-t_form_spec	get_form_spec(const char **s, const char *mask_set)
+int	ft_prt_arg(t_form_spec *data, va_list *args)
 {
-	int			i;
-	t_form_spec	res;
-
-	res = (t_form_spec){0};
-	res.precision = -1;
-	res.flag = ft_get_flags(s, mask_set);
-	res.field_width = get_number(s);
-	res.precision = ft_get_precision(s, mask_set);
-	if (res.precision != -1)
-		res.flag = (res.flag | FLAG_DOT) & ~FLAG_ZERO;
-	res.conv_spec = ft_get_conv_spec(s, mask_set);
-	if (res.conv_spec != -1)
-		res.flag &= g_allowed_flags[ft_indchr(g_valid_conv_spec,
-				res.conv_spec)];
-	return (res);
-}
-
-int	print_arg(t_form_spec *data, va_list *args)
-{
-	int	ret;
-
-	ret = 0;
-	if (data->conv_spec == 'c')
-		ret = print_char(data, va_arg(*args, int));
-	else if (data->conv_spec == 's')
-		ret = print_str(data, va_arg(*args, char *));
-	else if (data->conv_spec == 'p')
-		ret = print_ptr(data, (unsigned long)va_arg(*args, void *));
-	else if (data->conv_spec == 'd' || data->conv_spec == 'i')
-		ret = print_int(data, va_arg(*args, int));
-	else if (data->conv_spec == 'u')
-		ret = print_uint(data, va_arg(*args, unsigned int));
-	else if (data->conv_spec == 'x')
-		ret = print_hex(data, va_arg(*args, unsigned int), "0123456789abcdef");
-	else if (data->conv_spec == 'X')
-		ret = print_hex(data, va_arg(*args, unsigned int), "0123456789ABCDEF");
-	return (ret);
-}
-
-int	print_char(t_form_spec *data, int c)
-{
-	int	ret;
 	int	written;
 
-	ret = 0;
+	written = 0;
+	if (data->conv_spec == 'c')
+		written = ft_prt_char(data, va_arg(*args, int));
+	else if (data->conv_spec == 's')
+		written = ft_prt_str(data, va_arg(*args, char *));
+	else if (data->conv_spec == 'p')
+		written = ft_prt_ptr(data, (unsigned long)va_arg(*args, void *));
+	else if (data->conv_spec == 'd' || data->conv_spec == 'i')
+		written = ft_prt_int(data, va_arg(*args, int));
+	else if (data->conv_spec == 'u')
+		written = ft_prt_uint(data, va_arg(*args, unsigned int));
+	else if (data->conv_spec == 'x')
+		written = ft_prt_hex(data, va_arg(*args, unsigned int), BASE_HEX_L);
+	else if (data->conv_spec == 'X')
+		written = ft_prt_hex(data, va_arg(*args, unsigned int), BASE_HEX_U);
+	return (written);
+}
+
+int	ft_prt_char(t_form_spec *data, int c)
+{
+	int	written[2];
+
 	if (!(data->flag & FLAG_MINUS))
-	{
-		written = put_space(data, 1, 0);
-		if (written < 0)
-			return (-1);
-		ret += written;
-	}
-	written = write(1, &c, 1);
-	if (written < 0)
-		return (-1);
-	ret += written;
+		written[0] = ft_put_space(data, 1, 0);
+	written[1] = write(1, &c, 1);
 	if (data->flag & FLAG_MINUS)
-	{
-		written = put_space(data, 1, 0);
-		if (written < 0)
-			return (-1);
-		ret += written;
-	}
-	return (ret);
+		written[0] = ft_put_space(data, 1, 0);
+	return (ft_check_written(written, 2));
 }
 
 /*
@@ -125,31 +96,32 @@ int	print_char(t_form_spec *data, int c)
 	successive element into the buffer, if it is too small.
  */
 
-int	print_str(t_form_spec *data, char *s)
+int	ft_prt_str(t_form_spec *data, char *s)
 {
 	int	len;
-	int	ret;
-	int	written;
+	int	written[2];
 
-	ret = 0;
 	len = ft_get_str_len(data, s);
 	if (!(data->flag & FLAG_MINUS))
-	{
-		written = put_space(data, len, 0);
-		if (written < 0)
-			return (-1);
-		ret += written;
-	}
-	written = write(1, s, len);
-	if (written < 0)
-		return (-1);
-	ret += written;
+		written[0] = ft_put_space(data, len, 0);
+	written[1] = write(1, s, len);
 	if (data->flag & FLAG_MINUS)
+		written[0] = ft_put_space(data, len, 0);
+	return (ft_check_written(written, 2));
+}
+
+static int	ft_get_str_len(t_form_spec *data, char *s)
+{
+	int	len;
+
+	if (!s)
 	{
-		written = put_space(data, len, 0);
-		if (written < 0)
-			return (-1);
-		ret += written;
+		s = "(null)";
+		data->precision = 0;
 	}
-	return (ret);
+	len = ft_strlen(s);
+	if ((data->flag & FLAG_DOT) && (data->precision != -1)
+		&& (len > data->precision))
+		len = data->precision;
+	return (len);
 }

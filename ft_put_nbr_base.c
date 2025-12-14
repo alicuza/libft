@@ -6,11 +6,14 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 14:45:54 by sancuta           #+#    #+#             */
-/*   Updated: 2025/12/13 16:12:42 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/12/14 05:02:33 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
+
+static int	recurse(unsigned long n, const char *base,
+				unsigned long base_len, int i);
 
 int	put_nbr_base(unsigned long n, const char *base)
 {
@@ -21,7 +24,7 @@ int	put_nbr_base(unsigned long n, const char *base)
 }
 
 static int	recurse(unsigned long n, const char *base,
-		unsigned long base_len, int i)
+				unsigned long base_len, int i)
 {
 	int	written;
 
@@ -38,7 +41,7 @@ static int	recurse(unsigned long n, const char *base,
 	return (i + written);
 }
 
-static int	ft_putchar(int c)
+int	ft_putchar(int c)
 {
 	return (write(1, &c, 1));
 }

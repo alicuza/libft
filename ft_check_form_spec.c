@@ -1,29 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_get_str_len.c                                   :+:      :+:    :+:   */
+/*   ft_check_form_spec.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/13 15:42:09 by sancuta           #+#    #+#             */
-/*   Updated: 2025/12/14 00:31:59 by sancuta          ###   ########.fr       */
+/*   Created: 2025/12/13 14:18:51 by sancuta           #+#    #+#             */
+/*   Updated: 2025/12/14 04:34:45 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	ft_get_str_len(t_form_spec *data, char *s)
+int	ft_check_form_spec(const char **s)
 {
-	int	len;
+	int	written;
 
-	if (!s)
+	if (**s == '%')
 	{
-		s = "(null)";
-		data->precision = 0;
+		(*s)++;
+		if (!(**s))
+			return (-1);
+		if (**s == '%')
+		{
+			written = ft_putchar(**s);
+			if (written < 0)
+				return (-1);
+			(*s)++;
+		}
+		return (1);
 	}
-	len = ft_strlen(s);
-	if ((data->flag & FLAG_DOT) && (data->precision != -1)
-		&& (len > data->precision))
-		len = data->precision;
-	return (len);
+	return (0);
 }

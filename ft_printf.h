@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 17:39:27 by sancuta           #+#    #+#             */
-/*   Updated: 2025/12/14 00:30:45 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/12/14 05:08:06 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,10 @@
 //(FLAG_NEG | FLAG_PLUS | FLAG_SPACE) // bits: 01011000 = 64 + 16 + 8 = 88
 # define FLAG_SIGN	88
 
+# define BASE_TEN "0123456789"
+# define BASE_HEX_L "0123456789abcdef"
+# define BASE_HEX_U "0123456789ABCDEF"
+
 typedef struct s_format_specifier
 {
 	int					field_width;
@@ -46,22 +50,27 @@ extern const char	g_valid_flags[];
 extern const int	g_allowed_flags[];
 
 int			ft_printf(const char *s, ...);
-t_form_spec	get_form_spec(const char **s, const char *mask_set);
-int			get_number(const char **s);
-int			print_arg(t_form_spec *data, va_list *args);
-int			print_char(t_form_spec *data, int c);
-int			print_str(t_form_spec *data, char *s);
-int			print_int(t_form_spec *data, int n);
-int			print_ptr(t_form_spec *data, unsigned long n);
-int			print_hex(t_form_spec *data, unsigned long n, const char *base);
-int			print_uint(t_form_spec *data, unsigned int n);
-int			put_space(t_form_spec *data, int nb_len, int sign_len);
-int			put_sign(t_form_spec *data);
-int			put_zero(t_form_spec *data, int nb_len, int sign_len);
-int			abs_nbr_len(unsigned long n, unsigned long base);
-int			put_nbr_base(unsigned long n, const char *base);
-int			recurse(unsigned long n, const char *base, unsigned long base_len,
-				int i);
+t_form_spec	ft_get_form_spec(const char **s, const char *mask_set);
+int			ft_prt_arg(t_form_spec *data, va_list *args);
+int			ft_prt_char(t_form_spec *data, int c);
+int			ft_prt_str(t_form_spec *data, char *s);
+int			ft_prt_int(t_form_spec *data, int n);
+int			ft_prt_ptr(t_form_spec *data, unsigned long n);
+int			ft_prt_hex(t_form_spec *data, unsigned long n, const char *base);
+int			ft_prt_uint(t_form_spec *data, unsigned int n);
+int			ft_put_space(t_form_spec *data, int nb_len, int sign_len);
+int			ft_put_sign(t_form_spec *data);
+int			ft_put_zero(t_form_spec *data, int nb_len, int sign_len);
+int			ft_put_nbr_base(unsigned long n, const char *base);
+int			ft_recurse(unsigned long n, const char *base,
+				unsigned long base_len, int i);
 int			ft_putchar(int c);
 ssize_t		ft_indchr(const char *s, int c);
+int			ft_get_nbr(const char **s);
+int			ft_abs_nbr_len(unsigned long n, unsigned long base);
+int			ft_form_spec_handler(t_form_spec *data, int flag, const char **s,
+				va_list *args);
+int			ft_check_form_spec(const char **s);
+//TODO think about the type for len here.
+int			ft_check_written(int *written, int len);
 #endif
