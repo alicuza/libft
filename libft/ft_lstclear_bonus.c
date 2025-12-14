@@ -1,29 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_get_str_len.c                                   :+:      :+:    :+:   */
+/*   ft_lstclear_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/13 15:42:09 by sancuta           #+#    #+#             */
-/*   Updated: 2025/12/14 00:31:59 by sancuta          ###   ########.fr       */
+/*   Created: 2025/10/17 15:37:01 by sancuta           #+#    #+#             */
+/*   Updated: 2025/10/20 21:09:27 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	ft_get_str_len(t_form_spec *data, char *s)
+void	ft_lstclear(t_list **lst, void (*del)(void*))
 {
-	int	len;
+	t_list	*tmp;
 
-	if (!s)
+	if (!(lst && *lst && del))
+		return ;
+	while (*lst)
 	{
-		s = "(null)";
-		data->precision = 0;
+		del((*lst)->content);
+		tmp = (*lst)->next;
+		free(*lst);
+		*lst = tmp;
 	}
-	len = ft_strlen(s);
-	if ((data->flag & FLAG_DOT) && (data->precision != -1)
-		&& (len > data->precision))
-		len = data->precision;
-	return (len);
+	return ;
 }

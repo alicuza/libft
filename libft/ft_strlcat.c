@@ -1,29 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_get_str_len.c                                   :+:      :+:    :+:   */
+/*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/13 15:42:09 by sancuta           #+#    #+#             */
-/*   Updated: 2025/12/14 00:31:59 by sancuta          ###   ########.fr       */
+/*   Created: 2025/09/29 19:34:59 by sancuta           #+#    #+#             */
+/*   Updated: 2025/10/20 14:35:17 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	ft_get_str_len(t_form_spec *data, char *s)
+size_t	ft_strlcat(char *dst, const char *src, size_t size)
 {
-	int	len;
+	size_t	i;
+	size_t	dst_len;
 
-	if (!s)
+	i = 0;
+	while (i < size && dst[i])
+		i++;
+	dst_len = i;
+	if (dst_len == size)
+		return (dst_len + ft_strlen(src));
+	i = 0;
+	while (src[i] && dst_len + i < size - 1)
 	{
-		s = "(null)";
-		data->precision = 0;
+		dst[dst_len + i] = src[i];
+		i++;
 	}
-	len = ft_strlen(s);
-	if ((data->flag & FLAG_DOT) && (data->precision != -1)
-		&& (len > data->precision))
-		len = data->precision;
-	return (len);
+	dst[dst_len + i] = '\0';
+	while (src[i])
+		i++;
+	return (dst_len + i);
 }

@@ -1,29 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_get_str_len.c                                   :+:      :+:    :+:   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/13 15:42:09 by sancuta           #+#    #+#             */
-/*   Updated: 2025/12/14 00:31:59 by sancuta          ###   ########.fr       */
+/*   Created: 2025/09/29 20:38:25 by sancuta           #+#    #+#             */
+/*   Updated: 2025/10/20 15:56:38 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	ft_get_str_len(t_form_spec *data, char *s)
+char	*ft_strrchr(const char *s, int c)
 {
-	int	len;
+	size_t	size;
 
-	if (!s)
+	size = ft_strlen(s);
+	while (size > 0)
 	{
-		s = "(null)";
-		data->precision = 0;
+		if ((unsigned char)s[size] == (unsigned char)c)
+			return ((char *)s + size);
+		size--;
 	}
-	len = ft_strlen(s);
-	if ((data->flag & FLAG_DOT) && (data->precision != -1)
-		&& (len > data->precision))
-		len = data->precision;
-	return (len);
+	if ((unsigned char)s[size] == (unsigned char)c)
+		return ((char *)s + size);
+	return (NULL);
 }

@@ -1,29 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_get_str_len.c                                   :+:      :+:    :+:   */
+/*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/13 15:42:09 by sancuta           #+#    #+#             */
-/*   Updated: 2025/12/14 00:31:59 by sancuta          ###   ########.fr       */
+/*   Created: 2025/09/29 18:38:23 by sancuta           #+#    #+#             */
+/*   Updated: 2025/10/11 15:19:44 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	ft_get_str_len(t_form_spec *data, char *s)
+void	*ft_memmove(void *dest, const void *src, size_t n)
 {
-	int	len;
+	size_t	i;
 
-	if (!s)
+	if (dest > src && src + n > dest)
 	{
-		s = "(null)";
-		data->precision = 0;
+		i = n - 1;
+		while (i > 0)
+		{
+			*((char *)dest + i) = *((const char *)src + i);
+			i--;
+		}
+		*((char *)dest + i) = *((const char *)src + i);
 	}
-	len = ft_strlen(s);
-	if ((data->flag & FLAG_DOT) && (data->precision != -1)
-		&& (len > data->precision))
-		len = data->precision;
-	return (len);
+	else
+	{
+		i = 0;
+		while (i < n)
+		{
+			*((char *)dest + i) = *((const char *)src + i);
+			i++;
+		}
+	}
+	return (dest);
 }

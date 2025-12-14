@@ -1,29 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_get_str_len.c                                   :+:      :+:    :+:   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/13 15:42:09 by sancuta           #+#    #+#             */
-/*   Updated: 2025/12/14 00:31:59 by sancuta          ###   ########.fr       */
+/*   Created: 2025/09/29 22:39:35 by sancuta           #+#    #+#             */
+/*   Updated: 2025/10/20 16:37:54 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	ft_get_str_len(t_form_spec *data, char *s)
+void	*ft_calloc(size_t nmemb, size_t size)
 {
-	int	len;
+	void	*res;
+	size_t	total_size;
 
-	if (!s)
+	if (!nmemb || !size)
 	{
-		s = "(null)";
-		data->precision = 0;
+		return (malloc(0));
 	}
-	len = ft_strlen(s);
-	if ((data->flag & FLAG_DOT) && (data->precision != -1)
-		&& (len > data->precision))
-		len = data->precision;
-	return (len);
+	if (SIZE_MAX / size <= nmemb)
+	{
+		return (NULL);
+	}
+	total_size = nmemb * size;
+	res = malloc(total_size);
+	if (!res)
+		return (NULL);
+	ft_bzero(res, total_size);
+	return (res);
 }

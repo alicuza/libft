@@ -1,29 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_get_str_len.c                                   :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/13 15:42:09 by sancuta           #+#    #+#             */
-/*   Updated: 2025/12/14 00:31:59 by sancuta          ###   ########.fr       */
+/*   Created: 2025/09/30 08:49:45 by sancuta           #+#    #+#             */
+/*   Updated: 2025/09/30 09:41:32 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	ft_get_str_len(t_form_spec *data, char *s)
+char	*ft_strdup(const char *s)
 {
-	int	len;
+	size_t	size;
+	char	*dst;
 
-	if (!s)
-	{
-		s = "(null)";
-		data->precision = 0;
-	}
-	len = ft_strlen(s);
-	if ((data->flag & FLAG_DOT) && (data->precision != -1)
-		&& (len > data->precision))
-		len = data->precision;
-	return (len);
+	size = ft_strlen(s) + 1;
+	dst = malloc(size);
+	if (!dst)
+		return (NULL);
+	ft_strlcpy(dst, s, size);
+	return (dst);
 }

@@ -1,29 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_get_str_len.c                                   :+:      :+:    :+:   */
+/*   ft_lstmap_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/13 15:42:09 by sancuta           #+#    #+#             */
-/*   Updated: 2025/12/14 00:31:59 by sancuta          ###   ########.fr       */
+/*   Created: 2025/10/17 15:56:38 by sancuta           #+#    #+#             */
+/*   Updated: 2025/10/20 18:40:17 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	ft_get_str_len(t_form_spec *data, char *s)
+t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 {
-	int	len;
+	t_list	*map;
+	t_list	*head;
+	void	*tmp;
 
-	if (!s)
+	if (!(lst && f && del))
+		return (NULL);
+	head = NULL;
+	while (lst)
 	{
-		s = "(null)";
-		data->precision = 0;
+		tmp = f(lst->content);
+		map = ft_lstnew(tmp);
+		if (!map)
+		{
+			ft_lstclear(&head, del);
+			del(tmp);
+			return (NULL);
+		}
+		ft_lstadd_back(&head, map);
+		lst = lst->next;
 	}
-	len = ft_strlen(s);
-	if ((data->flag & FLAG_DOT) && (data->precision != -1)
-		&& (len > data->precision))
-		len = data->precision;
-	return (len);
+	return (head);
 }

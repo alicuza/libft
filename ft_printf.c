@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 13:55:17 by sancuta           #+#    #+#             */
-/*   Updated: 2025/12/14 00:05:31 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/12/14 02:40:06 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,10 @@ const int	g_allowed_flags[] = {
 
 int	ft_printf(const char *s, ...)
 {
-	size_t				res;
-	int					cnt;
-	va_list				args;
-	t_format_specifier	format_data;
+	size_t		res;
+	int			cnt;
+	va_list		args;
+	t_form_spec	format_data;
 
 	if (!s)
 		return (-1);
@@ -48,12 +48,12 @@ int	ft_printf(const char *s, ...)
 	return (res);
 }
 
-t_format_specifier	get_format_specifier(const char **s, const char *mask_set)
+t_form_spec	get_form_spec(const char **s, const char *mask_set)
 {
-	int					i;
-	t_format_specifier	res;
+	int			i;
+	t_form_spec	res;
 
-	res = (t_format_specifier){0};
+	res = (t_form_spec){0};
 	res.precision = -1;
 	res.flag = ft_get_flags(s, mask_set);
 	res.field_width = get_number(s);
@@ -67,21 +67,7 @@ t_format_specifier	get_format_specifier(const char **s, const char *mask_set)
 	return (res);
 }
 
-int	get_number(const char **s)
-{
-	int	ret;
-
-	ret = 0;
-	while (ft_isdigit(**s))
-	{
-		ret *= 10;
-		ret += **s - 48;
-		(*s)++;
-	}
-	return (ret);
-}
-
-int	print_arg(t_format_specifier *data, va_list *args)
+int	print_arg(t_form_spec *data, va_list *args)
 {
 	int	ret;
 
@@ -103,7 +89,7 @@ int	print_arg(t_format_specifier *data, va_list *args)
 	return (ret);
 }
 
-int	print_char(t_format_specifier *data, int c)
+int	print_char(t_form_spec *data, int c)
 {
 	int	ret;
 	int	written;
@@ -139,7 +125,7 @@ int	print_char(t_format_specifier *data, int c)
 	successive element into the buffer, if it is too small.
  */
 
-int	print_str(t_format_specifier *data, char *s)
+int	print_str(t_form_spec *data, char *s)
 {
 	int	len;
 	int	ret;
@@ -166,19 +152,4 @@ int	print_str(t_format_specifier *data, char *s)
 		ret += written;
 	}
 	return (ret);
-}
-
-int	abs_nbr_len(unsigned long n, unsigned long base)
-{
-	int	i;
-
-	if (!n)
-		return (1);
-	i = 0;
-	while (n)
-	{
-		n /= base;
-		i++;
-	}
-	return (i);
 }

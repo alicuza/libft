@@ -1,29 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_get_str_len.c                                   :+:      :+:    :+:   */
+/*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/13 15:42:09 by sancuta           #+#    #+#             */
-/*   Updated: 2025/12/14 00:31:59 by sancuta          ###   ########.fr       */
+/*   Created: 2025/09/29 21:34:38 by sancuta           #+#    #+#             */
+/*   Updated: 2025/10/12 12:59:37 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	ft_get_str_len(t_form_spec *data, char *s)
+char	*ft_strnstr(const char *big, const char *little, size_t len)
 {
-	int	len;
+	size_t	i;
+	size_t	little_len;
 
-	if (!s)
+	little_len = ft_strlen(little);
+	if (!little_len)
+		return ((char *)big);
+	i = 0;
+	while (i + little_len <= len && big[i])
 	{
-		s = "(null)";
-		data->precision = 0;
+		if (!ft_strncmp(big + i, little, little_len))
+			return ((char *)(big + i));
+		i++;
 	}
-	len = ft_strlen(s);
-	if ((data->flag & FLAG_DOT) && (data->precision != -1)
-		&& (len > data->precision))
-		len = data->precision;
-	return (len);
+	return (NULL);
 }

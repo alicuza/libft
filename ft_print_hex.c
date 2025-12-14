@@ -1,0 +1,48 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_print_hex.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/14 02:32:01 by sancuta           #+#    #+#             */
+/*   Updated: 2025/12/14 02:40:29 by sancuta          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "ft_printf.h"
+
+int	print_ptr(t_form_spec *data, unsigned long n)
+{
+	if (!n)
+		return (write(1, "(nil)", 5));
+	data->flag |= FLAG_HASH;
+	return (print_hex(data, n, "0123456789abcdef"));
+}
+
+int	print_hex(t_form_spec *data, unsigned long n, const char *base)
+{
+	int	nb_len;
+	int	sign_len;
+	int	written[4];
+
+	sign_len = 0;
+	nb_len = abs_nbr_len(n, 16);
+	if (data->precision == -1)
+		data->precision = 1;
+	if (!n && !data->precision)
+		nb_len = 0;
+	if ((data->flag & FLAG_HASH) && n)
+		sign_len += 2;
+	if (!(data->flag & (FLAG_MINUS | FLAG_ZERO)))
+		written[0] = put_space(data, nb_len, sign_len);
+	if ((data->flag & FLAG_HASH) && n)
+		written[1] = put_sign(data);
+	if (data->flag & (FLAG_ZERO | FLAG_DOT))
+		written[2] = put_zero(data, nb_len, sign_len);
+	if (nb_len)
+		written[3] = put_nbr_base(n, base);
+	if (data->flag & FLAG_MINUS)
+		written[0] = put_space(data, nb_len, sign_len);
+	return (ft_check_written(written, 4));
+}

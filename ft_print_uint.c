@@ -1,0 +1,39 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_print_uint.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/14 01:53:58 by sancuta           #+#    #+#             */
+/*   Updated: 2025/12/14 02:17:06 by sancuta          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "ft_printf.h"
+
+int	print_uint(t_form_spec *data, unsigned int n)
+{
+	int	nb_len;
+	int	written[3];
+
+	ft_prep_uint(data, *nb_len, n);
+	if (!(data->flag & (FLAG_MINUS | FLAG_ZERO)))
+		written[0] = put_space(data, nb_len, 0);
+	if (data->flag & (FLAG_ZERO | FLAG_DOT))
+		written[1] = put_zero(data, nb_len, 0);
+	if (nb_len)
+		written[2] = put_nbr_base(n, "0123456789");
+	if (data->flag & FLAG_MINUS)
+		written[0] = put_space(data, nb_len, 0);
+	return (ft_check_written(written, 3));
+}
+
+static void	ft_prep_uint(t_form_spec *data, unsigned int n, int *nb_len)
+{
+	nb_len = abs_nbr_len((unsigned long)n, 10);
+	if (data->precision == -1)
+		data->precision = 1;
+	if (!n && !data->precision)
+		*nb_len = 0;
+}

@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 00:01:26 by sancuta           #+#    #+#             */
-/*   Updated: 2025/12/14 00:05:04 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/12/14 00:31:23 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	ft_get_conv_spec(const char **s, const char *mask_set)
 {
-	int conv_spec;
+	int	conv_spec;
 
 	if (ft_indchr(g_valid_conv_spec, **s) != -1)
 	{

@@ -18,7 +18,7 @@ int	ft_format_spec_handler(int flag, const char *s)
 		return (-1);
 	else if (flag)
 	{
-		format_data = get_format_specifier(&s, g_valid_flags);
+		format_data = get_form_spec(&s, g_valid_flags);
 		if (format_data.conv_spec == -1)
 			return (-1);
 		return (print_arg(&format_data, &args));

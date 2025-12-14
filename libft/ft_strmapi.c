@@ -1,29 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_get_str_len.c                                   :+:      :+:    :+:   */
+/*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/13 15:42:09 by sancuta           #+#    #+#             */
-/*   Updated: 2025/12/14 00:31:59 by sancuta          ###   ########.fr       */
+/*   Created: 2025/10/15 01:15:11 by sancuta           #+#    #+#             */
+/*   Updated: 2025/10/15 13:44:51 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	ft_get_str_len(t_form_spec *data, char *s)
+char	*ft_strmapi(const char *s, char (*f)(unsigned int, char))
 {
-	int	len;
+	size_t	i;
+	size_t	len;
+	char	*fs;
 
-	if (!s)
-	{
-		s = "(null)";
-		data->precision = 0;
-	}
+	if (!s || !f)
+		return (NULL);
 	len = ft_strlen(s);
-	if ((data->flag & FLAG_DOT) && (data->precision != -1)
-		&& (len > data->precision))
-		len = data->precision;
-	return (len);
+	fs = malloc(len + 1);
+	if (!fs)
+		return (NULL);
+	i = 0;
+	while (s[i])
+	{
+		fs[i] = f(i, s[i]);
+		i++;
+	}
+	fs[i] = '\0';
+	return (fs);
 }
