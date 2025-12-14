@@ -6,14 +6,14 @@
 #    By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/16 23:38:42 by sancuta           #+#    #+#              #
-#    Updated: 2025/11/29 14:37:58 by sancuta          ###   ########.fr        #
+#    Updated: 2025/12/11 22:18:35 by sancuta          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libft.a
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
-AFLAGS = -rcs
+CFLAGS = -MMD -MP -Wall -Wextra -Werror
+ARFLAGS = -rcs
 SRCS =	ft_isalpha.c \
 		ft_isdigit.c \
 		ft_isalnum.c \
@@ -47,41 +47,33 @@ SRCS =	ft_isalpha.c \
 		ft_putchar_fd.c \
 		ft_putstr_fd.c \
 		ft_putendl_fd.c \
-		ft_putnbr_fd.c
-BSRCS =	ft_lstnew_bonus.c \
-		ft_lstadd_front_bonus.c \
-		ft_lstadd_back_bonus.c \
-		ft_lstsize_bonus.c \
-		ft_lstlast_bonus.c \
-		ft_lstdelone_bonus.c \
-		ft_lstclear_bonus.c \
-		ft_lstiter_bonus.c \
-		ft_lstmap_bonus.c
+		ft_putnbr_fd.c \
+		ft_lstnew.c \
+		ft_lstadd_front.c \
+		ft_lstadd_back.c \
+		ft_lstsize.c \
+		ft_lstlast.c \
+		ft_lstdelone.c \
+		ft_lstclear.c \
+		ft_lstiter.c \
+		ft_lstmap.c
 
 OBJS = $(SRCS:.c=.o)
-BOBJS = $(BSRCS:.c=.o)
+DEPS = $(SRCS:.c=.d)
 
-all: $(NAME) bonus
+all: $(NAME)
 
 $(NAME): $(OBJS)
-		ar $(AFLAGS) $@ $?
-
-%.o: %.c
-		$(CC) $(CFLAGS) -c $< -o $@
+		ar $(ARFLAGS) $@ $?
 
 clean:
-		rm -f $(OBJS) $(BOBJS)
+		rm -f $(OBJS) $(DEPS)
 
 fclean: clean
 		rm -f $(NAME)
-		rm -f .bonus
 
 re: fclean all
 
-bonus: .bonus
+.PHONY: all clean fclean re
 
-.bonus: $(OBJS) $(BOBJS)
-		ar $(AFLAGS) $(NAME) $?
-		touch .bonus
-
-.PHONY: all clean fclean re bonus
+-include $(DEPS)

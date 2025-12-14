@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 15:49:33 by sancuta           #+#    #+#             */
-/*   Updated: 2025/12/14 07:19:41 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/12/14 05:01:53 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@ int	ft_form_spec_handler(t_form_spec *data, int flag, const char **s,
 {
 	if (flag == -1)
 		return (-1);
-	if (!flag)
-		return (ft_putchar(*(*s)++));
-	else
+	else if (flag)
 	{
 		*data = ft_get_form_spec(s, g_valid_flags);
 		if (data->conv_spec == -1)
 			return (-1);
 		return (ft_prt_arg(data, args));
 	}
+	else
+		return (ft_putchar(*(*s)++));
 }

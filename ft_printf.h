@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 17:39:27 by sancuta           #+#    #+#             */
-/*   Updated: 2025/12/14 05:08:06 by sancuta          ###   ########.fr       */
+/*   Updated: 2025/12/14 05:46:43 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ extern const int	g_allowed_flags[];
 int			ft_printf(const char *s, ...);
 t_form_spec	ft_get_form_spec(const char **s, const char *mask_set);
 int			ft_prt_arg(t_form_spec *data, va_list *args);
-int			ft_prt_char(t_form_spec *data, int c);
-int			ft_prt_str(t_form_spec *data, char *s);
+//int			ft_prt_char(t_form_spec *data, int c);
+//int			ft_prt_str(t_form_spec *data, char *s);
 int			ft_prt_int(t_form_spec *data, int n);
 int			ft_prt_ptr(t_form_spec *data, unsigned long n);
 int			ft_prt_hex(t_form_spec *data, unsigned long n, const char *base);

@@ -1,29 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_print_handler.c                                 :+:      :+:    :+:   */
+/*   ft_check_form_spec.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/13 15:49:33 by sancuta           #+#    #+#             */
-/*   Updated: 2025/12/14 07:19:41 by sancuta          ###   ########.fr       */
+/*   Created: 2025/12/13 14:18:51 by sancuta           #+#    #+#             */
+/*   Updated: 2025/12/14 04:34:45 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	ft_form_spec_handler(t_form_spec *data, int flag, const char **s,
-		va_list *args)
+int	ft_check_form_spec(const char **s)
 {
-	if (flag == -1)
-		return (-1);
-	if (!flag)
-		return (ft_putchar(*(*s)++));
-	else
+	int	written;
+
+	if (**s == '%')
 	{
-		*data = ft_get_form_spec(s, g_valid_flags);
-		if (data->conv_spec == -1)
+		(*s)++;
+		if (!(**s))
 			return (-1);
-		return (ft_prt_arg(data, args));
+		if (**s == '%')
+		{
+			written = ft_putchar(**s);
+			if (written < 0)
+				return (-1);
+			(*s)++;
+		}
+		return (1);
 	}
+	return (0);
 }
