@@ -1,42 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf_utils.c                                  :+:      :+:    :+:   */
+/*   ft_indchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/29 17:38:01 by sancuta           #+#    #+#             */
-/*   Updated: 2026/01/25 15:47:12 by sancuta          ###   ########.fr       */
+/*   Created: 2026/01/25 15:44:56 by sancuta           #+#    #+#             */
+/*   Updated: 2026/01/25 15:59:15 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	ft_get_nbr(const char **s)
+ssize_t	ft_indchr(const char *s, int c)
 {
-	int	ret;
+	ssize_t	i;
 
-	ret = 0;
-	while (ft_isdigit(**s))
-	{
-		ret *= 10;
-		ret += **s - 48;
-		(*s)++;
-	}
-	return (ret);
-}
-
-int	ft_abs_nbr_len(unsigned long n, unsigned long base)
-{
-	int	i;
-
-	if (!n)
-		return (1);
+	if (!s)
+		return (-1);
 	i = 0;
-	while (n)
+	while (s[i])
 	{
-		n /= base;
+		if ((unsigned char)s[i] == (unsigned char)c)
+			return (i);
 		i++;
 	}
-	return (i);
+	if ((unsigned char)s[i] == (unsigned char)c)
+		return (i);
+	return (-1);
 }
