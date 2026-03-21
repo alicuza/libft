@@ -1,16 +1,27 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   handle_exit.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/21 20:24:18 by sancuta           #+#    #+#             */
+/*   Updated: 2026/03/21 21:22:04 by sancuta          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "libft.h"
 
-void	handle_exit(t_exit_data data)
+void	handle_exit(char *prefix, char *name, char *message, int status)
 {
-	if (data.status)
+	if (status)
 	{
-		ft_putstr_fd(data.prefix, 2);
+		ft_putstr_fd(prefix, 2);
 		ft_putstr_fd(": ", 2);
-		ft_putstr_fd(data.name, 2);
+		ft_putstr_fd(name, 2);
 		ft_putstr_fd(": ", 2);
-		ft_putstr_fd(data.message, 2);
+		ft_putstr_fd(message, 2);
 		ft_putstr_fd("\n", 2);
 	}
-	exit(data.status);
+	exit(status);
 }
