@@ -6,7 +6,7 @@
 #    By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/16 23:38:42 by sancuta           #+#    #+#              #
-#    Updated: 2026/02/18 15:59:07 by sancuta          ###   ########.fr        #
+#    Updated: 2026/03/26 16:27:12 by sancuta          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,6 +37,7 @@ SRCS =	ft_isalpha.c \
 		ft_memcmp.c \
 		ft_strnstr.c \
 		ft_atoi.c \
+		ft_atol.c \
 		ft_calloc.c \
 		ft_strdup.c \
 		ft_substr.c \
@@ -71,7 +72,13 @@ SRCS =	ft_isalpha.c \
 		ft_put_nbr_base.c \
 		get_next_line.c \
 		get_next_line_utils.c\
-		handle_exit.c
+		handle_exit.c \
+		arena/arena_alloc_reset.c \
+		arena/arena_init_free.c \
+		arena/arena_save_restore.c \
+		arena/arena_strings.c \
+		arena/arena_split.c \
+		arena/arena_pointer.c
 
 OBJS = $(SRCS:.c=.o)
 DEPS = $(SRCS:.c=.d)

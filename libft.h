@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 16:39:55 by sancuta           #+#    #+#             */
-/*   Updated: 2026/03/26 12:10:37 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/03/26 14:40:51 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ void	*ft_memchr(const void *s, int c, size_t n);
 int		ft_memcmp(const void *s1, const void *s2, size_t n);
 char	*ft_strnstr(const char *big, const char *little, size_t len);
 int		ft_atoi(const char *nptr);
+long	ft_atol(const char *nptr);
 size_t	word_len(const char *s, char del);
 size_t	count_words(const char *s, char del);
 
