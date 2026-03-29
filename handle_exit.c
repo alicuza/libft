@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/21 20:24:18 by sancuta           #+#    #+#             */
-/*   Updated: 2026/03/26 12:10:28 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/03/29 13:32:26 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,4 @@ void	handle_status_msg(char *prefix, char *name, char *message, int status)
 void	just_error(void)
 {
 	write(2, "Error\n", 6);
-	exit(1);
 }
