@@ -6,16 +6,11 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 22:19:28 by sancuta           #+#    #+#             */
-/*   Updated: 2026/03/26 14:40:08 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/03/30 02:12:15 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-
-static int	ft_isspace(int c)
-{
-	return (c == 32 || (c >= 9 && c <= 13));
-}
 
 /*	pay attention to the wording in strtol(3):
 		"The  string  may  begin  with an arbitrary amount of
