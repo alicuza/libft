@@ -6,7 +6,7 @@
 #    By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/16 23:38:42 by sancuta           #+#    #+#              #
-#    Updated: 2026/03/30 02:12:41 by sancuta          ###   ########.fr        #
+#    Updated: 2026/03/30 15:41:56 by sancuta          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,6 @@ SRCS =	ft_isalpha.c \
 		ft_memchr.c \
 		ft_memcmp.c \
 		ft_strnstr.c \
-		ft_is_nbr_str.c \
 		ft_atoi.c \
 		ft_atol.c \
 		ft_calloc.c \
