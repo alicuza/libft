@@ -2,6 +2,24 @@ _This project has been created as part of the 42 curriculum by nribakov, sancuta
 
 # minishell
 
+## Notes:
+
+### TODO
+- test automation for checking the repo before pushing
+- git workflow for working in a team
+- sketch out the architecture and data structure
+- harness for automatic unit testing (tdd)
+- compile documentation on signals
+
+### Documentation
+- [GNU Readline Library](https://tiswww.cwru.edu/php/chet/readline/rltop.html)
+ - [The GNU Readline Library](https://tiswww.cwru.edu/php/chet/readline/readline.html)
+ - [The GNU History Library](https://tiswww.case.edu/php/chet/readline/history.html)
+ - [The GNU Readline User Interface](https://tiswww.case.edu/php/chet/readline/rluserman.html)
+- [The Open Group Base Specifications Issue 8. IEEE Std 1003.1™-2024 Edition](https://pubs.opengroup.org/onlinepubs/9799919799/)
+ - [Shell & Utilities](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/toc.html)
+- [GNU Bash manual](https://www.gnu.org/software/bash/manual/bash.html)
+
 ## Description
 
 ---
@@ -85,3 +103,4 @@ _This project has been created as part of the 42 curriculum by nribakov, sancuta
 ### AI Usage
 
 AI tools were used mainly for interactive rubber ducking, and searching for information.
+
