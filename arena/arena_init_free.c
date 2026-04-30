@@ -17,7 +17,7 @@ t_arena	arena_init(size_t size)
 {
 	t_arena	arena;
 
-	arena = (t_arena){0};
+	arena = (t_arena){0}; // memset(arena, 0, size);
 	if (!size)
 		return (arena);
 	arena.buf = malloc(size);
