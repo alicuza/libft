@@ -34,6 +34,17 @@ _This project has been created as part of the 42 curriculum by nribakov, sancuta
 **2026.04.30**
 - read from posix: interactive mode, command line editing (vi mode)
 
+**2026.05.05**
+- read from posix, [2.3 Token Recognition](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html#tag_19_03):
+
+```
+Once a token is delimited, it is categorized as required by the grammar in 2.10 Shell Grammar.
+
+In situations where the shell parses its input as a program, once a complete_command has been recognized by the grammar (see 2.10 Shell Grammar), the complete_command shall be executed before the next complete_command is tokenized and parsed.
+```
+
+ - so once a token gets "delimited", you immediately parse it, and a rexognized command gets immediatly executed before tokenization continues.
+
 #### personal
 **2026.04.30**
 
@@ -59,7 +70,7 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 ### Structure
 
 *see [2.1 Shell Introduction](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html#tag_19_01)*
-1. //TODO
+1. //TODO: write out the whole structure, first as graph, then as high abstraction pseudocode.
 
 ### Schedule
 
