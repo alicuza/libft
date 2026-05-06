@@ -131,18 +131,23 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
   - [The GNU Readline Library](https://tiswww.cwru.edu/php/chet/readline/readline.html)
   - [The GNU History Library](https://tiswww.case.edu/php/chet/readline/history.html)
   - [The GNU Readline User Interface](https://tiswww.case.edu/php/chet/readline/rluserman.html)
+
 **termcap**
 - [The Termcap Manual](https://www.gnu.org/software/termutils/manual/termcap-1.3/html_mono/termcap.html)
+
 **posix**
 - [POSIX.1-2024](https://pubs.opengroup.org/onlinepubs/9799919799/)
   (same as "IEEE Std 1003.1-2024" and "The Open Group Standard Base Specifications, Issue 8")
   - [Shell & Utilities](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/toc.html)
     - [Consequences of Shell Errors](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html#tag_19_08_01)
   - [sh — shell, the standard command language interpreter](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html)
+
 **bash**
 - [GNU Bash manual](https://www.gnu.org/software/bash/manual/bash.html)
+
 **general**
 - [Shell (Computing)](https://en.wikipedia.org/wiki/Shell_(computing))
+
 **forgejo & codeberg**
 - [Forgejo - Repository Mirrors](https://forgejo.org/docs/latest/user/repo-mirror)
 - [Codeberg Pages](https://codeberg.page/)
