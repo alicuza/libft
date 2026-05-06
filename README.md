@@ -47,7 +47,13 @@ Once a token is delimited, it is categorized as required by the grammar in 2.10 
 In situations where the shell parses its input as a program, once a complete_command has been recognized by the grammar (see 2.10 Shell Grammar), the complete_command shall be executed before the next complete_command is tokenized and parsed.
 ```
 
- - so once a token gets "delimited", you immediately parse it, and a rexognized command gets immediatly executed before tokenization continues.
+  - so once a token gets "delimited", you immediately parse it, and a recognized command gets immediatly executed before tokenization continues.
+
+**2026.05.06**
+- fixed UB in `ft_memmove`, comparing pointers that are not necessarily pointing to the same object in memory. Cast to `intptr_t` first.
+- first structure sketched: [Visualisation](https://excalidraw.com/#json=8BAFo2sDfsrJqzire7OOM,YjbRdUHRhwRBObV-QLgAXg)
+  - tokens will reference slices of the input string, maintaining the original information such as type of quotes and expansion characters.
+  - tokens resulting from expansion will be appended to the token arena and relinked through indices to maintain the correct order of operations.
 
 #### personal
 **2026.04.30**
@@ -74,6 +80,7 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 ### Structure
 
 *see [2.1 Shell Introduction](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html#tag_19_01)*
+*see [structure sketch](https://excalidraw.com/#json=8BAFo2sDfsrJqzire7OOM,YjbRdUHRhwRBObV-QLgAXg)*
 1. //TODO: write out the whole structure, first as graph, then as high abstraction pseudocode.
 
 ### Schedule
@@ -95,6 +102,7 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 - [ ] research how readline interacts with arenas and if it would even make sense to implement them
 
 **implementation**
+- [d] add `arena_grow` function to arena library // on phone branch
 - [d] add github remote, and github action workflow
 - [ ] add push/pull mirroring on remote
 - [ ] rework makefile to create/use separate folders (`src`, `include`, `bin`, `debug`, `test`)
@@ -145,7 +153,6 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 - `man termios` - `tcgetattr`, `tcsetattr`
 
 - `man chdir`
-- 
 
 ---
 
