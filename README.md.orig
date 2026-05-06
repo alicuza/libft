@@ -34,10 +34,12 @@ _This project has been created as part of the 42 curriculum by nribakov, sancuta
 **2026.04.30.**
 - read from posix: interactive mode, command line editing (vi mode)
 
+<<<<<<< HEAD
 **2026.05.01. - 2026.05.04**
 - read from posix: the IFS variable and it's effect on variable expansion
 - read about the difference between env and set, environment and internal shell variables
 
+=======
 **2026.05.05**
 - read from posix, [2.3 Token Recognition](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html#tag_19_03):
 
@@ -48,6 +50,7 @@ In situations where the shell parses its input as a program, once a complete_com
 ```
 
  - so once a token gets "delimited", you immediately parse it, and a rexognized command gets immediatly executed before tokenization continues.
+>>>>>>> origin/phone
 
 #### personal
 **2026.04.30**
