@@ -27,12 +27,17 @@ _This project has been created as part of the 42 curriculum by nribakov, sancuta
 - decided on using github, with feature branches and pull requests
 - heard about interactive mode (when a program waits for inputs)
 
-**2026.04.29**
+**2026.04.29.**
 - read from posix: quoting, tokenizing, expansion, redirection
 - tested stuff out, bash seems to closesly follow the posix version on these topics
 
-**2026.04.30**
+**2026.04.30.**
 - read from posix: interactive mode, command line editing (vi mode)
+
+**2026.05.01. - 2026.05.04**
+- read from posix: the IFS variable and it's effect on variable expansion
+- read about the difference between env and set, environment and internal shell variables
+
 
 #### personal
 **2026.04.30**
