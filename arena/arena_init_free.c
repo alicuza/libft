@@ -13,11 +13,11 @@
 #include "arena.h"
 #include "../libft.h"
 
-t_arena	arena_init(size_t size)
+t_arena	arena_init(size_t size, t_align align)
 {
 	t_arena	arena;
 
-	arena = (t_arena){0}; // memset(arena, 0, size);
+	arena = (t_arena){0};
 	if (!size)
 		return (arena);
 	arena.buf = malloc(size);
@@ -25,6 +25,7 @@ t_arena	arena_init(size_t size)
 		return (arena);
 	ft_memset(arena.buf, 0, size);
 	arena.cap = size;
+    arena.align = align;
 	return (arena);
 }
 
@@ -34,6 +35,7 @@ void	arena_free(t_arena *arena)
 	arena->buf = NULL;
 	arena->used = 0;
 	arena->cap = 0;
+    arena->align = 0;
 }
 
 void	arena_hook_cleanup(t_arena *arena, void (*clean)(void *), void *env)

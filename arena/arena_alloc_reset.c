@@ -30,15 +30,30 @@ size_t	arena_alloc(t_arena *arena, size_t size, size_t align)
 
 	arena_align(arena, align);
 	if (size > (arena->cap - arena->used))
-	{
-		if (arena->clean)
-			arena->clean(arena->env);
-		handle_status_msg("arena", "alloc", strerror(ENOMEM), 1);
-		exit(1);
-	}
+        arena_grow(arena);
 	offset = arena->used;
 	arena->used += size;
 	return (offset);
+}
+
+void *arena_grow(t_arena *arena)
+{
+    void *new_buffer;
+    
+    if (arena->cap > HALF_SIZE_MAX)
+        return ; // TODO: error?
+        
+    new_buffer = malloc(arena->cap * 2);
+    if (!new_buffer)
+    {
+        if (arena->clean && arena->env)
+            arena->clean(arena->env);
+        free(arena->buf);
+        return ;
+    }
+    ft_memmove(new_buffer, arena->buf, arena->used);
+    ft_memset(new_buffer + arena->used, 0, arena->cap - arena->used);
+    arena->buf = buffer_new;
 }
 
 void	arena_reset(t_arena *arena)
