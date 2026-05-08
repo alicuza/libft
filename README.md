@@ -55,6 +55,11 @@ In situations where the shell parses its input as a program, once a complete_com
   - tokens will reference slices of the input string, maintaining the original information such as type of quotes and expansion characters.
   - tokens resulting from expansion will be appended to the token arena and relinked through indices to maintain the correct order of operations.
 
+**2026.05.06.2026.05.07**
+- worked on the arena implementation:
+  - added `arena_grow` function
+  - reworked alignment to be a member of the struct: `arena->align` encodes the type of alignment (if the alignment is set to 0, it should be using default dynamic alignment)
+
 #### personal
 **2026.04.30**
 
