@@ -49,6 +49,11 @@ In situations where the shell parses its input as a program, once a complete_com
 
  - so once a token gets "delimited", you immediately parse it, and a rexognized command gets immediatly executed before tokenization continues.
 
+**2026.05.06.2026.05.07**
+- worked on the arena implementation:
+  - added `arena_grow` function
+  - reworked alignment to be a member of the struct: `arena->align` encodes the type of alignment (if the alignment is set to 0, it should be using default dynamic alignment)
+
 #### personal
 **2026.04.30**
 
