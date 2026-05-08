@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/09 09:27:38 by sancuta           #+#    #+#             */
-/*   Updated: 2026/05/07 18:54:52 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/05/08 12:31:01 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,11 @@
  * natural alignment of 64bit systems is 8
  */
 
-static inline void	arena_align(t_arena *arena)
+static inline void	arena_align(t_arena *arena, t_align align)
 {
-	arena->used = (arena->used + (arena->align - 1)) & ~(arena->align - 1);
+	if (!align)
+		align = arena->align;
+	arena->used = (arena->used + (align - 1)) & ~(align - 1);
 }
 
 static void arena_grow(t_arena *arena)
@@ -43,11 +45,11 @@ static void arena_grow(t_arena *arena)
     arena->buf = new_buffer;
 }
 
-size_t	arena_alloc(t_arena *arena, size_t size)
+size_t	arena_alloc(t_arena *arena, size_t size, t_align align)
 {
 	size_t	offset;
 
-	arena_align(arena);
+	arena_align(arena, align);
 	if (size > (arena->cap - arena->used))
         arena_grow(arena);
 	offset = arena->used;
@@ -55,7 +57,10 @@ size_t	arena_alloc(t_arena *arena, size_t size)
 	return (offset);
 }
 
-void	arena_reset(t_arena *arena)
+void	arena_reset(t_arena *arena, t_align align)
 {
 	arena->used = 0;
+	arena->align = ALIGN_DYNAMIC;
+	if (align)
+		arena->align = align;
 }
