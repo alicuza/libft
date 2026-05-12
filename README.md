@@ -241,22 +241,22 @@ Input is read in terms of lines in 2 different circumstances:
 apply the first applicable rule from the list:
 
 1.	if
-		`cur_char` is `EOI`
+		`cur_char` is `EOI`/`EOF`
 	do
 		delimit `cur_token`, if it exists
 
 2.	if
-		`prev_char` is part of `cur_token`/`op_token`
+		`prev_char` is part of `operator`
 		&& `cur_char` is unquoted
-		&& `cur_char` can be used with the `prev_char` to form an `op_token`
+		&& `cur_char` can be used with the `prev_char` to form an `operator`
 	do
-		add `cur_char` to the `cur_token`/`op_token`
+		add `cur_char` to the `cur_token`
 
 3.	if
-		`prev_char` is part of `cur_token`/`op_token`
-		&& `cur_char` cannot be used with the `prev_char` to form an `op_token`
+		`prev_char` is part of `operator`
+		&& `cur_char` cannot be used with the `prev_char` to form an `operator`
 	do
-		delimit the `cur_token`/`op_token`
+		delimit the `cur_token`
 
 4.	if
 		`cur_char` is a `quote_char`(`'`, `"`)
@@ -272,7 +272,7 @@ apply the first applicable rule from the list:
 		&& add following `char`s to the `cur_token` unmodified while valid `name_chars`
 
 6.	if`cur_char` is unquoted
-		&& `cur_char` can introduce `op_token`
+		&& `cur_char` is start of an `operator`
 	do	
 		delimit `cur_token` if it exists
 
@@ -299,11 +299,45 @@ apply the first applicable rule from the list:
 
 Once delimited, a token get's lexed according to the Shell Grammar.
 
+"In situations where the shell parses its input as a program, once a `complete_command` has been recognized by the grammar (see 2.10 Shell Grammar), the `complete_command` shall be executed before the next `complete_command` is tokenized and parsed."
+
 #### Grammar
 *see [2.10 Shell Grammar](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html#tag_19_10)*
 
 **Shell Grammar Lexical Conventions**
-- 
+Lexing happens immediately following the `token` being delimited.
+
+1.	if
+		`cur_token` is `operator`
+	do
+		identify as corresponding `token_id`
+
+```yacc
+/* -------------------------------------------------------
+   The grammar symbols
+   ------------------------------------------------------- */
+
+%token  WORD
+%token  ASSIGNMENT_WORD
+%token  NAME
+%token  NEWLINE
+%token  IO_NUMBER
+%token  IO_LOCATION
+
+%token	AND_IF		OR_IF		DLESS		DGREAT		LESS		GREAT
+/*		'&&'		'||'		'<<'		'>>'		'<'			'>'		*/
+```
+
+2.	if
+		`cur_token` is only `digits`
+		&& `delimiter` is `<` or `>`
+	do
+		identify as `IO_NUMBER`
+
+3.	SKIP rule
+
+4.	do
+		identify as `TOKEN`
 
 ### Execution
 
