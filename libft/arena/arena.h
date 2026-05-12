@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/09 09:41:35 by sancuta           #+#    #+#             */
-/*   Updated: 2026/05/08 12:28:48 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/05/12 17:07:11 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,10 @@
 
 # include <stdlib.h>
 # include "../libft.h"
-# define HALF_SIZE_MAX (SIZE_MAX >> 2)
-
-typedef enum e_align
-{
-    ALIGN_DYNAMIC = 0,
-    ALIGN_CHAR = 1,
-    ALIGN_INT  = 4,
-    ALIGN_LONG = 8,
-}   t_align;
+# define HALF_SIZE_MAX 9223372036854775807
 
 typedef struct s_arena
 {
-    t_align align;
 	char	*buf;
 	size_t	used;
 	size_t	cap;
@@ -35,9 +26,9 @@ typedef struct s_arena
 	void	*env;
 }	t_arena;
 
-t_arena	arena_init(size_t cap, t_align align);
-size_t	arena_alloc(t_arena *arena, size_t size, t_align align);
-void	arena_reset(t_arena *arena, t_align align);
+t_arena	arena_init(size_t cap);
+size_t	arena_alloc(t_arena *arena, size_t size, size_t align);
+void	arena_reset(t_arena *arena, size_t align);
 size_t	arena_memset(t_arena *data, int c, size_t size);
 size_t	arena_memcpy(t_arena *dest, const void *src, size_t size);
 size_t	arena_strlcpy(t_arena *dest, const void *src, size_t size);

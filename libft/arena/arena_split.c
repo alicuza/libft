@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/21 20:26:16 by sancuta           #+#    #+#             */
-/*   Updated: 2026/03/21 20:52:53 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/05/12 16:41:13 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,25 +40,24 @@ size_t	word_len(const char *s, char del)
 
 size_t	arena_split(t_arena *dest, const char *src, char del)
 {
-	size_t	offset;
+	size_t	offs;
 	size_t	i;
 	size_t	word_cnt;
 	size_t	len;
 
 	word_cnt = count_words(src, del);
-	offset = arena_alloc(dest, (word_cnt + 1) * sizeof(char *),
-			_Alignof(char *));
+	offs = arena_alloc(dest, (word_cnt + 1) * sizeof(char *), _Alignof(char *));
 	i = 0;
 	while (i < word_cnt)
 	{
 		while (*src == del)
 			src++;
 		len = word_len(src, del);
-		((char **)(dest->buf + offset))[i]
+		((char **)(dest->buf + offs))[i]
 			= dest->buf + arena_strlcpy(dest, src, (len + 1) * sizeof(char));
 		src += len;
 		i++;
 	}
-	((char **)(dest->buf + offset))[i] = NULL;
-	return (offset);
+	((char **)(dest->buf + offs))[i] = NULL;
+	return (offs);
 }

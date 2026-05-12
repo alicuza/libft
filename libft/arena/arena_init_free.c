@@ -6,14 +6,14 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/09 08:36:13 by sancuta           #+#    #+#             */
-/*   Updated: 2026/05/08 12:39:25 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/05/12 16:51:00 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "arena.h"
 #include "../libft.h"
 
-t_arena	arena_init(size_t size, t_align align)
+t_arena	arena_init(size_t size)
 {
 	t_arena	arena;
 
@@ -25,8 +25,6 @@ t_arena	arena_init(size_t size, t_align align)
 		return (arena);
 	ft_memset(arena.buf, 0, size);
 	arena.cap = size;
-	if (align)
-		arena.align = align;
 	return (arena);
 }
 
@@ -36,7 +34,6 @@ void	arena_free(t_arena *arena)
 	arena->buf = NULL;
 	arena->used = 0;
 	arena->cap = 0;
-	arena->align = ALIGN_DYNAMIC;
 }
 
 void	arena_hook_cleanup(t_arena *arena, void (*clean)(void *), void *env)
