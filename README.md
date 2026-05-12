@@ -46,7 +46,6 @@ Once a token is delimited, it is categorized as required by the grammar in 2.10 
 
 In situations where the shell parses its input as a program, once a complete_command has been recognized by the grammar (see 2.10 Shell Grammar), the complete_command shall be executed before the next complete_command is tokenized and parsed.
 ```
-
   - so once a token gets "delimited", you immediately parse it, and a recognized command gets immediatly executed before tokenization continues.
 
 **2026.05.06**
@@ -54,6 +53,8 @@ In situations where the shell parses its input as a program, once a complete_com
 - first structure sketched: [Visualisation](https://excalidraw.com/#json=8BAFo2sDfsrJqzire7OOM,YjbRdUHRhwRBObV-QLgAXg)
   - tokens will reference slices of the input string, maintaining the original information such as type of quotes and expansion characters.
   - tokens resulting from expansion will be appended to the token arena and relinked through indices to maintain the correct order of operations.
+=======
+ - so once a token gets "delimited", you immediately parse it, and a recognized `complete_command` gets immediatly executed before tokenization continues.
 
 **2026.05.06.2026.05.07**
 - worked on the arena implementation:
@@ -62,6 +63,8 @@ In situations where the shell parses its input as a program, once a complete_com
 
 **2026.05.12.**
 - `env` has to be a built-in, which it isn't in `bash`
+- added description of token recognition rules
+- added description of shell grammar
 
 #### personal
 **2026.04.30**
@@ -100,9 +103,10 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 #### minishell
 
 **research & documentation**
-- [ ] read up on built-ins
+- [d] compile documentation on `flex` and `bison`
 - [ ] compile documentation on signals
 - [ ] compile documentation on `curses.h` and `term.h`
+- [ ] research built-ins
 - [ ] research interactive mode
 - [ ] research `posix sh`
 - [ ] research git workflow for working in a team
@@ -112,6 +116,7 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 
 **implementation**
 - [d] add `arena_grow` function to arena library // on phone branch
+- [ ] write a simple `flex` and `bison` based lexer and parser
 - [d] add github remote, and github action workflow
 - [ ] add push/pull mirroring on remote
 - [ ] rework makefile to create/use separate folders (`src`, `include`, `bin`, `debug`, `test`)
@@ -170,6 +175,11 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 - `man termios` - `tcgetattr`, `tcsetattr`
 
 - `man chdir`
+
+**pdfs**
+- [Wang - Tutorial Flex Bison](../resources/wang-tutorial_flex_bison.pdf)
+- [Levine - Flex & Bison](../resources/levine-flex&bison.pdf)
+- [Aaby - Compiler Construction using Flex and Bison](../resources/aaby-compiler_construction_using_flex_and_bison.pdf)
 
 ---
 
@@ -324,32 +334,40 @@ Lexing happens immediately following the `token` being delimited.
 	do
 		identify as corresponding `token_id`
 
-```yacc
-/* -------------------------------------------------------
-   The grammar symbols
-   ------------------------------------------------------- */
-
-%token  WORD
-%token  ASSIGNMENT_WORD
-%token  NAME
-%token  NEWLINE
-%token  IO_NUMBER
-%token  IO_LOCATION
-
-%token	AND_IF		OR_IF		DLESS		DGREAT		LESS		GREAT
-/*		'&&'		'||'		'<<'		'>>'		'<'			'>'		*/
-```
-
 2.	if
 		`cur_token` is only `digits`
 		&& `delimiter` is `<` or `>`
 	do
 		identify as `IO_NUMBER`
 
-3.	SKIP rule
-
-4.	do
+3.	do							// actually rule 4, but we do not implement `IO_LOCATION`
 		identify as `TOKEN`
+
+```yacc
+/* -------------------------------------------------------
+   The grammar symbols
+   ------------------------------------------------------- */
+
+%token  WORD				/* */
+%token  ASSIGNMENT_WORD		/* 'NAME[=]WORD' */
+%token  NAME				/* 'WORD("[a-zA-Z_][a-zA-Z0-9_]*")' */
+%token  NEWLINE				/* '\n'*/
+%token  IO_NUMBER			/* 'WORD("[0-9].*")'[GREAT|LESS]*/
+
+%token	AND_IF		OR_IF		DLESS		DGREAT		LESS		GREAT
+/*		'&&'		'||'		'<<'		'>>'		'<'			'>'		*/
+```
+
+**Shell Grammar Rules** 
+1. (rule 2 - redirection to or from `filename`) Expansions according to [2.7 Redirections](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html#tag_19_07)
+	1.1. tilde expansion
+	1.2. parameter/variable expansion
+	1.3. quote removal		// actually 5th expansion, but we don't handle command substitution or arithmetic expansion
+	1.4. filename expansion
+	1.5. word splitting		// if more than one word, bash errors with: `bash: $var: ambiguous redirect`
+2. (rule 3 - redirection from `here-doc`) Quote removal of `WORD` after `DLESS` to determine `here-doc` `delimiter`
+3. (rule 7 - assignment preceding command name)
+	//TODO: continue writing
 
 ### Execution
 
