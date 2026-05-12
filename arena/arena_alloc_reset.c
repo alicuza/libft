@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/09 09:27:38 by sancuta           #+#    #+#             */
-/*   Updated: 2026/05/12 17:11:59 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/05/12 20:02:29 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ size_t	arena_alloc(t_arena *arena, size_t size, size_t align)
 	return (offset);
 }
 
-void	arena_reset(t_arena *arena, size_t align)
+void	arena_reset(t_arena *arena)
 {
 	arena->used = 0;
 }
