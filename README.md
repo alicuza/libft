@@ -271,62 +271,82 @@ Input is read in terms of lines in 2 different circumstances:
 **ordinary token recognition**
 apply the first applicable rule from the list:
 
+```
 1.	if
 		`cur_char` is `EOI`/`EOF`
 	do
 		delimit `cur_token`, if it exists
+```
 
+```
 2.	if
 		`prev_char` is part of `operator`
 		&& `cur_char` is unquoted
 		&& `cur_char` can be used with the `prev_char` to form an `operator`
 	do
 		add `cur_char` to the `cur_token`
+```
 
+```
 3.	if
 		`prev_char` is part of `operator`
 		&& `cur_char` cannot be used with the `prev_char` to form an `operator`
 	do
 		delimit the `cur_token`
+```
 
+```
 4.	if
 		`cur_char` is a `quote_char`(`'`, `"`)
 	do
 		<add `cur_char` to the `cur_token`
 		&& add following `char`s to the `cur_token` unmodified until the closing `quote_char` was found
 		&& DO NOT DELIMIT `cur_token`
+```
 
+```
 5.	if
 		`cur_char` is beginning of variable expansion (`$`)
 	do
 		add `cur_char` to the `cur_token`
 		&& add following `char`s to the `cur_token` unmodified while valid `name_chars`
+```
 
+```
 6.	if`cur_char` is unquoted
 		&& `cur_char` is start of an `operator`
 	do	
 		delimit `cur_token` if it exists
+```
 
+```
 7.	if
 		`cur_char` is unquoted
-		&& `cur_char` is [`blank` (` `, `\t`)](https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap03.html#tag_03_45)
+		&& `cur_char` is `blank` (` `, `\t`)
 	do
 		delimit `cur_token`
 		&& discrad `cur_char`
+```
 
+```
 8.	if
 		`prev_char` is part of `word_token`
 	do	
 		add `cur_char` to the `cur_token`/`word_token`
+```
 
+```
 9.	if
 		`cur_char` is `comment_char` (`#`)
 	do
 		discard `cur_char`
 		&& discrad `chars` until `\n`
+```
 
+```
 10.	do
 		`cur_char` is used as the start of a new `word_token`
+```
 
 Once delimited, a token get's lexed according to the Shell Grammar.
 
@@ -338,23 +358,29 @@ Once delimited, a token get's lexed according to the Shell Grammar.
 **Shell Grammar Lexical Conventions**
 Lexing happens immediately following the `token` being delimited.
 
+```
 1.	if
 		`cur_token` is `operator`
 	do
 		identify as corresponding `token_id`
+```
 
+```
 2.	if
 		`cur_token` is only `digits`
 		&& `delimiter` is `<` or `>`
 	do
 		identify as `IO_NUMBER`
+```
 
-3.	do							// actually rule 4, but we do not implement `IO_LOCATION`
+```
+3.	do	# actually rule 4, but we do not implement `IO_LOCATION`
 		identify as `TOKEN`
+```
 
-```yacc
+```ebnf
 /* -------------------------------------------------------
-   The grammar symbols
+       Selection of Grammar Symbols used in Minishell
    ------------------------------------------------------- */
 
 %token  WORD				/* ".*" */
@@ -368,244 +394,46 @@ Lexing happens immediately following the `token` being delimited.
 ```
 
 **Shell Grammar Rules**
-1. (rule 2 - redirection to or from `filename`) Expansions according to [2.7 Redirections](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html#tag_19_07)
+
+```
+1. (rule 2 - redirection to or from `filename`)
 	1.1. tilde expansion
 	1.2. parameter/variable expansion
 	1.3. quote removal		// actually 5th expansion, but we don't handle command substitution or arithmetic expansion
 	1.4. filename expansion
 	1.5. word splitting		// if more than one word, bash errors with: `bash: $var: ambiguous redirect`
-2. (rule 3 - redirection from `here-doc`) Quote removal of `WORD` after `DLESS` to determine `here-doc` `delimiter`
+```
+
+```
+2. (rule 3 - redirection from `here-doc`) 
+	Quote removal of `WORD` after `DLESS` to determine `here-doc` `delimiter`
+```
+
+```
 3. (rule 7 - assignment preceding command name)
 	//TODO: continue writing
-
-```yacc
-/* -------------------------------------------------------
-                        bash grammar
-   ------------------------------------------------------- */
-
-/* The grammar symbols */
-
-%token  WORD
-%token  ASSIGNMENT_WORD
-%token  NAME
-%token  NEWLINE
-%token  IO_NUMBER
-%token  IO_LOCATION
-
-
-/* The following are the operators */
-
-/* control operators */
-
-%token  AND    PIPE    OPAR    CPAR    LESS    GREAT
-/*      '&'    '|'     '('     ')'     '<'     '>'   */
-
-%token  AND_IF    OR_IF    DSEMI    SEMI_AND
-/*      '&&'      '||'     ';;'     ';&'   */
-
-
-%token  DLESS  DGREAT  LESSAND  GREATAND  LESSGREAT  DLESSDASH
-/*      '<<'   '>>'    '<&'     '>&'      '<>'       '<<-'   */
-
-
-%token  CLOBBER
-/*      '>|'   */
-
-
-/* The following are the reserved words. */
-
-
-%token  If    Then    Else    Elif    Fi    Do    Done
-/*      'if'  'then'  'else'  'elif'  'fi'  'do'  'done'   */
-
-
-%token  Case    Esac    While    Until    For
-/*      'case'  'esac'  'while'  'until'  'for'   */
-
-
-/* These are reserved words, not operator tokens, and are
-   recognized when reserved words are recognized. */
-
-
-%token  Lbrace    Rbrace    Bang
-/*      '{'       '}'       '!'   */
-
-
-%token  In
-/*      'in'   */
-
-
-
-
-/* -------------------------------------------------------
-   The Grammar
-   ------------------------------------------------------- */
-%start program
-%%
-program          : linebreak complete_commands linebreak
-                 | linebreak
-                 ;
-complete_commands: complete_commands newline_list complete_command
-                 |                                complete_command
-                 ;
-complete_command : list separator_op
-                 | list
-                 ;
-list             : list separator_op and_or
-                 |                   and_or
-                 ;
-and_or           :                         pipeline
-                 | and_or AND_IF linebreak pipeline
-                 | and_or OR_IF  linebreak pipeline
-                 ;
-pipeline         :      pipe_sequence
-                 | Bang pipe_sequence
-                 ;
-pipe_sequence    :                             command
-                 | pipe_sequence '|' linebreak command
-                 ;
-command          : simple_command
-                 | compound_command
-                 | compound_command redirect_list
-                 | function_definition
-                 ;
-compound_command : brace_group
-                 | subshell
-                 | for_clause
-                 | case_clause
-                 | if_clause
-                 | while_clause
-                 | until_clause
-                 ;
-subshell         : '(' compound_list ')'
-                 ;
-compound_list    : linebreak term
-                 | linebreak term separator
-                 ;
-term             : term separator and_or
-                 |                and_or
-                 ;
-for_clause       : For name                                      do_group
-                 | For name                       sequential_sep do_group
-                 | For name linebreak in          sequential_sep do_group
-                 | For name linebreak in wordlist sequential_sep do_group
-                 ;
-name             : NAME                     /* Apply rule 5 */
-                 ;
-in               : In                       /* Apply rule 6 */
-                 ;
-wordlist         : wordlist WORD
-                 |          WORD
-                 ;
-case_clause      : Case WORD linebreak in linebreak case_list    Esac
-                 | Case WORD linebreak in linebreak case_list_ns Esac
-                 | Case WORD linebreak in linebreak              Esac
-                 ;
-case_list_ns     : case_list case_item_ns
-                 |           case_item_ns
-                 ;
-case_list        : case_list case_item
-                 |           case_item
-                 ;
-case_item_ns     : pattern_list ')' linebreak
-                 | pattern_list ')' compound_list
-                 ;
-case_item        : pattern_list ')' linebreak     DSEMI linebreak
-                 | pattern_list ')' compound_list DSEMI linebreak
-                 | pattern_list ')' linebreak     SEMI_AND linebreak
-                 | pattern_list ')' compound_list SEMI_AND linebreak
-                 ;
-pattern_list     :                  WORD    /* Apply rule 4 */
-                 |              '(' WORD    /* Do not apply rule 4 */
-                 | pattern_list '|' WORD    /* Do not apply rule 4 */
-                 ;
-if_clause        : If compound_list Then compound_list else_part Fi
-                 | If compound_list Then compound_list           Fi
-                 ;
-else_part        : Elif compound_list Then compound_list
-                 | Elif compound_list Then compound_list else_part
-                 | Else compound_list
-                 ;
-while_clause     : While compound_list do_group
-                 ;
-until_clause     : Until compound_list do_group
-                 ;
-function_definition : fname '(' ')' linebreak function_body
-                 ;
-function_body    : compound_command                /* Apply rule 9 */
-                 | compound_command redirect_list  /* Apply rule 9 */
-                 ;
-fname            : NAME                            /* Apply rule 8 */
-                 ;
-brace_group      : Lbrace compound_list Rbrace
-                 ;
-do_group         : Do compound_list Done           /* Apply rule 6 */
-                 ;
-simple_command   : cmd_prefix cmd_word cmd_suffix
-                 | cmd_prefix cmd_word
-                 | cmd_prefix
-                 | cmd_name cmd_suffix
-                 | cmd_name
-                 ;
-cmd_name         : WORD                   /* Apply rule 7a */
-                 ;
-cmd_word         : WORD                   /* Apply rule 7b */
-                 ;
-cmd_prefix       :            io_redirect
-                 | cmd_prefix io_redirect
-                 |            ASSIGNMENT_WORD
-                 | cmd_prefix ASSIGNMENT_WORD
-                 ;
-cmd_suffix       :            io_redirect
-                 | cmd_suffix io_redirect
-                 |            WORD
-                 | cmd_suffix WORD
-                 ;
-redirect_list    :               io_redirect
-                 | redirect_list io_redirect
-                 ;
-io_redirect      :             io_file
-                 | IO_NUMBER   io_file
-                 | IO_LOCATION io_file /* Optionally supported */
-                 |             io_here
-                 | IO_NUMBER   io_here
-                 | IO_LOCATION io_here /* Optionally supported */
-                 ;
-io_file          : '<'       filename
-                 | LESSAND   filename
-                 | '>'       filename
-                 | GREATAND  filename
-                 | DGREAT    filename
-                 | LESSGREAT filename
-                 | CLOBBER   filename
-                 ;
-filename         : WORD                      /* Apply rule 2 */
-                 ;
-io_here          : DLESS     here_end
-                 | DLESSDASH here_end
-                 ;
-here_end         : WORD                      /* Apply rule 3 */
-                 ;
-newline_list     :              NEWLINE
-                 | newline_list NEWLINE
-                 ;
-linebreak        : newline_list
-                 | /* empty */
-                 ;
-separator_op     : '&'
-                 | ';'
-                 ;
-separator        : separator_op linebreak
-                 | newline_list
-                 ;
-sequential_sep   : ';' linebreak
-                 | newline_list
-                 ;
 ```
+
+**documentation**
+- [2.7 Redirections](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html#tag_19_07)
+- [2.10.2 Shell Grammar Rules](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html#tag_19_10_02)
+- [3.45 Blank Character](https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap03.html#tag_03_45)
+
+
+
 ### Bash Specific Terms
 
-#### `metacharacters`
+**bash grammar**
+the following chars don't have an explicit token they get assigned to in the grammar.
 
+```
+	'&'	'|'	'('	')'	'<'	'>'
+```
+- being single `char` tokens, they can just represent themselves?
+
+#### metacharacters
+
+*see [2. Definitions - metacharacter](https://www.gnu.org/software/bash/manual/bash.html#index-metacharacter)*
 - characters that separate words when unquoted.
 ```
 ' ', '\t', '\n', '|', '&', ';', '(', ')', '<', '>'
@@ -613,10 +441,16 @@ sequential_sep   : ';' linebreak
 
 #### operators
 
+*see [2. Definitions - operator](https://www.gnu.org/software/bash/manual/bash.html#index-operator_002c-shell)*
 - `operator`s contain at least one unquoted `metacharacter`
+
 **control operators**
--
+*see [2. Definitions - control operator](https://www.gnu.org/software/bash/manual/bash.html#index-control-operator)*
+- 
+
 **redirection operators**
+*see [3.6 Redirections](https://www.gnu.org/software/bash/manual/bash.html#Redirections)*
+- 
 
 
 ### Execution
