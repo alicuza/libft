@@ -56,7 +56,7 @@ In situations where the shell parses its input as a program, once a complete_com
 =======
  - so once a token gets "delimited", you immediately parse it, and a recognized `complete_command` gets immediatly executed before tokenization continues.
 
-**2026.05.06.-2026.05.07.**
+**2026.05.06. - 2026.05.07.**
 - worked on the arena implementation:
   - added `arena_grow` function
   - reworked alignment to be a member of the struct: `arena->align` encodes the type of alignment (if the alignment is set to 0, it should be using default dynamic alignment)
@@ -71,18 +71,19 @@ In situations where the shell parses its input as a program, once a complete_com
   - got overwhelmed reading the generated `.c` files
 - wrote makeshift `bnaf` format grammar rules
 
-**2026.05.14.2026.05.16.**
+**2026.05.14. - 2026.05.16.**
 - acquired rene's annotated bash manual pdf.
   - nice as an overview of what is actually relevant for minishell accoring to rene
 - read from bash manual about execution, [3.7 Executing Commands](https://www.gnu.org/software/bash/manual/bash.html#Executing-Commands):
   - order of expansion for simple commands: [3.7.1 Simple Command Expansion](https://www.gnu.org/software/bash/manual/bash.html#Simple-Command-Expansion)
   - order of `PATH` search & command execution: [3.7.2 Command Search and Execution](https://www.gnu.org/software/bash/manual/bash.html#Command-Search-and-Execution)
   - commands in pipelines are always executed in a child, [3.2.3 Pipelines](https://www.gnu.org/software/bash/manual/bash.html#Pipelines): "Each command in a multi-command pipeline, where pipes are created, is executed in its own subshell, which is a separate process."
-  - the shell has it's own execution environment, that consists of inheritances at invocation (`char **envp`) and modifications through the builtins, like `cd` and `export`, or assignments `name=word`
-  - commands other than builtins are executed in their seaprate execution environment (`child process`) with values inherited from the shell's environment ("variables marked for `export`"), and everything copied by `fork()` (open fds, file creation mask) and assignments before the command name (which are injected as temporary env for this one command)
+  - the shell has it's own execution environment, that consists of inheritances at invocation (`char **envp`) and modifications through builtins, like `cd` and `export`, or assignments `name=word`
+  - commands other than builtins are executed in their seaprate execution environment (`child process`) with values inherited from the shell's environment ("variables marked for `export`"), everything copied by `fork()` (open fds, file creation mask) (additionally, but not required by the project: assignments before the command name, which are injected temporarily into the env for this one command)
 
 **2026.05.17.**
 - looked through the `makefiles` of people for inspiration (starred on github)
+- used `declare` to see all shell variables listed, which nicely shows what the different attributes of shell variables are
 
 #### personal
 **2026.04.30**
@@ -108,6 +109,8 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 
 **2026.05.17.**
 - read about [`trap`](https://www.gnu.org/software/bash/manual/bash.html#index-trap): executes a given command when a given signal is intercepted.
+- learned neat bash trick: `set -e; : ${parameter:?word}` to close the shell if the parameter doesn't exist in the execution environment.
+- read about [`job control`](https://www.gnu.org/software/bash/manual/bash.html#Job-Control)
 
 ### Structure
 
