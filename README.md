@@ -71,6 +71,19 @@ In situations where the shell parses its input as a program, once a complete_com
   - got overwhelmed reading the generated `.c` files
 - wrote makeshift `bnaf` format grammar rules
 
+**2026.05.14.2026.05.16.**
+- acquired rene's annotated bash manual pdf.
+  - nice as an overview of what is actually relevant for minishell accoring to rene
+- read from bash manual about execution, [3.7 Executing Commands](https://www.gnu.org/software/bash/manual/bash.html#Executing-Commands):
+  - order of expansion for simple commands: [3.7.1 Simple Command Expansion](https://www.gnu.org/software/bash/manual/bash.html#Simple-Command-Expansion)
+  - order of `PATH` search & command execution: [3.7.2 Command Search and Execution](https://www.gnu.org/software/bash/manual/bash.html#Command-Search-and-Execution)
+  - commands in pipelines are always executed in a child, [3.2.3 Pipelines](https://www.gnu.org/software/bash/manual/bash.html#Pipelines): "Each command in a multi-command pipeline, where pipes are created, is executed in its own subshell, which is a separate process."
+  - the shell has it's own execution environment, that consists of inheritances at invocation (`char **envp`) and modifications through the builtins, like `cd` and `export`, or assignments `name=word`
+  - commands other than builtins are executed in their seaprate execution environment (`child process`) with values inherited from the shell's environment ("variables marked for `export`"), and everything copied by `fork()` (open fds, file creation mask) and assignments before the command name (which are injected as temporary env for this one command)
+
+**2026.05.17.**
+- looked through the `makefiles` of people for inspiration (starred on github)
+
 #### personal
 **2026.04.30**
 
@@ -93,6 +106,9 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 - `man console_codes`
 - [ANSI escape code](https://en.wikipedia.org/wiki/ANSI_escape_code)
 
+**2026.05.17.**
+- read about [`trap`](https://www.gnu.org/software/bash/manual/bash.html#index-trap): executes a given command when a given signal is intercepted.
+
 ### Structure
 
 *see [2.1 Shell Introduction](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html#tag_19_01)*
@@ -110,7 +126,7 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 **research & documentation**
 - [ ] compile documentation on signals
 - [ ] compile documentation on `curses.h` and `term.h`
-- [ ] research built-ins
+- [p] research built-ins
 - [ ] research interactive mode
 - [ ] research `posix sh`
 - [ ] research git workflow for working in a team
@@ -452,8 +468,9 @@ the following chars don't have an explicit token they get assigned to in the gra
 *see [3.6 Redirections](https://www.gnu.org/software/bash/manual/bash.html#Redirections)*
 - 
 
-
 ### Execution
+
+
 
 ### Signals
 
