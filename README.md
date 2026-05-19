@@ -78,6 +78,44 @@ In situations where the shell parses its input as a program, once a complete_com
 - looked through the `makefiles` of people for inspiration (starred on github)
 - used `declare` to see all shell variables listed, which nicely shows what the different attributes of shell variables are
 
+**2026.05.19**
+- read from the readline manual, [2.1 Basic Behavior](https://tiswww.cwru.edu/php/chet/readline/readline.html#Basic-Behavior)
+  - seems pretty straightforward considering the number of functions we are allowed to use. there is another example inf the manual that also handles signals, i still have to look into those more. since the handlers mostly just modify the global variable we're allowed to use, this shouldn't be that hard to implement.
+  - this can be the basis for the entrypoint:
+
+```
+Here is a function which usefully replaces the standard gets() library function, and has the advantage of no static buffer to overflow:
+
+/* A static variable for holding the line. */
+static char *line_read = (char *)NULL;
+
+/* Read a string, and return a pointer to it.
+   Returns NULL on EOF. */
+char *
+rl_gets ()
+{
+  /* If the buffer has already been allocated,
+     return the memory to the free pool. */
+  if (line_read)
+    {
+      free (line_read);
+      line_read = (char *)NULL;
+    }
+
+  /* Get a line from the user. */
+  line_read = readline ("");
+
+  /* If the line has any text in it,
+     save it on the history. */
+  if (line_read && *line_read)
+    add_history (line_read);
+
+  return (line_read);
+}
+```
+
+- added documentation on signals
+
 #### personal
 **2026.04.30**
 
@@ -119,7 +157,7 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 #### minishell
 
 **research & documentation**
-- [ ] compile documentation on signals
+- [x] ~~compile documentation on signals~~
 - [ ] compile documentation on `curses.h` and `term.h`
 - [p] research built-ins
 - [ ] research interactive mode
@@ -186,7 +224,14 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 - `man readline`
 - `man termios` - `tcgetattr`, `tcsetattr`
 
+- `man 3 signal`
+- `man 3 sigaction`
+- `man 7 signal`
+- `man 7 signal-safety`
+
 - `man chdir`
+
+- `man 5 core`
 
 **pdfs**
 - [Wang - Tutorial Flex Bison](../resources/wang-tutorial_flex_bison.pdf)
