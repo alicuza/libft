@@ -13,6 +13,7 @@
 NAME = minishell
 CC = cc
 CFLAGS = -MMD -MP -Wall -Wextra -Werror
+LIBS = -lreadline
 LIBFT = ./libft/libft.a
 SRCS =	main.c
 OBJS = $(SRCS:.c=.o)
@@ -24,7 +25,7 @@ all: .release $(NAME)
 	if [ -f .debug ]; then $(MAKE) fclean; fi
 	touch .release
 
-$(NAME): $(OBJS) $(LIBFT)
+$(NAME): $(OBJS) $(LIBFT) $(LIBS)
 	$(CC) $(CFLAGS) $^ -o $@
 
 $(LIBFT): FORCE
