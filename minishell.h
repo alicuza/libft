@@ -12,6 +12,7 @@
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+
 # include <stdio.h>				// printf, perror
 # include <string.h>			// sterror
 # include <readline/readline.h>	// readline, rl_clear_history, rl_on_new_line,
@@ -31,5 +32,15 @@
 # include <termios.h>			// tcgetattr, tcsetattr
 # include <termcap.h>			// tgetent, tgetflag, tgetnum, tgetstr, tgoto,
 								// tputs
+# include "libft/libft.h"
+# include "libft/arena/arena.h"
+
+typedef struct	s_env
+{
+	char	*line_buffer;
+	t_arena	prompt;
+//	t_arena	token;
+//	t_arena	command;
+}	t_env;
 
 #endif
