@@ -13,27 +13,27 @@
 #include "arena.h"
 #include "../libft.h"
 
-t_arena	arena_init(size_t size)
+t_arena	arena_init(size_t size, size_t sentinel)
 {
 	t_arena	arena;
 
-	arena = (t_arena){0};
+	ft_memset(&arena, 0, sizeof(t_arena));
+	arena.sentinel = sentinel;
 	if (!size)
 		return (arena);
-	arena.buf = malloc(size);
+	arena.buf = malloc(size + sentinel);
 	if (!arena.buf)
 		return (arena);
-	ft_memset(arena.buf, 0, size);
+	ft_memset(arena.buf, 0, size + sentinel);
 	arena.cap = size;
+	arena.offset = arena.sentinel;
 	return (arena);
 }
 
-void	arena_free(t_arena *arena)
+void	arena_free_buf(t_arena *arena)
 {
 	free(arena->buf);
-	arena->buf = NULL;
-	arena->used = 0;
-	arena->cap = 0;
+	ft_memset(arena, 0, sizeof(t_arena));
 }
 
 void	arena_hook_cleanup(t_arena *arena, void (*clean)(void *), void *env)

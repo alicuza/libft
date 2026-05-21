@@ -13,6 +13,7 @@
 #include "arena.h"
 
 //TODO: consider whether alignment needs to be 8 in arena_mem* functions
+//      i think it should be 8, as the natural alignment of 64bit OS
 size_t	arena_memcpy(t_arena *dest, const void *src, size_t size)
 {
 	size_t	offset;

@@ -21,29 +21,33 @@
 
 static inline void	arena_align(t_arena *arena, size_t align)
 {
-	arena->used = (arena->used + (align - 1)) & ~(align - 1);
+	arena->offset = (arena->offset + (align - 1)) & ~(align - 1);
 }
+/* static void	arena_grow_error_handler(t_arena *arena)
+{
+	perror("arena_grow");
+	if (arena->clean && arena->env)
+		arena->clean(arena->env);
+	arena_free(arena);
+	exit(EXIT_FAILURE);
+} */
 
-static void	arena_grow(t_arena *arena)
+static bool	arena_grow(t_arena *arena)
 {
 	void	*new_buffer;
 
 	if (arena->cap > HALF_SIZE_MAX)
-	{
-		if (arena->clean && arena->env)
-			arena->clean(arena->env);
-		return ;
-	}
-	new_buffer = malloc(arena->cap * 2);
+		return (false);
+	arena->cap *= 2;
+	new_buffer = malloc(arena->cap + arena->sentinel);
 	if (!new_buffer)
-	{
-		if (arena->clean && arena->env)
-			arena->clean(arena->env);
-		return ;
-	}
-	ft_memmove(new_buffer, arena->buf, arena->used);
-	ft_memset(new_buffer + arena->used, 0, arena->cap - arena->used);
+		return (false);
+	ft_memmove(new_buffer, arena->buf, arena->offset);
+	ft_memset(new_buffer + arena->offset, 0,
+		arena->cap + arena->sentinel - arena->offset);
+	free(arena->buf);
 	arena->buf = new_buffer;
+	return (true);
 }
 
 size_t	arena_alloc(t_arena *arena, size_t size, size_t align)
@@ -51,14 +55,15 @@ size_t	arena_alloc(t_arena *arena, size_t size, size_t align)
 	size_t	offset;
 
 	arena_align(arena, align);
-	if (size > (arena->cap - arena->used))
-		arena_grow(arena);
-	offset = arena->used;
-	arena->used += size;
+	if (size > (arena->cap + arena->sentinel - arena->offset)
+		&& !arena_grow(arena))
+		arena->offset = 0;
+	offset = arena->offset;
+	arena->offset += size;
 	return (offset);
 }
 
 void	arena_reset(t_arena *arena)
 {
-	arena->used = 0;
+	arena->offset = arena->sentinel;
 }

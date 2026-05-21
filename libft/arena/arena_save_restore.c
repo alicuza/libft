@@ -14,10 +14,10 @@
 
 size_t	arena_save(t_arena *arena)
 {
-	return (arena->used);
+	return (arena->offset);
 }
 
-void	arena_restore(t_arena *arena, size_t idx)
+void	arena_restore(t_arena *arena, size_t offset)
 {
-	arena->used = idx;
+	arena->offset = offset;
 }
