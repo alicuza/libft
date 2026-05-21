@@ -40,3 +40,12 @@ size_t	arena_strlcpy(t_arena *dest, const void *src, size_t size)
 	ft_strlcpy(dest->buf + offset, src, size);
 	return (offset);
 }
+
+size_t	arena_strlcat(t_arena *dest, const void *src, size_t size)
+{
+	size_t	offset;
+
+	offset = arena_alloc(dest, size - 1, 1);
+	ft_strlcpy(dest->buf + offset - 1, src, size);
+	return (offset);
+}

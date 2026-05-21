@@ -32,6 +32,7 @@ void	arena_reset(t_arena *arena);
 size_t	arena_memset(t_arena *data, int c, size_t size);
 size_t	arena_memcpy(t_arena *dest, const void *src, size_t size);
 size_t	arena_strlcpy(t_arena *dest, const void *src, size_t size);
+size_t	arena_strlcat(t_arena *dest, const void *src, size_t size);
 size_t	arena_split(t_arena *dest, const char *src, char del);
 size_t	arena_save(t_arena *arena);
 void	arena_restore(t_arena *arena, size_t idx);
