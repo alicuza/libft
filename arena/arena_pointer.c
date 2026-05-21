@@ -12,7 +12,7 @@
 
 #include "arena.h"
 
-void	*get_arena_ptr(t_arena *arena, size_t idx)
+void	*get_arena_ptr(t_arena *arena, size_t offset)
 {
-	return (arena->buf + idx);
+	return (arena->buf + offset);
 }
