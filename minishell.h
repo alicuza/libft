@@ -32,15 +32,19 @@
 # include <termios.h>			// tcgetattr, tcsetattr
 # include <termcap.h>			// tgetent, tgetflag, tgetnum, tgetstr, tgoto,
 								// tputs
+
+# include <stdint.h>			// TODO: consider for the saner type names
+
 # include "libft/libft.h"
 # include "libft/arena/arena.h"
 
-typedef struct	s_env
+typedef struct s_env
 {
-	char	*line_buffer;
-	t_arena	prompt;
-//	t_arena	token;
-//	t_arena	command;
+	char	*read_line;
+	t_arena	*prompt;
+	t_arena	*strings;
+//	t_arena	*token;
+//	t_arena	*command;
 }	t_env;
 
 #endif
