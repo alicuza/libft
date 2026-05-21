@@ -38,13 +38,20 @@
 # include "libft/libft.h"
 # include "libft/arena/arena.h"
 
+typedef enum e_arena_type
+{
+  STRING,
+  PROMPT,
+  TOKEN,
+  STACK,
+  CMD,
+  COUNT,
+} t_arena_type;
+
 typedef struct s_env
 {
-	char	*read_line;
-	t_arena	*prompt;
-	t_arena	*strings;
-//	t_arena	*token;
-//	t_arena	*command;
+	char  	*read_line;
+	t_arena	arena[5];
 }	t_env;
 
 #endif
