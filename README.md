@@ -2,6 +2,14 @@ _This project has been created as part of the 42 curriculum by nribakov, sancuta
 
 # minishell
 
+- [Notes](#notes)
+  - [Journal](#journal)
+  - [Structure](#structure)
+  - [Schedule](#schedule)
+  - [TODO](#todo)
+  - [Documentation](#documentation)
+- [TOC](#table-of-contents)
+
 ## Notes:
 
 ### Journal
@@ -122,6 +130,14 @@ rl_gets ()
 ```
 
 - added documentation on signals
+
+**2026.05.20.-2026.05.21.**
+- implemented an entrypoint based on the example found in the readline manual
+- implemented a prototype for a prompt that could be extended to be dynamic
+- added arenas to the naive implementation
+  - had to modify arenas to include a member element sized zero initialized memory area at offset 0
+- found out that readline strips the `\n` from the end of the `read_line`, which needs to be reinserted, when the readline is copied to its arena buffer
+- added section for stuff that is not required
 
 #### personal
 **2026.04.30**
@@ -277,6 +293,9 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
   - [Execution](#execution)
   - [Signals](#signals)
   - [Error Handling and Cleanup](#error-handling-and-cleanup)
+- [Deviation from bash](#deviation-from-bash)
+  - [Grammar (mandatory)](#grammar-mandatory)
+  - [Grammar (bonus)](#grammar-bonus)
 - [Resources](#resources)
   - [Documentation and References](#documentation-and-references)
     - [Special Thanks To](#special-thanks-to)
@@ -523,6 +542,86 @@ the following chars don't have an explicit token they get assigned to in the gra
 ### Signals
 
 ### Error Handling and Cleanup
+
+## Deviation from bash
+
+- `ASSIGNMENT_WORD` - bash potentially unnecessay, because we can handle this construct in `export` as a builtin with string parsing
+- `NAME` - not needed as separate token type, might still be required for some things
+- `IO_NUMBER` - fd-specific redirects like `2>` are not mentioned by the subject, but according to Renés notes regarding the campus consensus it is not required
+- `;`, `#`, `!`, `\`, `~` - not required, but interesting to consider
+  - `~` - for the dynamic prompt
+  - `#` - for comments, because that seems useful
+
+---
+
+### Grammar (mandatory)
+
+```ebnf
+input       : command_list NEWLINE
+            | NEWLINE
+            ;
+
+command_list: pipeline
+            ;
+
+pipeline    : pipeline PIPE command
+            | command
+            ;
+
+command     : simple_command
+            ;
+
+simple_command
+            : prefix WORD suffix
+            | WORD suffix
+            | WORD
+            | prefix WORD
+            | prefix
+            ;
+
+prefix      : redirection
+            | prefix redirection
+            ;
+
+suffix      : WORD
+            | redirection
+            | suffix WORD
+            | suffix redirection
+            ;
+
+redirection : LESS WORD
+            | GREAT WORD
+            | DGREAT WORD
+            | DLESS WORD
+            ;
+```
+
+**Precedence:** `|` is left-associative (`a | b | c` → `(a | b) | c`).
+
+**Key invariant (mandatory):** a `simple_command` is complete when the next token is `NEWLINE` or `PIPE`. Execution happens at that boundary.
+
+---
+
+### Grammar (bonus) 
+
+```ebnf
+command_list: command_list AND_IF pipeline
+            | command_list OR_IF pipeline
+            | pipeline
+            ;
+
+pipeline    : pipeline PIPE command
+            | command
+            ;
+
+command     : simple_command
+            | OPAR command_list CPAR
+            ;
+```
+
+**Precedence:** `|` binds tighter than `&&`/`||`. So `cmd1 && cmd2 | cmd3` parses as `cmd1 && (cmd2 | cmd3)`.
+
+**Key invariant (bonus):** also `AND_IF`, `OR_IF`, and `CPAR` terminate a `simple_command`.
 
 ---
 
