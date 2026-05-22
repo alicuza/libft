@@ -190,6 +190,7 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 - [-] ~~compile documentation on `curses.h` and `term.h`~~
 
 **implementation**
+- [ ] work on arenas - prepare prompt arena for `getcwd`
 - [p] rework makefile to create/use separate folders (`src`, `include`, `bin`, `debug`, `test`)
 - [p] include the additional info in the make section.
 - [p] draft the data structure and core architecture
