@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
+/*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/26 12:20:15 by sancuta           #+#    #+#             */
-/*   Updated: 2026/05/12 17:14:03 by sancuta          ###   ########.fr       */
+/*   Created: 2026/05/22 21:48:28 by sancuta           #+#    #+#             */
+/*   Updated: 2026/05/22 21:48:28 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -35,8 +36,12 @@
 
 # include <stdint.h>			// TODO: consider for the saner type names
 
-# include "libft/libft.h"
-# include "libft/arena/arena.h"
+# include "libft.h"
+# include "arena.h"
+
+# ifdef DEBUG
+#  include "debug.h"
+# endif
 
 typedef enum e_arena_type
 {

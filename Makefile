@@ -3,54 +3,116 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+         #
+#    By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2026/04/26 13:41:16 by sancuta           #+#    #+#              #
-#    Updated: 2026/04/26 13:41:25 by sancuta          ###   ########.fr        #
+#    Created: 2026/05/22 21:29:56 by sancuta           #+#    #+#              #
+#    Updated: 2026/05/22 21:32:14 by sancuta          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = minishell
-CC = cc
-CFLAGS = -MMD -MP -Wall -Wextra -Werror
-LIBS = -lreadline
-LIBFT = ./libft/libft.a
-SRCS =	main.c
-OBJS = $(SRCS:.c=.o)
-DEPS = $(SRCS:.c=.d)
+# ---- project ------------------------------------------------------------- #
+NAME       = minishell
 
-all: .release $(NAME)
+# ---- compiler / linker --------------------------------------------------- #
+CC         = cc
+CFLAGS     = -Wall -Wextra -Werror -MMD -MP
+CPPFLAGS   = -I inc -I $(LIBFT_DIR) -I $(LIBFT_DIR)/arena
+LDFLAGS    =
+LDLIBS     = -lreadline
 
-.release:
-	if [ -f .debug ]; then $(MAKE) fclean; fi
-	touch .release
+# ---- build directories --------------------------------------------------- #
+RELEASE_DIR = build/release
+DEBUG_DIR   = build/debug
 
-$(NAME): $(OBJS) $(LIBFT) $(LIBS)
-	$(CC) $(CFLAGS) $^ -o $@
+# ---- libraries ----------------------------------------------------------- #
+LIBFT_DIR     = libs/libft
+LIBFT_RELEASE = $(LIBFT_DIR)/libft.a
+LIBFT_DEBUG   = $(DEBUG_DIR)/libft.a
 
-$(LIBFT): FORCE
-	if [ -f .debug ]; then $(MAKE) -C libft debug; \
-	else $(MAKE) -C libft; fi
+# ---- sources ------------------------------------------------------------- #
+SRCS        = main.c
+DEBUG_SRCS  = debug_utils.c
+
+RELEASE_OBJS = $(addprefix $(RELEASE_DIR)/, $(SRCS:.c=.o))
+DEBUG_OBJS   = $(addprefix $(DEBUG_DIR)/, $(SRCS:.c=.o)) \
+                $(addprefix $(DEBUG_DIR)/, $(DEBUG_SRCS:.c=.o))
+
+# ---- source lookup ------------------------------------------------------- #
+vpath %.c srcs debug_srcs
+
+# ---- build flags --------------------------------------------------------- #
+RELEASE_FLAGS = -O2
+DEBUG_FLAGS   = -O0 -g3 -DDEBUG
+
+# ---- targets ------------------------------------------------------------- #
+all: $(NAME)
+
+$(NAME): $(RELEASE_OBJS) $(LIBFT_RELEASE)
+	$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
+
+debug: $(NAME)-debug
+
+$(NAME)-debug: $(DEBUG_DIR)/$(NAME)
+	ln -sf $(DEBUG_DIR)/$(NAME) $@
+
+$(DEBUG_DIR)/$(NAME): $(DEBUG_OBJS) $(LIBFT_DEBUG)
+	@mkdir -p $(@D)
+	$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
+
+# ---- object compilation -------------------------------------------------- #
+$(RELEASE_DIR)/%.o: BUILD_FLAGS = $(RELEASE_FLAGS)
+$(DEBUG_DIR)/%.o:   BUILD_FLAGS = $(DEBUG_FLAGS)
+
+$(RELEASE_DIR)/%.o: %.c
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(BUILD_FLAGS) -c $< -o $@
+
+$(DEBUG_DIR)/%.o: %.c
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(BUILD_FLAGS) -c $< -o $@
+
+# ---- libft --------------------------------------------------------------- #
+$(LIBFT_RELEASE): FORCE
+	$(MAKE) -C $(LIBFT_DIR)
+
+$(LIBFT_DEBUG): FORCE
+	$(MAKE) -C $(LIBFT_DIR) debug
+	cp -u $(LIBFT_RELEASE) $@
 
 FORCE:
 
+# ---- utility targets ----------------------------------------------------- #
+run: $(NAME)
+	./$(NAME)
+
+run-debug: $(NAME)-debug
+	./$(NAME)-debug
+
+doc:
+	printf '%s\n' \
+	  'OUTPUT_DIRECTORY = docs' \
+	  'GENERATE_MAN = YES' \
+	  'MAN_OUTPUT = man' \
+	  'INPUT = inc srcs debug_srcs' \
+	  'EXTRACT_ALL = YES' \
+	  'OPTIMIZE_OUTPUT_FOR_C = YES' \
+	  > docs/Doxyfile
+	doxygen docs/Doxyfile
+
 clean:
-	$(MAKE) -C libft clean
-	rm -f $(OBJS) $(DEPS)
+	$(MAKE) -C $(LIBFT_DIR) clean
+	rm -rf build docs/Doxyfile
 
 fclean: clean
-	$(MAKE) -C libft fclean
-	rm -f $(NAME) .debug .release
+	$(MAKE) -C $(LIBFT_DIR) fclean
+	rm -f $(NAME) $(NAME)-debug
+	rm -rf docs
 
 re: fclean all
 
-debug: CFLAGS += -g #-fsanitize=address,leak,undefined
-debug: .debug $(NAME)
+# ---- phony targets ------------------------------------------------------- #
+.PHONY: all debug run run-debug doc clean fclean re FORCE
 
-.debug:
-	if [ -f .release ]; then $(MAKE) fclean; fi
-	touch .debug
-
-.PHONY: all clean fclean re debug FORCE
-
--include $(DEPS)
+# ---- dependencies -------------------------------------------------------- #
+-include $(RELEASE_OBJS:.o=.d)
+-include $(DEBUG_OBJS:.o=.d)

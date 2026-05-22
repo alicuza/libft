@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
+/*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/26 13:41:30 by sancuta           #+#    #+#             */
-/*   Updated: 2026/05/08 12:25:43 by sancuta          ###   ########.fr       */
+/*   Created: 2026/05/22 21:47:55 by sancuta           #+#    #+#             */
+/*   Updated: 2026/05/22 21:56:33 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "minishell.h"
 
@@ -20,16 +21,17 @@
 char	*ft_get_prompt(t_env *e)
 {
 	size_t	offset;
-  t_arena *prompt;
+	t_arena	*prompt;
 
-  prompt = &(e->arena[PROMPT]);
-  arena_reset(prompt);
+	prompt = &(e->arena[PROMPT]);
+	arena_reset(prompt);
 	offset = arena_strlcpy(prompt, getenv("USER"), ft_strlen(getenv("USER")) + 1); // TODO: this seems to not work correctly, i probably need strlen + 1
 	arena_strlcat(prompt, "@", 2);
-  arena_strlcat(prompt, "fanish", 7);
-  arena_strlcat(prompt, ":", 2);
+	arena_strlcat(prompt, "fanish", 7);
+	arena_strlcat(prompt, ":", 2);
 	getcwd(prompt->buf + prompt->offset - 1, CWD_SIZE); // TODO: is there a better way of doing this?
-	prompt->offset = prompt->sentinel + ft_strlen(prompt->buf + prompt->sentinel) + 1;
+	prompt->offset =
+		prompt->sentinel + ft_strlen(prompt->buf + prompt->sentinel) + 1;
 	arena_strlcat(prompt, "$ ", 3);
 	return ((char *)get_arena_ptr(prompt, offset));
 }
@@ -43,46 +45,42 @@ size_t	ft_get_user_input(t_env *e)
 		return (0);
 	if (*(e->read_line))
 		add_history(e->read_line);
-	offset = 
-    arena_strlcpy(&(e->arena[STRING]), e->read_line, ft_strlen(e->read_line) + 1);
-    arena_strlcat(&(e->arena[STRING]), "\n", 2);
+	offset =
+		arena_strlcpy(&(e->arena[STRING]), e->read_line, ft_strlen(e->read_line) + 1);
+	arena_strlcat(&(e->arena[STRING]), "\n", 2);
 	free(e->read_line);
 	return (offset);
 }
 
-t_env	init_env()
+t_env	init_env(void)
 {
 	t_env	env;
 
-  ft_memset(&env, 0, sizeof(t_env));
+	ft_memset(&env, 0, sizeof(t_env));
 	env.arena[STRING] = arena_init(ARENA_SIZE, STR_SENTINEL_SIZE);
 	env.arena[PROMPT] = arena_init(ARENA_SIZE, STR_SENTINEL_SIZE);
+	//	env.arena[TOKEN] = arena_init(ARENA_SIZE, sizeof(t_token));
 	return (env);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	(void)	argc;
-	(void)	argv;
-	(void)	envp;
+	(void) argc;
+	(void) argv;
+	(void) envp;
 
 	t_env	env;
 
-  env = init_env();
+	env = init_env();
 	ft_get_user_input(&env);
-  printf("string_arena\n\tcapacity = %lu\n\tsentinel = %lu\n\tbuffer address = %p\n", env.arena[STRING].cap, env.arena[STRING].sentinel, env.arena[STRING].buf);
-  printf("head:\n");
-  ft_print_memory(&env.arena[STRING], sizeof(t_arena));
-  printf("buffer:\n");
-  ft_print_memory(env.arena[STRING].buf, env.arena[STRING].cap + env.arena[STRING].sentinel);
-	while (env.arena[STRING].offset && ft_get_user_input(&env))
-  {
-    printf("string_arena\n\tcapacity = %lu\n\tsentinel = %lu\n\tbuffer address = %p\n", env.arena[STRING].cap, env.arena[STRING].sentinel, env.arena[STRING].buf);
-    printf("head:\n");
-    ft_print_memory(&env.arena[STRING], sizeof(t_arena));
-    printf("buffer:\n");
-    ft_print_memory(env.arena[STRING].buf, env.arena[STRING].cap + env.arena[STRING].sentinel);
-    arena_reset(&env.arena[STRING]);
-  }
+#ifdef DEBUG
+	print_arena(&env.arena[STRING]);
+#endif
+	while (ft_get_user_input(&env))
+	{
+#ifdef DEBUG
+		print_arena(&env.arena[STRING]);
+#endif
+	}
 	return (0);
 }

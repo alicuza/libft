@@ -14,7 +14,12 @@ NAME = libft.a
 CC ?= cc
 CFLAGS ?= -MMD -MP -Wall -Wextra -Werror
 ARFLAGS = -rcs
-SRCS =	ft_isalpha.c \
+PRINTF_DIR = printf
+GNL_DIR    = gnl
+ARENA_DIR  = arena
+
+SRCS = \
+		ft_isalpha.c \
 		ft_issign.c \
 		ft_isspace.c \
 		ft_isdigit.c \
@@ -62,24 +67,24 @@ SRCS =	ft_isalpha.c \
 		ft_lstclear.c \
 		ft_lstiter.c \
 		ft_lstmap.c \
-		ft_get_form_spec.c \
-		ft_printf_utils.c \
-		ft_prt_hex.c \
-		ft_prt_uint.c \
-		ft_printf.c \
-		ft_printf_padding.c \
-		ft_print_handler.c \
-		ft_prt_int.c \
-		ft_put_nbr_base.c \
-		get_next_line.c \
-		get_next_line_utils.c\
 		handle_exit.c \
-		arena/arena_alloc_reset.c \
-		arena/arena_init_free.c \
-		arena/arena_save_restore.c \
-		arena/arena_strings.c \
-		arena/arena_split.c \
-		arena/arena_pointer.c
+		$(PRINTF_DIR)/ft_get_form_spec.c \
+		$(PRINTF_DIR)/ft_printf.c \
+		$(PRINTF_DIR)/ft_printf_padding.c \
+		$(PRINTF_DIR)/ft_printf_utils.c \
+		$(PRINTF_DIR)/ft_print_handler.c \
+		$(PRINTF_DIR)/ft_prt_hex.c \
+		$(PRINTF_DIR)/ft_prt_int.c \
+		$(PRINTF_DIR)/ft_prt_uint.c \
+		$(PRINTF_DIR)/ft_put_nbr_base.c \
+		$(GNL_DIR)/get_next_line.c \
+		$(GNL_DIR)/get_next_line_utils.c \
+		$(ARENA_DIR)/arena_alloc_reset.c \
+		$(ARENA_DIR)/arena_init_free.c \
+		$(ARENA_DIR)/arena_save_restore.c \
+		$(ARENA_DIR)/arena_strings.c \
+		$(ARENA_DIR)/arena_split.c \
+		$(ARENA_DIR)/arena_pointer.c
 
 OBJS = $(SRCS:.c=.o)
 DEPS = $(SRCS:.c=.d)
