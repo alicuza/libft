@@ -201,6 +201,7 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 - [d] add `arena_grow` function to arena library // on phone branch
 - [ ] write a simple `flex` and `bison` based lexer and parser
 - [d] add github remote, and github action workflow
+- [ ] work on arenas - prepare prompt arena for `getcwd`
 - [p] rework makefile to create/use separate folders (`src`, `include`, `bin`, `debug`, `test`)
 - [p] include the additional info in the make section.
 - [p] draft the data structure and core architecture
