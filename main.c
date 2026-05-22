@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-#define ARENA_SIZE 1024
+#define ARENA_SIZE 64
 #define CWD_SIZE 256
 #define STR_SENTINEL_SIZE 1
 
@@ -39,11 +39,13 @@ size_t	ft_get_user_input(t_env *e)
 	size_t	offset;
 
 	e->read_line = readline(ft_get_prompt(e));
-	// TODO: error management for failing readline
-	if (e->read_line && *(e->read_line))
+	if (!e->read_line)
+		return (0);
+	if (*(e->read_line))
 		add_history(e->read_line);
 	offset = 
-    arena_strlcpy(&(e->arena[STRING]), e->read_line, ft_strlen(e->read_line));
+    arena_strlcpy(&(e->arena[STRING]), e->read_line, ft_strlen(e->read_line) + 1);
+    arena_strlcat(&(e->arena[STRING]), "\n", 2);
 	free(e->read_line);
 	return (offset);
 }
@@ -68,7 +70,19 @@ int	main(int argc, char **argv, char **envp)
 
   env = init_env();
 	ft_get_user_input(&env);
-	while (env.arena[STRING].offset)
-		ft_get_user_input(&env);
+  printf("string_arena\n\tcapacity = %lu\n\tsentinel = %lu\n\tbuffer address = %p\n", env.arena[STRING].cap, env.arena[STRING].sentinel, env.arena[STRING].buf);
+  printf("head:\n");
+  ft_print_memory(&env.arena[STRING], sizeof(t_arena));
+  printf("buffer:\n");
+  ft_print_memory(env.arena[STRING].buf, env.arena[STRING].cap + env.arena[STRING].sentinel);
+	while (env.arena[STRING].offset && ft_get_user_input(&env))
+  {
+    printf("string_arena\n\tcapacity = %lu\n\tsentinel = %lu\n\tbuffer address = %p\n", env.arena[STRING].cap, env.arena[STRING].sentinel, env.arena[STRING].buf);
+    printf("head:\n");
+    ft_print_memory(&env.arena[STRING], sizeof(t_arena));
+    printf("buffer:\n");
+    ft_print_memory(env.arena[STRING].buf, env.arena[STRING].cap + env.arena[STRING].sentinel);
+    arena_reset(&env.arena[STRING]);
+  }
 	return (0);
 }
