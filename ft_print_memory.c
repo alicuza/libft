@@ -55,12 +55,16 @@ static void	print_hex_string(void *addr, unsigned int size)
 	{
 		if (index < (int)size)
 		{
-			dec_to_hex_n(&buffer[counter], value[index], 2);
+			dec_to_hex_n(&buffer[counter], (unsigned char)value[index], 2);
 			index++;
 			counter += 2;
 		}
-		else
+	else
+		{
 			buffer[counter++] = ' ';
+			buffer[counter++] = ' ';
+			index++;
+		}
 		if (index % 2 == 0)
 			buffer[counter++] = ' ';
 	}
