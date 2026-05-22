@@ -135,6 +135,7 @@ rl_gets ()
 **2026.05.22**
 - massive restructuring of folder structure and makefile
   - created a separate debug function folder to use for debugging, without including it into the binary otherwise
+- added a way to quickly test different arena sizes, inspired by the tests i did for gnl
 
 #### personal
 **2026.04.30**
@@ -177,25 +178,26 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 #### minishell
 
 **research & documentation**
-- [x] ~~compile documentation on signals~~
-- [ ] compile documentation on `curses.h` and `term.h`
 - [p] research built-ins
 - [p] research interactive mode
 - [ ] research `posix sh`
 - [ ] research git workflow for working in a team
+- [x] ~~compile documentation on signals~~
 - [x] ~~research managing memory with multiple arenas, because there are actual multiple lifetimes~~
 - [x] ~~research how to implement the variable content size for tokens in the context of expansion~~
 - [x] ~~research how readline interacts with arenas and if it would even make sense to implement them~~
 - [-] ~~compile documentation on `flex` and `bison`~~
+- [-] ~~compile documentation on `curses.h` and `term.h`~~
 
 **implementation**
+- [p] rework makefile to create/use separate folders (`src`, `include`, `bin`, `debug`, `test`)
+- [p] include the additional info in the make section.
+- [p] draft the data structure and core architecture
 - [ ] add github action workflow
 - [ ] add push/pull mirroring on remote
-- [p] rework makefile to create/use separate folders (`src`, `include`, `bin`, `debug`, `test`)
 - [ ] create harness for automatic unit testing (tdd)
-- [p] draft the data structure and core architecture
-- [ ] finish writing the readme file
 - [ ] consider error handling according to posix
+- [ ] finish writing the readme file
 - [x] ~~add github remote~~
 - [x] ~~write a simple `flex` and `bison` based lexer and parser~~
 
@@ -300,6 +302,12 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 - `make fclean`: additionally removes the binary and libs
 - `make re`: recompiles the entire project from scratch
 - `make debug`: compiles with the `-g` flag for debugging
+- // TODO: complete the description with debugging funtionality;
+- // TODO: also add descriptions about the linking of binaries
+
+**Options:**
+- `make ARENA_SIZE=N`: overrides the arena initial capacity (default `64`)
+- `make debug ARENA_SIZE=N`: debug build with custom arena size
 
 **Dependencies:**
 - libft (bundled)
@@ -307,6 +315,7 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 ### Usage
 
 ```bash
+./minishell
 ```
 
 ### Functionality
