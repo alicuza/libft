@@ -13,7 +13,9 @@
 
 #include "minishell.h"
 
-#define ARENA_SIZE 64
+#ifndef ARENA_SIZE
+# define ARENA_SIZE 64
+#endif
 #define CWD_SIZE 256
 #define STR_SENTINEL_SIZE 1
 
