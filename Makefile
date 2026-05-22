@@ -16,7 +16,8 @@ NAME       = minishell
 # ---- compiler / linker --------------------------------------------------- #
 CC         = cc
 CFLAGS     = -Wall -Wextra -Werror -MMD -MP
-CPPFLAGS   = -I inc -I $(LIBFT_DIR) -I $(LIBFT_DIR)/arena
+ARENA_SIZE ?= 64
+CPPFLAGS   = -I inc -I $(LIBFT_DIR) -I $(LIBFT_DIR)/arena -D ARENA_SIZE=$(ARENA_SIZE)
 LDFLAGS    =
 LDLIBS     = -lreadline
 
