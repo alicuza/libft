@@ -132,6 +132,10 @@ rl_gets ()
 - found out that readline strips the `\n` from the end of the `read_line`, which needs to be reinserted, when the readline is copied to its arena buffer
 - added section for stuff that is not required
 
+**2026.05.22**
+- massive restructuring of folder structure and makefile
+  - created a separate debug function folder to use for debugging, without including it into the binary otherwise
+
 #### personal
 **2026.04.30**
 
@@ -176,20 +180,20 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 - [x] ~~compile documentation on signals~~
 - [ ] compile documentation on `curses.h` and `term.h`
 - [p] research built-ins
-- [ ] research interactive mode
+- [p] research interactive mode
 - [ ] research `posix sh`
 - [ ] research git workflow for working in a team
-- [ ] research managing memory with multiple arenas, because there are actual multiple lifetimes
-- [ ] research how to implement the variable content size for tokens in the context of expansion
-- [ ] research how readline interacts with arenas and if it would even make sense to implement them
+- [x] ~~research managing memory with multiple arenas, because there are actual multiple lifetimes~~
+- [x] ~~research how to implement the variable content size for tokens in the context of expansion~~
+- [x] ~~research how readline interacts with arenas and if it would even make sense to implement them~~
 - [-] ~~compile documentation on `flex` and `bison`~~
 
 **implementation**
 - [ ] add github action workflow
 - [ ] add push/pull mirroring on remote
-- [ ] rework makefile to create/use separate folders (`src`, `include`, `bin`, `debug`, `test`)
+- [p] rework makefile to create/use separate folders (`src`, `include`, `bin`, `debug`, `test`)
 - [ ] create harness for automatic unit testing (tdd)
-- [ ] draft the data structure and core architecture
+- [p] draft the data structure and core architecture
 - [ ] finish writing the readme file
 - [ ] consider error handling according to posix
 - [x] ~~add github remote~~
