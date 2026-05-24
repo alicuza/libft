@@ -136,6 +136,8 @@ rl_gets ()
 - massive restructuring of folder structure and makefile
   - created a separate debug function folder to use for debugging, without including it into the binary otherwise
 - added a way to quickly test different arena sizes, inspired by the tests i did for gnl
+- started on the tokenizer, it seems to create the correct arena entries.
+  - needs more looking at, i forgot how annoying it is to work with indices and arenas. i need to improve the api.
 
 #### personal
 **2026.04.30**
@@ -163,6 +165,10 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 - read about [`trap`](https://www.gnu.org/software/bash/manual/bash.html#index-trap): executes a given command when a given signal is intercepted.
 - learned neat bash trick: `set -e; : ${parameter:?word}` to close the shell if the parameter doesn't exist in the execution environment.
 - read about [`job control`](https://www.gnu.org/software/bash/manual/bash.html#Job-Control)
+
+**2026.05.23.**
+- structs are automatically padded to align with the biggest member type.
+  - for my arenas it is then unnecessary to even align them, since they are automatically aligned by the way sturct are padded
 
 ### Structure
 
@@ -415,7 +421,7 @@ apply the first applicable rule from the list:
 	do	
 		add `cur_char` to the `cur_token`/`word_token`
 ```
-
+// we skip rule 9 for now
 ```
 9.	if
 		`cur_char` is `comment_char` (`#`)
