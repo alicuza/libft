@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 21:48:28 by sancuta           #+#    #+#             */
-/*   Updated: 2026/05/22 21:48:28 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/05/24 02:24:54 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,18 +45,38 @@
 
 typedef enum e_arena_type
 {
-  STRING,
-  PROMPT,
-  TOKEN,
-  STACK,
-  CMD,
-  COUNT,
+	AT_STRING,
+	AT_PROMPT,
+	AT_TOKEN,
+	AT_STACK,
+	AT_CMD,
+	AT_COUNT,
 } t_arena_type;
 
-typedef struct s_env
+typedef enum e_token_type
 {
+	TT_NONE,
+	TT_WORD,
+	TT_COUNT,
+} t_token_type;
+
+typedef struct s_ctx
+{
+	t_arena	arena[AT_COUNT];
 	char  	*read_line;
-	t_arena	arena[5];
-}	t_env;
+}	t_ctx;
+
+typedef struct s_slice
+{
+	size_t	start;
+	size_t	len;
+}	t_slice;
+
+typedef struct s_token
+{
+	t_slice			content;
+	t_token_type	type;
+	size_t	next;
+}	t_token;
 
 #endif
