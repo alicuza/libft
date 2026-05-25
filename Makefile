@@ -31,7 +31,12 @@ LIBFT_RELEASE = $(LIBFT_DIR)/libft.a
 LIBFT_DEBUG   = $(DEBUG_DIR)/libft.a
 
 # ---- sources ------------------------------------------------------------- #
-SRCS        = main.c
+SRCS        = \
+			main.c \
+			prompt.c \
+			input.c \
+			token.c \
+			token_utils.c
 DEBUG_SRCS  = debug_utils.c
 
 RELEASE_OBJS = $(addprefix $(RELEASE_DIR)/, $(SRCS:.c=.o))
