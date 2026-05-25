@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 21:48:28 by sancuta           #+#    #+#             */
-/*   Updated: 2026/05/24 02:24:54 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/05/25 17:35:53 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,17 @@
 #  include "debug.h"
 # endif
 
+# ifndef ARENA_SIZE
+#  define ARENA_SIZE 64
+# endif
+# define CWD_SIZE 256
+# define STR_SENTINEL_SIZE 1
+# define NO_TOKEN 0
+
+# ifndef DEBUG
 typedef enum e_arena_type
 {
+	AT_NONE,	// TODO: should i init arenas as NONE, with everything zeroed out, and then assign arena to the correct type?
 	AT_STRING,
 	AT_PROMPT,
 	AT_TOKEN,
@@ -53,18 +62,12 @@ typedef enum e_arena_type
 	AT_COUNT,
 } t_arena_type;
 
-typedef enum e_token_type
-{
-	TT_NONE,
-	TT_WORD,
-	TT_COUNT,
-} t_token_type;
-
 typedef struct s_ctx
 {
 	t_arena	arena[AT_COUNT];
 	char  	*read_line;
 }	t_ctx;
+# endif
 
 typedef struct s_slice
 {
@@ -72,11 +75,28 @@ typedef struct s_slice
 	size_t	len;
 }	t_slice;
 
+typedef enum e_token_type
+{
+	TT_NONE,
+	TT_WORD,
+	TT_COUNT,
+} t_token_type;
+
 typedef struct s_token
 {
 	t_slice			content;
 	t_token_type	type;
 	size_t	next;
 }	t_token;
+
+char	*get_prompt(t_ctx *c);
+size_t	get_user_input(t_ctx *c);
+size_t	get_next_token_idx(t_ctx *c);
+size_t	get_idx_from_offset(t_arena *arena, size_t offset);
+size_t	get_offset_from_idx(t_arena *arena, size_t idx);
+t_token	*get_token_from_offset(t_arena *arena, size_t offset);
+t_token	*get_token_from_idx(t_arena *arena, size_t idx);
+size_t	start_token(t_arena *arena, size_t start, t_token_type type);
+void	grow_token(t_arena *arena, size_t id);
 
 #endif
