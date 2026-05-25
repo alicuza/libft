@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 21:48:28 by sancuta           #+#    #+#             */
-/*   Updated: 2026/05/25 17:35:53 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/05/25 21:35:13 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,23 @@
 # ifndef ARENA_SIZE
 #  define ARENA_SIZE 64
 # endif
-# define CWD_SIZE 256
+# define CWD_SIZE 256			// TODO: think of a better way to do this.
 # define STR_SENTINEL_SIZE 1
 # define NO_TOKEN 0
+# define OPERATOR_SET "<>&|()"
+
+/* ------------------------------- quote types ------------------------------ */ // TODO: i should use more of these types of section headers
+// "0b" officially supported by the standard since C23, not sure if we can use it
+# define QT_NONE 0,				// 0b00000000
+# define QT_SQ 1,				// 0b00000001
+# define QT_DQ 2,				// 0b00000010
+# define QT_UNENCLOSED_SQ 8,	// 0b00000100
+# define QT_UNENCLOSED_DQ 16,	// 0b00001000
 
 # ifndef DEBUG
 typedef enum e_arena_type
 {
-	AT_NONE,	// TODO: should i init arenas as NONE, with everything zeroed out, and then assign arena to the correct type?
+	AT_NONE,					// TODO: should i init arenas as NONE, with everything zeroed out, and then assign arena to the correct type?
 	AT_STRING,
 	AT_PROMPT,
 	AT_TOKEN,
@@ -85,8 +94,8 @@ typedef enum e_token_type
 typedef struct s_token
 {
 	t_slice			content;
+	size_t			next;
 	t_token_type	type;
-	size_t	next;
 }	t_token;
 
 char	*get_prompt(t_ctx *c);
