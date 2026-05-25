@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/09 09:27:38 by sancuta           #+#    #+#             */
-/*   Updated: 2026/05/12 20:02:29 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/05/24 20:49:18 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,5 +68,11 @@ size_t	arena_alloc(t_arena *arena, size_t size, size_t align)
 
 void	arena_reset(t_arena *arena)
 {
+	arena->offset = arena->sentinel;
+}
+
+void	arena_clear(t_arena *arena)
+{
+	ft_memset(arena->buf + arena->sentinel, 0, arena->offset - arena->sentinel);
 	arena->offset = arena->sentinel;
 }
