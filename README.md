@@ -139,6 +139,17 @@ rl_gets ()
 - started on the tokenizer, it seems to create the correct arena entries.
   - needs more looking at, i forgot how annoying it is to work with indices and arenas. i need to improve the api.
 
+**2026.05.23**
+- started work on the tokenizer
+- some naming changes, like `env` to `ctx`
+
+**2026.05.25**
+- mvp tokenizer works.
+- modified and added to the debug function:
+  - `print_arena` now names the type of arena it is
+  - `print_token` and `poison_sentinel` (changes the last byte of the sentinel to `0xff`) are the newest additions.
+- need to decide how to track whether a variable included liteal quote chars, because those don't need to be removed by the subsequent quote removal stage
+
 #### personal
 **2026.04.30**
 
@@ -184,6 +195,7 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 #### minishell
 
 **research & documentation**
+- [ ] what does a struct pointer dereference to, if its member is another struct. The first element of that struct?
 - [p] research built-ins
 - [p] research interactive mode
 - [ ] research `posix sh`
@@ -358,84 +370,77 @@ Input is read in terms of lines in 2 different circumstances:
 **ordinary token recognition**
 apply the first applicable rule from the list:
 
-```
-1.	if
-		`cur_char` is `EOI`/`EOF`
-	do
-		delimit `cur_token`, if it exists
-```
+rule 1.
+if
+	`cur_char` is `EOI`/`EOF`
+do
+	delimit `cur_token`, if it exists
 
-```
-2.	if
-		`prev_char` is part of `operator`
-		&& `cur_char` is unquoted
-		&& `cur_char` can be used with the `prev_char` to form an `operator`
-	do
-		add `cur_char` to the `cur_token`
-```
+rule 2.
+if
+	`prev_char` is part of `operator`
+	&& `cur_char` is unquoted
+	&& `cur_char` can be used with the `prev_char` to form an `operator`
+do
+	add `cur_char` to the `cur_token`
 
-```
-3.	if
-		`prev_char` is part of `operator`
-		&& `cur_char` cannot be used with the `prev_char` to form an `operator`
-	do
-		delimit the `cur_token`
-```
+rule 3.
+if
+	`prev_char` is part of `operator`
+	&& `cur_char` cannot be used with the `prev_char` to form an `operator`
+do
+	delimit the `cur_token`
 
-```
-4.	if
-		`cur_char` is a `quote_char`(`'`, `"`)
-	do
-		<add `cur_char` to the `cur_token`
-		&& add following `char`s to the `cur_token` unmodified until the closing `quote_char` was found
-		&& DO NOT DELIMIT `cur_token`
-```
+rule 4.
+if
+	`cur_char` is a `quote_char`(`'`, `"`)
+do
+	add `cur_char` to the `cur_token`
+	&& add following `char`s to the `cur_token` unmodified until the closing `quote_char` was found
+	&& DO NOT DELIMIT `cur_token`
 
-```
-5.	if
-		`cur_char` is beginning of variable expansion (`$`)
-	do
-		add `cur_char` to the `cur_token`
-		&& add following `char`s to the `cur_token` unmodified while valid `name_chars`
-```
+rule 5.
+if
+	`cur_char` is beginning of variable expansion (`$`)
+do
+	add `cur_char` to the `cur_token`
+	&& add following `char`s to the `cur_token` unmodified while valid `name_chars`
 
-```
-6.	if`cur_char` is unquoted
-		&& `cur_char` is start of an `operator`
-	do	
-		delimit `cur_token` if it exists
-```
+rule 6.
+if
+	`cur_char` is unquoted
+	&& `cur_char` is start of an `operator`
+do	
+	delimit `cur_token` if it exists
 
-```
-7.	if
-		`cur_char` is unquoted
-		&& `cur_char` is `blank` (` `, `\t`)
-	do
-		delimit `cur_token`
-		&& discrad `cur_char`
-```
+rule 7.
+if
+	`cur_char` is unquoted
+	&& `cur_char` is `blank` (` `, `\t`)
+do
+	delimit `cur_token`
+	&& discrad `cur_char`
 
-```
-8.	if
-		`prev_char` is part of `word_token`
-	do	
-		add `cur_char` to the `cur_token`/`word_token`
-```
+rule 8.
+if
+	`prev_char` is part of `word_token`
+do	
+	add `cur_char` to the `cur_token`/`word_token`
 // we skip rule 9 for now
-```
-9.	if
-		`cur_char` is `comment_char` (`#`)
-	do
-		discard `cur_char`
-		&& discrad `chars` until `\n`
-```
-
-```
-10.	do
-		`cur_char` is used as the start of a new `word_token`
+rule 9.
+if
+	`cur_char` is `comment_char` (`#`)
+do
+	discard `cur_char`
+	&& discrad `chars` until `\n`
 ```
 
-Once delimited, a token get's lexed according to the Shell Grammar.
+```
+rule 10.
+do
+	`cur_char` is used as the start of a new `word_token`
+
+Once delimited, a token gets lexed according to the Shell Grammar.
 
 "In situations where the shell parses its input as a program, once a `complete_command` has been recognized by the grammar (see 2.10 Shell Grammar), the `complete_command` shall be executed before the next `complete_command` is tokenized and parsed."
 
@@ -451,8 +456,8 @@ Lexing happens immediately following the `token` being delimited.
 	do
 		identify as corresponding `token_id`
 ```
-
 ```
+
 2.	if
 		`cur_token` is only `digits`
 		&& `delimiter` is `<` or `>`

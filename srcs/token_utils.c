@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 13:03:51 by sancuta           #+#    #+#             */
-/*   Updated: 2026/05/25 17:08:10 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/05/25 18:33:28 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,32 @@ void	grow_token(t_arena *arena, size_t idx)
 	printf("in arena_append_token at offset %zu\n", arena->offset);
 	token = get_token_from_idx(arena, idx);
 	++(token->content.len);
+}
+
+bool	is_op_char(char c)
+{
+	const char	*set = OPERATOR_SET;
+
+	while (*set)
+	{
+		if (c == *set)
+			return (true);
+		++set;
+	}
+	return (false);
+}
+
+bool	is_op_str(char *c)
+{
+	const char	*operators[] = {"<<", ">>", "&&", "||", NULL};
+	size_t	i;
+
+	i = 0;
+	while (operators[i])
+	{
+		if (!ft_strncmp(c, operators[i], 2))
+			return (true);
+		++i;
+	}
+	return (false);
 }
