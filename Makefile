@@ -6,7 +6,7 @@
 #    By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/22 21:29:56 by sancuta           #+#    #+#              #
-#    Updated: 2026/05/22 21:32:14 by sancuta          ###   ########.fr        #
+#    Updated: 2026/05/26 18:49:25 by sancuta          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,9 @@ SRCS        = \
 			prompt.c \
 			input.c \
 			token.c \
-			token_utils.c
+			token_utils.c \
+			token_char.c \
+			token_transform.c
 DEBUG_SRCS  = debug_utils.c
 
 RELEASE_OBJS = $(addprefix $(RELEASE_DIR)/, $(SRCS:.c=.o))

@@ -6,14 +6,13 @@
 /*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 21:47:55 by sancuta           #+#    #+#             */
-/*   Updated: 2026/05/26 00:05:06 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/05/26 18:53:26 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "minishell.h"
 
-t_ctx	init_ctx(void)
+static t_ctx	init_ctx(void)
 {
 	t_ctx	c;
 

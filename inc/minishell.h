@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 21:48:28 by sancuta           #+#    #+#             */
-/*   Updated: 2026/05/25 21:35:13 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/05/26 19:11:01 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,14 +50,17 @@
 # define STR_SENTINEL_SIZE 1
 # define NO_TOKEN 0
 # define OPERATOR_SET "<>&|()"
+# define QUOTE_SET "\"'"
 
 /* ------------------------------- quote types ------------------------------ */ // TODO: i should use more of these types of section headers
 // "0b" officially supported by the standard since C23, not sure if we can use it
-# define QT_NONE 0,				// 0b00000000
-# define QT_SQ 1,				// 0b00000001
-# define QT_DQ 2,				// 0b00000010
-# define QT_UNENCLOSED_SQ 8,	// 0b00000100
-# define QT_UNENCLOSED_DQ 16,	// 0b00001000
+/* TODO: probably unnecessary for me. leaving it in for now
+ * # define QT_NONE 0,				// 0b00000000
+ * # define QT_SQ 1,				// 0b00000001
+ * # define QT_DQ 2,				// 0b00000010
+ * # define QT_UNENCLOSED_SQ 8,	// 0b00000100
+ * # define QT_UNENCLOSED_DQ 16,	// 0b00001000
+ */
 
 # ifndef DEBUG
 typedef enum e_arena_type
@@ -98,14 +101,28 @@ typedef struct s_token
 	t_token_type	type;
 }	t_token;
 
-char	*get_prompt(t_ctx *c);
-size_t	get_user_input(t_ctx *c);
-size_t	get_next_token_idx(t_ctx *c);
-size_t	get_idx_from_offset(t_arena *arena, size_t offset);
-size_t	get_offset_from_idx(t_arena *arena, size_t idx);
-t_token	*get_token_from_offset(t_arena *arena, size_t offset);
-t_token	*get_token_from_idx(t_arena *arena, size_t idx);
-size_t	start_token(t_arena *arena, size_t start, t_token_type type);
-void	grow_token(t_arena *arena, size_t id);
+/* ---------------------------------- main.c -------------------------------- */
+char		*get_prompt(t_ctx *c);
+size_t		get_user_input(t_ctx *c);
+
+/* --------------------------------- token.c -------------------------------- */
+size_t		get_next_token_idx(t_ctx *c);
+
+/* --------------------------- token_transform.c ---------------------------- */
+size_t		get_idx_from_offset(t_arena *arena, size_t offset);
+size_t		get_offset_from_idx(t_arena *arena, size_t idx);
+t_token		*get_token_from_offset(t_arena *arena, size_t offset);
+t_token		*get_token_from_idx(t_arena *arena, size_t idx);
+
+/* ----------------------------- token_utils.c ------------------------------ */
+size_t		start_token(t_arena *arena, size_t start, t_token_type type);
+void		grow_token(t_arena *arena, size_t id);
+size_t		save_token_len(t_token *arena);
+void		restore_token_len(t_token *arena, size_t len);
+
+/* ------------------------------ token_char.c ------------------------------ */
+bool		is_char_in_set(char c, const char *set);
+const char	**get_operator_strs(void);
+bool		is_str_in_set(char *c, const char **set);
 
 #endif

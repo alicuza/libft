@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 13:37:40 by sancuta           #+#    #+#             */
-/*   Updated: 2026/05/26 00:01:03 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/05/26 19:41:24 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,62 +26,107 @@
  * 	return (true);
 }
  */
+/* TODO: might be unnecessary
+ *
+ * bool	is_enclosed_quote(t_arena *input, size_t idx)
+ * {
+ * 	char	quote;
+ * 
+ * 	if (is_char_in_set(input->buf[cur_char_idx], QUOTE_SET))
+ * 	{
+ * 		quote = input->buf[idx];
+ * 		++idx;
+ * 	}
+ * 	while (input->buf[idx] && input->buf[idx] != quote)
+ * 		++idx;
+ * 	if (!input->buf[idx])
+ * 		return (false);
+ * 	return (true);
+ * }
+ */ 
+// returns the passed cur_char_idx or the updated one, if the quote is closed
+static size_t	try_as_enclosed_quote(t_ctx *c, size_t token_idx, size_t input_idx)
+{
+	size_t	saved_len;	// TODO: could add this offset variable as static in the arena function itself.
+	size_t	new_input_idx;
+	t_arena	*input = &(c->arena[AT_STRING]);
+	t_arena	*tokens = &(c->arena[AT_TOKEN]);
 
-size_t	get_next_token_idx(t_ctx *c, bool reset)
+	new_input_idx = input_idx + 1;
+	grow_token(tokens, token_idx);
+	saved_len = save_token_len(get_token_from_idx(tokens, token_idx)); // TODO: arena_save is not the correct function for this.
+	while (input->buf[new_input_idx] && (input->buf[new_input_idx] != input->buf[input_idx]))
+	{
+		grow_token(tokens, token_idx);
+		++new_input_idx;
+	}
+	if (!input->buf[new_input_idx])
+	{
+		restore_token_len(get_token_from_idx(tokens, token_idx), saved_len);
+		return (input_idx);
+	}
+	grow_token(tokens, token_idx);
+	return (new_input_idx);
+}
+size_t	get_next_token_idx(t_ctx *c)
 {
 	static size_t	cur_char_idx;
 	static size_t	cur_token_idx;
 	t_arena			*input = &(c->arena[AT_STRING]); // TODO: think about making helper functions to return the arena by type
 	t_arena			*tokens = &(c->arena[AT_TOKEN]);
-	size_t			i;
 
 	if (!cur_char_idx)
 	{
 		cur_char_idx = input->sentinel;
 		cur_token_idx = 0;
 	}
+#ifdef DEBUG
 	printf("cur_char_idx: %c\n", input->buf[cur_char_idx]);
 	printf("cur_char_idx: %s\n", input->buf + cur_char_idx);
+#endif
 	while (cur_char_idx <= input->offset)
 	{
 		if (input->buf[cur_char_idx] == '\0')	// rule 1
 		{
+#ifdef DEBUG
 			printf("rule 1\n");
-/*			if (!cur_token_idx)	// TODO: need to consider if this is actually a good check for whether a token exists
- *			{
- *				cur_char_idx = 0;
- *				return (cur_token_idx);	// TODO: need to think about this more: returning 0 is saying that there was no token (it points to the sentinel), or that something went wrong
- *			}
- *			TODO: !! this is actually unnecessary, turns out the way i designed the arenas actually comes in handy here: the current index is returned either way
- */
+#endif
 			cur_char_idx = 0;
 			return (cur_token_idx);
 		}
 		// TODO: figure out in general how this could be done better, if i want to use an unclosed quote as a char
 		// 		also tracking of quotes is unnecessarym except for the case that a variable gets expanded to something
-		// 		containing literal quotes
-		else if (is_quote_char(input->buf[cur_char_idx] && is_enclosed_quote(input, cur_char_idx))		// rule 4
+		// 		containing literal quote chars
+		else if (is_char_in_set(input->buf[cur_char_idx], QUOTE_SET))		// rule 4
 		{
+#ifdef DEBUG
 			printf("rule 4\n");
+#endif
 			if (!cur_token_idx)
 				cur_token_idx = get_idx_from_offset(tokens, start_token(tokens, cur_char_idx, TT_WORD));
-			while (!is_quote_char(input->buf[cur_char_idx]))	// TODO: for now we iterate again over the quoted text and grow the token one by one
-			{
-				grow_token(tokens, cur_token_idx);	// TODO: should take length as a parameter to grow multiple times is necessary
-				++cur_char_idx;
-			}
-			grow_token(tokens, cur_token_idx);	// TODO: would not be necessary if i implement growing the token by the len of the quoted section
-			++cur_char_idx;
-		}
-		else if (token->type == TT_WORD) 		// rule 8
+/* TODO: this must be removed, i can just reset the arena to the offset 
+ *			while (!is_char_in_set(input->buf[cur_char_idx], QUOTE_SET))	// TODO: for now we iterate again over the quoted text and grow the token one by one
+ *			{
+ *				grow_token(tokens, cur_token_idx);	// TODO: should take length as a parameter to grow multiple times is necessary
+ *				++cur_char_idx;
+ *			}
+ *			grow_token(tokens, cur_token_idx);	// TODO: would not be necessary if i implement growing the token by the len of the quoted section
+ *			++cur_char_idx;
+ */			cur_char_idx = try_as_enclosed_quote(c, cur_token_idx, cur_char_idx);
+ 		}
+		else if (get_token_from_idx(tokens, cur_token_idx)->type == TT_WORD) 		// rule 8
 		{
+#ifdef DEBUG
 			printf("rule 8\n");
+#endif
 			grow_token(tokens, cur_token_idx);
 		}
 												// rule 9 - being skipped
 		else									// rule 10
 		{
+#ifdef DEBUG
 			printf("rule 10\n");
+#endif
 			cur_token_idx = get_idx_from_offset(tokens, start_token(tokens, cur_char_idx, TT_WORD));
 		}
 		++cur_char_idx;
