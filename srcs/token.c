@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 13:37:40 by sancuta           #+#    #+#             */
-/*   Updated: 2026/05/26 19:41:24 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/05/26 20:00:20 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ static size_t	try_as_enclosed_quote(t_ctx *c, size_t token_idx, size_t input_idx
 	t_arena	*tokens = &(c->arena[AT_TOKEN]);
 
 	new_input_idx = input_idx + 1;
-	grow_token(tokens, token_idx);
 	saved_len = save_token_len(get_token_from_idx(tokens, token_idx)); // TODO: arena_save is not the correct function for this.
 	while (input->buf[new_input_idx] && (input->buf[new_input_idx] != input->buf[input_idx]))
 	{
@@ -104,15 +103,9 @@ size_t	get_next_token_idx(t_ctx *c)
 #endif
 			if (!cur_token_idx)
 				cur_token_idx = get_idx_from_offset(tokens, start_token(tokens, cur_char_idx, TT_WORD));
-/* TODO: this must be removed, i can just reset the arena to the offset 
- *			while (!is_char_in_set(input->buf[cur_char_idx], QUOTE_SET))	// TODO: for now we iterate again over the quoted text and grow the token one by one
- *			{
- *				grow_token(tokens, cur_token_idx);	// TODO: should take length as a parameter to grow multiple times is necessary
- *				++cur_char_idx;
- *			}
- *			grow_token(tokens, cur_token_idx);	// TODO: would not be necessary if i implement growing the token by the len of the quoted section
- *			++cur_char_idx;
- */			cur_char_idx = try_as_enclosed_quote(c, cur_token_idx, cur_char_idx);
+			else
+				grow_token(tokens, cur_token_idx);
+			cur_char_idx = try_as_enclosed_quote(c, cur_token_idx, cur_char_idx);
  		}
 		else if (get_token_from_idx(tokens, cur_token_idx)->type == TT_WORD) 		// rule 8
 		{
