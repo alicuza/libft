@@ -61,10 +61,8 @@ In situations where the shell parses its input as a program, once a complete_com
 - first structure sketched: [Visualisation](https://excalidraw.com/#json=8BAFo2sDfsrJqzire7OOM,YjbRdUHRhwRBObV-QLgAXg)
   - tokens will reference slices of the input string, maintaining the original information such as type of quotes and expansion characters.
   - tokens resulting from expansion will be appended to the token arena and relinked through indices to maintain the correct order of operations.
-=======
- - so once a token gets "delimited", you immediately parse it, and a recognized `complete_command` gets immediatly executed before tokenization continues.
 
-**2026.05.06. - 2026.05.07.**
+**2026.05.07.**
 - worked on the arena implementation:
   - added `arena_grow` function
   - reworked alignment to be a member of the struct: `arena->align` encodes the type of alignment (if the alignment is set to 0, it should be using default dynamic alignment)
@@ -143,6 +141,19 @@ rl_gets ()
 - massive restructuring of folder structure and makefile
   - created a separate debug function folder to use for debugging, without including it into the binary otherwise
 - added a way to quickly test different arena sizes, inspired by the tests i did for gnl
+- started on the tokenizer, it seems to create the correct arena entries.
+  - needs more looking at, i forgot how annoying it is to work with indices and arenas. i need to improve the api.
+
+**2026.05.23**
+- started work on the tokenizer
+- some naming changes, like `env` to `ctx`
+
+**2026.05.25**
+- mvp tokenizer works.
+- modified and added to the debug function:
+  - `print_arena` now names the type of arena it is
+  - `print_token` and `poison_sentinel` (changes the last byte of the sentinel to `0xff`) are the newest additions.
+- need to decide how to track whether a variable included liteal quote chars, because those don't need to be removed by the subsequent quote removal stage
 
 #### personal
 **2026.04.30**
@@ -171,6 +182,10 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 - learned neat bash trick: `set -e; : ${parameter:?word}` to close the shell if the parameter doesn't exist in the execution environment.
 - read about [`job control`](https://www.gnu.org/software/bash/manual/bash.html#Job-Control)
 
+**2026.05.23.**
+- structs are automatically padded to align with the biggest member type.
+  - for my arenas it is then unnecessary to even align them, since they are automatically aligned by the way sturct are padded
+
 ### Structure
 
 *see [2.1 Shell Introduction](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html#tag_19_01)*
@@ -194,6 +209,7 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 - [x] ~~research managing memory with multiple arenas, because there are actual multiple lifetimes~~
 - [x] ~~research how to implement the variable content size for tokens in the context of expansion~~
 - [x] ~~research how readline interacts with arenas and if it would even make sense to implement them~~
+- [x] ~~what does a struct pointer dereference to, if its member is another struct. The first element of that struct?~~
 - [-] ~~compile documentation on `flex` and `bison`~~
 - [-] ~~compile documentation on `curses.h` and `term.h`~~
 
@@ -368,84 +384,74 @@ Input is read in terms of lines in 2 different circumstances:
 **ordinary token recognition**
 apply the first applicable rule from the list:
 
-```
-1.	if
+	rule 1.
+	if
 		`cur_char` is `EOI`/`EOF`
 	do
 		delimit `cur_token`, if it exists
-```
 
-```
-2.	if
+	rule 2.
+	if
 		`prev_char` is part of `operator`
 		&& `cur_char` is unquoted
 		&& `cur_char` can be used with the `prev_char` to form an `operator`
 	do
 		add `cur_char` to the `cur_token`
-```
 
-```
-3.	if
+	rule 3.
+	if
 		`prev_char` is part of `operator`
 		&& `cur_char` cannot be used with the `prev_char` to form an `operator`
 	do
 		delimit the `cur_token`
-```
 
-```
-4.	if
+	rule 4.
+	if
 		`cur_char` is a `quote_char`(`'`, `"`)
 	do
-		<add `cur_char` to the `cur_token`
+		add `cur_char` to the `cur_token`
 		&& add following `char`s to the `cur_token` unmodified until the closing `quote_char` was found
 		&& DO NOT DELIMIT `cur_token`
-```
 
-```
-5.	if
+	rule 5.
+	if
 		`cur_char` is beginning of variable expansion (`$`)
 	do
 		add `cur_char` to the `cur_token`
 		&& add following `char`s to the `cur_token` unmodified while valid `name_chars`
-```
 
-```
-6.	if`cur_char` is unquoted
+	rule 6.
+	if
+		`cur_char` is unquoted
 		&& `cur_char` is start of an `operator`
 	do	
 		delimit `cur_token` if it exists
-```
 
-```
-7.	if
+	rule 7.
+	if
 		`cur_char` is unquoted
 		&& `cur_char` is `blank` (` `, `\t`)
 	do
 		delimit `cur_token`
 		&& discrad `cur_char`
-```
 
-```
-8.	if
+	rule 8.
+	if
 		`prev_char` is part of `word_token`
 	do	
 		add `cur_char` to the `cur_token`/`word_token`
-```
 
-```
-9.	if
+	rule 9.	// we skip rule 9 for now
 		`cur_char` is `comment_char` (`#`)
 	do
 		discard `cur_char`
 		&& discrad `chars` until `\n`
-```
 
-```
-10.	do
+	rule 10.
+	do
 		`cur_char` is used as the start of a new `word_token`
-```
 
-Once delimited, a token get's lexed according to the Shell Grammar.
+Once delimited, a token gets lexed according to the Shell Grammar.
 
 "In situations where the shell parses its input as a program, once a `complete_command` has been recognized by the grammar (see 2.10 Shell Grammar), the `complete_command` shall be executed before the next `complete_command` is tokenized and parsed."
 
@@ -515,8 +521,6 @@ Lexing happens immediately following the `token` being delimited.
 - [2.7 Redirections](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html#tag_19_07)
 - [2.10.2 Shell Grammar Rules](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html#tag_19_10_02)
 - [3.45 Blank Character](https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap03.html#tag_03_45)
-
-
 
 ### Bash Specific Terms
 
