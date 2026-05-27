@@ -54,7 +54,17 @@ Once a token is delimited, it is categorized as required by the grammar in 2.10 
 
 In situations where the shell parses its input as a program, once a complete_command has been recognized by the grammar (see 2.10 Shell Grammar), the complete_command shall be executed before the next complete_command is tokenized and parsed.
 ```
+  - so once a token gets "delimited", you immediately parse it, and a recognized command gets immediatly executed before tokenization continues.
 
+<<<<<<< HEAD
+=======
+**2026.05.06**
+- fixed UB in `ft_memmove`, comparing pointers that are not necessarily pointing to the same object in memory. Cast to `intptr_t` first.
+- first structure sketched: [Visualisation](https://excalidraw.com/#json=8BAFo2sDfsrJqzire7OOM,YjbRdUHRhwRBObV-QLgAXg)
+  - tokens will reference slices of the input string, maintaining the original information such as type of quotes and expansion characters.
+  - tokens resulting from expansion will be appended to the token arena and relinked through indices to maintain the correct order of operations.
+=======
+>>>>>>> main
  - so once a token gets "delimited", you immediately parse it, and a recognized `complete_command` gets immediatly executed before tokenization continues.
 
 **2026.05.06. - 2026.05.07.**
@@ -136,6 +146,7 @@ rl_gets ()
 - massive restructuring of folder structure and makefile
   - created a separate debug function folder to use for debugging, without including it into the binary otherwise
 - added a way to quickly test different arena sizes, inspired by the tests i did for gnl
+<<<<<<< HEAD
 - started on the tokenizer, it seems to create the correct arena entries.
   - needs more looking at, i forgot how annoying it is to work with indices and arenas. i need to improve the api.
 
@@ -149,6 +160,8 @@ rl_gets ()
   - `print_arena` now names the type of arena it is
   - `print_token` and `poison_sentinel` (changes the last byte of the sentinel to `0xff`) are the newest additions.
 - need to decide how to track whether a variable included liteal quote chars, because those don't need to be removed by the subsequent quote removal stage
+=======
+>>>>>>> main
 
 #### personal
 **2026.04.30**
@@ -177,13 +190,17 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 - learned neat bash trick: `set -e; : ${parameter:?word}` to close the shell if the parameter doesn't exist in the execution environment.
 - read about [`job control`](https://www.gnu.org/software/bash/manual/bash.html#Job-Control)
 
+<<<<<<< HEAD
 **2026.05.23.**
 - structs are automatically padded to align with the biggest member type.
   - for my arenas it is then unnecessary to even align them, since they are automatically aligned by the way sturct are padded
 
+=======
+>>>>>>> main
 ### Structure
 
 *see [2.1 Shell Introduction](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html#tag_19_01)*
+*see [structure sketch](https://excalidraw.com/#json=8BAFo2sDfsrJqzire7OOM,YjbRdUHRhwRBObV-QLgAXg)*
 1. //TODO: write out the whole structure, first as graph, then as high abstraction pseudocode.
 
 ### Schedule
@@ -195,7 +212,10 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 #### minishell
 
 **research & documentation**
+<<<<<<< HEAD
 - [ ] what does a struct pointer dereference to, if its member is another struct. The first element of that struct?
+=======
+>>>>>>> main
 - [p] research built-ins
 - [p] research interactive mode
 - [ ] research `posix sh`
@@ -208,6 +228,12 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 - [-] ~~compile documentation on `curses.h` and `term.h`~~
 
 **implementation**
+<<<<<<< HEAD
+=======
+- [d] add `arena_grow` function to arena library // on phone branch
+- [ ] write a simple `flex` and `bison` based lexer and parser
+- [d] add github remote, and github action workflow
+>>>>>>> main
 - [ ] work on arenas - prepare prompt arena for `getcwd`
 - [p] rework makefile to create/use separate folders (`src`, `include`, `bin`, `debug`, `test`)
 - [p] include the additional info in the make section.
@@ -243,18 +269,23 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
   - [The GNU Readline Library](https://tiswww.cwru.edu/php/chet/readline/readline.html)
   - [The GNU History Library](https://tiswww.case.edu/php/chet/readline/history.html)
   - [The GNU Readline User Interface](https://tiswww.case.edu/php/chet/readline/rluserman.html)
+
 **termcap**
 - [The Termcap Manual](https://www.gnu.org/software/termutils/manual/termcap-1.3/html_mono/termcap.html)
+
 **posix**
 - [POSIX.1-2024](https://pubs.opengroup.org/onlinepubs/9799919799/)
   (same as "IEEE Std 1003.1-2024" and "The Open Group Standard Base Specifications, Issue 8")
   - [Shell & Utilities](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/toc.html)
     - [Consequences of Shell Errors](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html#tag_19_08_01)
   - [sh — shell, the standard command language interpreter](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html)
+
 **bash**
 - [GNU Bash manual](https://www.gnu.org/software/bash/manual/bash.html)
+
 **general**
 - [Shell (Computing)](https://en.wikipedia.org/wiki/Shell_(computing))
+
 **forgejo & codeberg**
 - [Forgejo - Repository Mirrors](https://forgejo.org/docs/latest/user/repo-mirror)
 - [Codeberg Pages](https://codeberg.page/)
@@ -370,6 +401,7 @@ Input is read in terms of lines in 2 different circumstances:
 **ordinary token recognition**
 apply the first applicable rule from the list:
 
+<<<<<<< HEAD
 	rule 1.
 	if
 		`cur_char` is `EOI`/`EOF`
@@ -378,18 +410,37 @@ apply the first applicable rule from the list:
 
 	rule 2.
 	if
+=======
+```
+1.	if
+		`cur_char` is `EOI`/`EOF`
+	do
+		delimit `cur_token`, if it exists
+```
+
+```
+2.	if
+>>>>>>> main
 		`prev_char` is part of `operator`
 		&& `cur_char` is unquoted
 		&& `cur_char` can be used with the `prev_char` to form an `operator`
 	do
 		add `cur_char` to the `cur_token`
+<<<<<<< HEAD
 
 	rule 3.
 	if
+=======
+```
+
+```
+3.	if
+>>>>>>> main
 		`prev_char` is part of `operator`
 		&& `cur_char` cannot be used with the `prev_char` to form an `operator`
 	do
 		delimit the `cur_token`
+<<<<<<< HEAD
 
 	rule 4.
 	if
@@ -401,10 +452,26 @@ apply the first applicable rule from the list:
 
 	rule 5.
 	if
+=======
+```
+
+```
+4.	if
+		`cur_char` is a `quote_char`(`'`, `"`)
+	do
+		<add `cur_char` to the `cur_token`
+		&& add following `char`s to the `cur_token` unmodified until the closing `quote_char` was found
+		&& DO NOT DELIMIT `cur_token`
+```
+
+```
+5.	if
+>>>>>>> main
 		`cur_char` is beginning of variable expansion (`$`)
 	do
 		add `cur_char` to the `cur_token`
 		&& add following `char`s to the `cur_token` unmodified while valid `name_chars`
+<<<<<<< HEAD
 
 	rule 6.
 	if
@@ -415,11 +482,25 @@ apply the first applicable rule from the list:
 
 	rule 7.
 	if
+=======
+```
+
+```
+6.	if`cur_char` is unquoted
+		&& `cur_char` is start of an `operator`
+	do	
+		delimit `cur_token` if it exists
+```
+
+```
+7.	if
+>>>>>>> main
 		`cur_char` is unquoted
 		&& `cur_char` is `blank` (` `, `\t`)
 	do
 		delimit `cur_token`
 		&& discrad `cur_char`
+<<<<<<< HEAD
 
 	rule 8.
 	if
@@ -429,16 +510,40 @@ apply the first applicable rule from the list:
 	// we skip rule 9 for now
 	rule 9.
 	if
+=======
+```
+
+```
+8.	if
+		`prev_char` is part of `word_token`
+	do	
+		add `cur_char` to the `cur_token`/`word_token`
+```
+
+```
+9.	if
+>>>>>>> main
 		`cur_char` is `comment_char` (`#`)
 	do
 		discard `cur_char`
 		&& discrad `chars` until `\n`
+<<<<<<< HEAD
 
 	rule 10.
 	do
 		`cur_char` is used as the start of a new `word_token`
 
 Once delimited, a token gets lexed according to the Shell Grammar.
+=======
+```
+
+```
+10.	do
+		`cur_char` is used as the start of a new `word_token`
+```
+
+Once delimited, a token get's lexed according to the Shell Grammar.
+>>>>>>> main
 
 "In situations where the shell parses its input as a program, once a `complete_command` has been recognized by the grammar (see 2.10 Shell Grammar), the `complete_command` shall be executed before the next `complete_command` is tokenized and parsed."
 
@@ -454,8 +559,13 @@ Lexing happens immediately following the `token` being delimited.
 	do
 		identify as corresponding `token_id`
 ```
+<<<<<<< HEAD
 ```
 
+=======
+
+```
+>>>>>>> main
 2.	if
 		`cur_token` is only `digits`
 		&& `delimiter` is `<` or `>`

@@ -37,5 +37,6 @@ typedef struct s_ctx
 void	print_arena(t_arena *arena);
 void	print_token(t_ctx *c, size_t token_idx);
 void	poison_sentinel(t_arena *arena);
+void	print_arena(t_arena *arena);
 
 #endif

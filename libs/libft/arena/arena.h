@@ -18,12 +18,12 @@
 
 typedef struct s_arena
 {
-	char			*buf;
-	size_t			offset;
-	size_t			cap;
-	size_t			sentinel;
-	void			(*clean)(void *);
-	void			*env;
+	char	*buf;
+	size_t	offset;
+	size_t	cap;
+	size_t	sentinel;
+	void	(*clean)(void *);
+	void	*env;
 }	t_arena;
 
 t_arena	arena_init(size_t cap, size_t sentinel);
