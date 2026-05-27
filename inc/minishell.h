@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 21:48:28 by sancuta           #+#    #+#             */
-/*   Updated: 2026/05/26 19:11:01 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/05/26 20:10:13 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@
 # define STR_SENTINEL_SIZE 1
 # define NO_TOKEN 0
 # define OPERATOR_SET "<>&|()"
+# define BLANK_SET " \t"
 # define QUOTE_SET "\"'"
 
 /* ------------------------------- quote types ------------------------------ */ // TODO: i should use more of these types of section headers

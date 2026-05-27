@@ -370,75 +370,73 @@ Input is read in terms of lines in 2 different circumstances:
 **ordinary token recognition**
 apply the first applicable rule from the list:
 
-rule 1.
-if
-	`cur_char` is `EOI`/`EOF`
-do
-	delimit `cur_token`, if it exists
+	rule 1.
+	if
+		`cur_char` is `EOI`/`EOF`
+	do
+		delimit `cur_token`, if it exists
 
-rule 2.
-if
-	`prev_char` is part of `operator`
-	&& `cur_char` is unquoted
-	&& `cur_char` can be used with the `prev_char` to form an `operator`
-do
-	add `cur_char` to the `cur_token`
+	rule 2.
+	if
+		`prev_char` is part of `operator`
+		&& `cur_char` is unquoted
+		&& `cur_char` can be used with the `prev_char` to form an `operator`
+	do
+		add `cur_char` to the `cur_token`
 
-rule 3.
-if
-	`prev_char` is part of `operator`
-	&& `cur_char` cannot be used with the `prev_char` to form an `operator`
-do
-	delimit the `cur_token`
+	rule 3.
+	if
+		`prev_char` is part of `operator`
+		&& `cur_char` cannot be used with the `prev_char` to form an `operator`
+	do
+		delimit the `cur_token`
 
-rule 4.
-if
-	`cur_char` is a `quote_char`(`'`, `"`)
-do
-	add `cur_char` to the `cur_token`
-	&& add following `char`s to the `cur_token` unmodified until the closing `quote_char` was found
-	&& DO NOT DELIMIT `cur_token`
+	rule 4.
+	if
+		`cur_char` is a `quote_char`(`'`, `"`)
+	do
+		add `cur_char` to the `cur_token`
+		&& add following `char`s to the `cur_token` unmodified until the closing `quote_char` was found
+		&& DO NOT DELIMIT `cur_token`
 
-rule 5.
-if
-	`cur_char` is beginning of variable expansion (`$`)
-do
-	add `cur_char` to the `cur_token`
-	&& add following `char`s to the `cur_token` unmodified while valid `name_chars`
+	rule 5.
+	if
+		`cur_char` is beginning of variable expansion (`$`)
+	do
+		add `cur_char` to the `cur_token`
+		&& add following `char`s to the `cur_token` unmodified while valid `name_chars`
 
-rule 6.
-if
-	`cur_char` is unquoted
-	&& `cur_char` is start of an `operator`
-do	
-	delimit `cur_token` if it exists
+	rule 6.
+	if
+		`cur_char` is unquoted
+		&& `cur_char` is start of an `operator`
+	do	
+		delimit `cur_token` if it exists
 
-rule 7.
-if
-	`cur_char` is unquoted
-	&& `cur_char` is `blank` (` `, `\t`)
-do
-	delimit `cur_token`
-	&& discrad `cur_char`
+	rule 7.
+	if
+		`cur_char` is unquoted
+		&& `cur_char` is `blank` (` `, `\t`)
+	do
+		delimit `cur_token`
+		&& discrad `cur_char`
 
-rule 8.
-if
-	`prev_char` is part of `word_token`
-do	
-	add `cur_char` to the `cur_token`/`word_token`
-// we skip rule 9 for now
-rule 9.
-if
-	`cur_char` is `comment_char` (`#`)
-do
-	discard `cur_char`
-	&& discrad `chars` until `\n`
-```
+	rule 8.
+	if
+		`prev_char` is part of `word_token`
+	do	
+		add `cur_char` to the `cur_token`/`word_token`
+	// we skip rule 9 for now
+	rule 9.
+	if
+		`cur_char` is `comment_char` (`#`)
+	do
+		discard `cur_char`
+		&& discrad `chars` until `\n`
 
-```
-rule 10.
-do
-	`cur_char` is used as the start of a new `word_token`
+	rule 10.
+	do
+		`cur_char` is used as the start of a new `word_token`
 
 Once delimited, a token gets lexed according to the Shell Grammar.
 

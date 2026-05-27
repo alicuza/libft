@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 13:37:40 by sancuta           #+#    #+#             */
-/*   Updated: 2026/05/26 20:00:20 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/05/27 15:05:25 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,8 @@ static size_t	try_as_enclosed_quote(t_ctx *c, size_t token_idx, size_t input_idx
 	grow_token(tokens, token_idx);
 	return (new_input_idx);
 }
+
+// TODO: !!NOW: figure out how to actually implement the blanks
 size_t	get_next_token_idx(t_ctx *c)
 {
 	static size_t	cur_char_idx;
@@ -107,6 +109,11 @@ size_t	get_next_token_idx(t_ctx *c)
 				grow_token(tokens, cur_token_idx);
 			cur_char_idx = try_as_enclosed_quote(c, cur_token_idx, cur_char_idx);
  		}
+		else if (is_char_in_set(input->buf[cur_char_idx], BLANK_SET))		// rule 7
+		{
+			++cur_char_idx;
+			return (cur_token_idx++);
+		}
 		else if (get_token_from_idx(tokens, cur_token_idx)->type == TT_WORD) 		// rule 8
 		{
 #ifdef DEBUG
@@ -124,5 +131,5 @@ size_t	get_next_token_idx(t_ctx *c)
 		}
 		++cur_char_idx;
 	}
-	return (cur_token_idx); // TODO: do i want it to return the byte offset or the array index?
+	return (0); // TODO: do i want it to return the byte offset or the array index?
 }
