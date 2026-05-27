@@ -6,7 +6,7 @@
 #    By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/22 21:29:56 by sancuta           #+#    #+#              #
-#    Updated: 2026/05/26 18:49:25 by sancuta          ###   ########.fr        #
+#    Updated: 2026/05/27 19:18:38 by sancuta          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -107,6 +107,13 @@ doc:
 	  > docs/Doxyfile
 	doxygen docs/Doxyfile
 
+compile_flags.txt:
+	@echo setup $@
+	@echo -n > $@
+	@for flag in $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(LDLIBS); do \
+		echo $$flag >> $@ ; \
+	done
+
 clean:
 	$(MAKE) -C $(LIBFT_DIR) clean
 	rm -rf build docs/Doxyfile
@@ -115,6 +122,7 @@ fclean: clean
 	$(MAKE) -C $(LIBFT_DIR) fclean
 	rm -f $(NAME) $(NAME)-debug
 	rm -rf docs
+	rm -f compile_flags
 
 re: fclean all
 

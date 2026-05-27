@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 13:37:40 by sancuta           #+#    #+#             */
-/*   Updated: 2026/05/27 15:05:25 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/05/27 20:38:37 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,27 +73,26 @@ size_t	get_next_token_idx(t_ctx *c)
 {
 	static size_t	cur_char_idx;
 	static size_t	cur_token_idx;
+//	t_tok_state		state;
 	t_arena			*input = &(c->arena[AT_STRING]); // TODO: think about making helper functions to return the arena by type
 	t_arena			*tokens = &(c->arena[AT_TOKEN]);
 
-	if (!cur_char_idx)
-	{
+	if (!cur_char_idx && !cur_token_idx)
 		cur_char_idx = input->sentinel;
-		cur_token_idx = 0;
-	}
+	cur_token_idx = 0;
 #ifdef DEBUG
-	printf("cur_char_idx: %c\n", input->buf[cur_char_idx]);
+	printf("cur_char_idx: %c '%i'\n", input->buf[cur_char_idx], input->buf[cur_char_idx]);
 	printf("cur_char_idx: %s\n", input->buf + cur_char_idx);
 #endif
-	while (cur_char_idx <= input->offset)
+	while (cur_char_idx < input->offset)
 	{
 		if (input->buf[cur_char_idx] == '\0')	// rule 1
 		{
 #ifdef DEBUG
 			printf("rule 1\n");
 #endif
-			cur_char_idx = 0;
-			return (cur_token_idx);
+			++cur_char_idx;
+			return (get_idx_from_offset(tokens, tokens->offset));
 		}
 		// TODO: figure out in general how this could be done better, if i want to use an unclosed quote as a char
 		// 		also tracking of quotes is unnecessarym except for the case that a variable gets expanded to something
@@ -111,15 +110,18 @@ size_t	get_next_token_idx(t_ctx *c)
  		}
 		else if (is_char_in_set(input->buf[cur_char_idx], BLANK_SET))		// rule 7
 		{
+#ifdef DEBUG
+			printf("rule 7\n");
+#endif
 			++cur_char_idx;
-			return (cur_token_idx++);
+			return (get_idx_from_offset(tokens, tokens->offset));
 		}
 		else if (get_token_from_idx(tokens, cur_token_idx)->type == TT_WORD) 		// rule 8
 		{
 #ifdef DEBUG
 			printf("rule 8\n");
 #endif
-			grow_token(tokens, cur_token_idx);
+			grow_token(tokens, get_idx_from_offset(tokens, tokens->offset));
 		}
 												// rule 9 - being skipped
 		else									// rule 10
@@ -131,5 +133,7 @@ size_t	get_next_token_idx(t_ctx *c)
 		}
 		++cur_char_idx;
 	}
+	cur_char_idx = 0;
+	cur_token_idx = 0;
 	return (0); // TODO: do i want it to return the byte offset or the array index?
 }
