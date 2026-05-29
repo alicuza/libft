@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 21:47:55 by sancuta           #+#    #+#             */
-/*   Updated: 2026/05/27 21:20:34 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/05/29 14:38:28 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,15 @@ int	main(int argc, char **argv, char **envp)
 		if (!get_user_input(&c))
 			break ;
 #ifdef DEBUG
-		cur_token_idx = get_next_token_idx(&c);
-		while (cur_token_idx)
+		print_arena(&c.arena[AT_STRING]);
+		while (true)
 		{
+			cur_token_idx = get_next_token_idx(&c);
+			if (!cur_token_idx)
+				break;
 //			print_arena(&c.arena[AT_PROMPT]);
 			print_token(&c, cur_token_idx);
-			print_arena(&c.arena[AT_STRING]);
 			print_arena(&c.arena[AT_TOKEN]);
-			cur_token_idx = get_next_token_idx(&c);
 		}
 #endif
 		arena_reset(&c.arena[AT_STRING]);
