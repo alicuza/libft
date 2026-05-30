@@ -1,0 +1,16 @@
+# build artifacts
+*.o
+*.d
+.release
+.debug
+
+# vim swap files
+*.sw?
+
+# binaries
+a.out
+test
+test.out
+
+# libraries
+*.a
