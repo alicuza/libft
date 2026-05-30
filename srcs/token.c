@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 13:37:40 by sancuta           #+#    #+#             */
-/*   Updated: 2026/05/30 12:19:09 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/05/30 13:09:29 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,10 +121,10 @@ size_t	get_next_token_idx(t_ctx *c)
 #endif
 			if(cur_token_idx)
 			{
+				++cur_char_idx;
 				grow_token_at_idx(tokens, cur_token_idx);
 				token_idx = cur_token_idx;
 				cur_token_idx = 0;
-				++cur_char_idx;
 				return (token_idx);
 			}
 		}
@@ -135,7 +135,6 @@ size_t	get_next_token_idx(t_ctx *c)
 #endif
 			token_idx = cur_token_idx;
 			cur_token_idx = 0;
-//			++cur_char_idx;
 			return (token_idx);
 		}
 /* TODO: figure out in general how this could be done better, if i want to use
@@ -155,7 +154,7 @@ size_t	get_next_token_idx(t_ctx *c)
 			}
 			else
 				grow_token_at_idx(tokens, cur_token_idx);
-			cur_char_idx = try_as_quote_pair(c, cur_token_idx, cur_char_idx);
+			cur_char_idx = try_as_quote_pair(c, cur_token_idx, cur_char_idx) + 1;
 		}
 		else if (is_expansion_start(input->buf, cur_char_idx))	// rule 5
 		{
@@ -170,7 +169,7 @@ size_t	get_next_token_idx(t_ctx *c)
 				--len;
 			}
 			grow_token_times_at_idx(tokens, cur_token_idx, len);
-			cur_char_idx += len;
+			cur_char_idx += len + 1;
 		}
 		else if (/*get_token_from_idx(tokens, cur_token_idx)->type != TT_OPERATOR && */ is_char_in_set(input->buf[cur_char_idx], OPERATOR_SET))		// rule 6
 		{
@@ -182,10 +181,12 @@ size_t	get_next_token_idx(t_ctx *c)
 				token_idx = cur_token_idx;
 				cur_token_idx = get_idx_from_offset(tokens,
 					start_token(tokens, cur_char_idx, TT_OPERATOR));
+				++cur_char_idx;
 				return (token_idx);
 			}
 			cur_token_idx = get_idx_from_offset(tokens,
 				start_token(tokens, cur_char_idx, TT_OPERATOR));
+			++cur_char_idx;
 		}
 		else if (is_char_in_set(input->buf[cur_char_idx], BLANK_SET))			// rule 7
 		{
@@ -198,6 +199,7 @@ size_t	get_next_token_idx(t_ctx *c)
 				cur_token_idx = 0;
 				return (token_idx);
 			}
+			++cur_char_idx;
 		}
 		else if (get_token_from_idx(tokens, cur_token_idx)->type == TT_WORD) 	// rule 8
 		{
@@ -205,6 +207,7 @@ size_t	get_next_token_idx(t_ctx *c)
 			printf("rule 8\n");
 #endif
 			grow_token_at_idx(tokens, cur_token_idx);
+			++cur_char_idx;
 		}
 																				// rule 9 - skipped
 		else																	// rule 10
@@ -214,8 +217,8 @@ size_t	get_next_token_idx(t_ctx *c)
 #endif
 			cur_token_idx = get_idx_from_offset(tokens,
 					start_token(tokens, cur_char_idx, TT_WORD));
+			++cur_char_idx;
 		}
-		++cur_char_idx;
 	}
 // TODO: do i want it to return the byte offset or the array index?
 	cur_char_idx = 0;
