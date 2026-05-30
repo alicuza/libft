@@ -12,6 +12,7 @@ jobs:
   build:
     name: attempting make
     runs-on: ubuntu-latest
+    timeout-minutes: 2
     steps:
       - uses: actions/checkout@v4
       - run: sudo apt-get update && sudo apt-get install -y libreadline-dev
@@ -22,6 +23,7 @@ jobs:
   norminette:
     name: checking norminette
     runs-on: ubuntu-latest
+    timeout-minutes: 2
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
