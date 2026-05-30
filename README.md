@@ -415,7 +415,8 @@ apply the first applicable rule from the list:
 
 	rule 5.
 	if
-		`cur_char` is beginning of variable expansion (`$`)
+		`cur_char` is unquoted
+		&& `cur_char` is beginning of variable expansion (`$`)
 	do
 		add `cur_char` to the `cur_token`
 		&& add following `char`s to the `cur_token` unmodified while valid `name_chars`
@@ -530,14 +531,17 @@ the following chars don't have an explicit token they get assigned to in the gra
 ```
 	'&'	'|'	'('	')'	'<'	'>'
 ```
+
 - being single `char` tokens, they can just represent themselves?
 
 #### metacharacters
 
 *see [2. Definitions - metacharacter](https://www.gnu.org/software/bash/manual/bash.html#index-metacharacter)*
 - characters that separate words when unquoted.
+
 ```
-' ', '\t', '\n', '|', '&', ';', '(', ')', '<', '>'
+'|', '&', ';', '(', ')', '<', '>'
+' ', '\t', '\n'
 ```
 
 #### operators
@@ -545,17 +549,33 @@ the following chars don't have an explicit token they get assigned to in the gra
 *see [2. Definitions - operator](https://www.gnu.org/software/bash/manual/bash.html#index-operator_002c-shell)*
 - `operator`s contain at least one unquoted `metacharacter`
 
-**control operators**
-*see [2. Definitions - control operator](https://www.gnu.org/software/bash/manual/bash.html#index-control-operator)*
-- 
+#### blanks
+*see [2. Definitions](https://www.gnu.org/software/bash/manual/bash.html#Definitions)*
 
-**redirection operators**
+```
+' ', '\t'
+```
+
+#### control operators
+*see [2. Definitions - control operator](https://www.gnu.org/software/bash/manual/bash.html#index-control-operator)*
+
+```
+'||', '&&', '&', ';', ';;', ';&', ';;&', '|', '|&', '(', ')'
+```
+
+#### redirection operators
 *see [3.6 Redirections](https://www.gnu.org/software/bash/manual/bash.html#Redirections)*
-- 
+
+```
+'<', '>', '>>'
+'<<' // here-doc
+```
+
+#### name
+*see [2. Definitions - name](https://www.gnu.org/software/bash/manual/bash.html#index-name)*
+- `word`s that conform to the following format: `[a-zA-Z_][a-zA-Z0-9_]`
 
 ### Execution
-
-
 
 ### Signals
 

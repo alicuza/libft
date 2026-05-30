@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 13:03:51 by sancuta           #+#    #+#             */
-/*   Updated: 2026/05/28 15:05:04 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/05/29 20:13:10 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,14 @@ void	grow_token_at_idx(t_arena *arena, size_t idx)
 
 	token = get_token_from_idx(arena, idx);
 	++(token->content.len);
+}
+
+void	grow_token_times_at_idx(t_arena *arena, size_t idx, size_t len)
+{
+	t_token	*token;
+
+	token = get_token_from_idx(arena, idx);
+	token->content.len += len;
 }
 
 void	grow_token_at_offset(t_arena *arena, size_t offset)
