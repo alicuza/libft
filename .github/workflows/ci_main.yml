@@ -1,0 +1,37 @@
+name: main ci
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches: 
+    - main
+
+jobs:
+  build:
+    name: attempting make
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y libreadline-dev
+      - run: make
+      - run: make debug
+      - run: make re
+
+  norminette:
+    name: checking norminette
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-norminette
+      - run: pip install norminette
+        env:
+          PIP_REQUIRE_VIRTUALENV: "false"
+      - run: norminette inc/ srcs/ debug_srcs/ libs/libft/
