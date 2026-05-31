@@ -1,0 +1,4 @@
+[submodule "libs/libft"]
+	path = libs/libft
+	url = ssh://git@codeberg.org/alicuza/libft.git
+	branch = main
