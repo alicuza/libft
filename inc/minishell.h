@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 21:48:28 by sancuta           #+#    #+#             */
-/*   Updated: 2026/05/26 20:10:13 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/05/30 11:54:32 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ typedef enum e_token_type
 {
 	TT_NONE,
 	TT_WORD,
+	TT_OPERATOR,
 	TT_COUNT,
 } t_token_type;
 
@@ -117,7 +118,9 @@ t_token		*get_token_from_idx(t_arena *arena, size_t idx);
 
 /* ----------------------------- token_utils.c ------------------------------ */
 size_t		start_token(t_arena *arena, size_t start, t_token_type type);
-void		grow_token(t_arena *arena, size_t id);
+void		grow_token_at_idx(t_arena *arena, size_t idx);
+void		grow_token_times_at_idx(t_arena *arena, size_t idx, size_t len);
+void		grow_token_at_offset(t_arena *arena, size_t offset);
 size_t		save_token_len(t_token *arena);
 void		restore_token_len(t_token *arena, size_t len);
 

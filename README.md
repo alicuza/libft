@@ -137,23 +137,28 @@ rl_gets ()
 - found out that readline strips the `\n` from the end of the `read_line`, which needs to be reinserted, when the readline is copied to its arena buffer
 - added section for stuff that is not required
 
-**2026.05.22**
+**2026.05.22.**
 - massive restructuring of folder structure and makefile
   - created a separate debug function folder to use for debugging, without including it into the binary otherwise
 - added a way to quickly test different arena sizes, inspired by the tests i did for gnl
 - started on the tokenizer, it seems to create the correct arena entries.
   - needs more looking at, i forgot how annoying it is to work with indices and arenas. i need to improve the api.
 
-**2026.05.23**
+**2026.05.23.**
 - started work on the tokenizer
 - some naming changes, like `env` to `ctx`
 
-**2026.05.25**
+**2026.05.25.**
 - mvp tokenizer works.
 - modified and added to the debug function:
   - `print_arena` now names the type of arena it is
   - `print_token` and `poison_sentinel` (changes the last byte of the sentinel to `0xff`) are the newest additions.
 - need to decide how to track whether a variable included liteal quote chars, because those don't need to be removed by the subsequent quote removal stage
+
+**2026.05.26.-2026.05.30**
+- finished the tokenizer with all rules
+- some basic testing and refactoring done -> the annoying bugs are waiting in the dark edges of my code for sure.
+- added colour to the prompt so we can differentiate it better from the usual shell
 
 #### personal
 **2026.04.30**
@@ -415,7 +420,8 @@ apply the first applicable rule from the list:
 
 	rule 5.
 	if
-		`cur_char` is beginning of variable expansion (`$`)
+		`cur_char` is unquoted
+		&& `cur_char` is beginning of variable expansion (`$`)
 	do
 		add `cur_char` to the `cur_token`
 		&& add following `char`s to the `cur_token` unmodified while valid `name_chars`
@@ -530,14 +536,17 @@ the following chars don't have an explicit token they get assigned to in the gra
 ```
 	'&'	'|'	'('	')'	'<'	'>'
 ```
+
 - being single `char` tokens, they can just represent themselves?
 
 #### metacharacters
 
 *see [2. Definitions - metacharacter](https://www.gnu.org/software/bash/manual/bash.html#index-metacharacter)*
 - characters that separate words when unquoted.
+
 ```
-' ', '\t', '\n', '|', '&', ';', '(', ')', '<', '>'
+'|', '&', ';', '(', ')', '<', '>'
+' ', '\t', '\n'
 ```
 
 #### operators
@@ -545,17 +554,34 @@ the following chars don't have an explicit token they get assigned to in the gra
 *see [2. Definitions - operator](https://www.gnu.org/software/bash/manual/bash.html#index-operator_002c-shell)*
 - `operator`s contain at least one unquoted `metacharacter`
 
-**control operators**
-*see [2. Definitions - control operator](https://www.gnu.org/software/bash/manual/bash.html#index-control-operator)*
-- 
+#### blanks
+*see [2. Definitions](https://www.gnu.org/software/bash/manual/bash.html#Definitions)*
 
-**redirection operators**
+```
+' ', '\t'
+```
+
+#### control operators
+*see [2. Definitions - control operator](https://www.gnu.org/software/bash/manual/bash.html#index-control-operator)*
+
+```
+'||', '&&', '(', ')'
+'&', ';', ';;', ';&', ';;&', '|', '|&' - not implemented
+```
+
+#### redirection operators
 *see [3.6 Redirections](https://www.gnu.org/software/bash/manual/bash.html#Redirections)*
-- 
+
+```
+'<', '>', '>>'
+'<<' // here-doc
+```
+
+#### name
+*see [2. Definitions - name](https://www.gnu.org/software/bash/manual/bash.html#index-name)*
+- `word`s that conform to the following format: `[a-zA-Z_][a-zA-Z0-9_]`
 
 ### Execution
-
-
 
 ### Signals
 

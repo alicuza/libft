@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 13:03:51 by sancuta           #+#    #+#             */
-/*   Updated: 2026/05/27 19:40:10 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/05/29 20:13:10 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,27 @@ size_t	start_token(t_arena *arena, size_t start, t_token_type type)
 }
 
 // TODO: should i reference the token itself? since now i save the corresponding arena in the token?
-void	grow_token(t_arena *arena, size_t idx)
+void	grow_token_at_idx(t_arena *arena, size_t idx)
 {
 	t_token	*token;
 
 	token = get_token_from_idx(arena, idx);
+	++(token->content.len);
+}
+
+void	grow_token_times_at_idx(t_arena *arena, size_t idx, size_t len)
+{
+	t_token	*token;
+
+	token = get_token_from_idx(arena, idx);
+	token->content.len += len;
+}
+
+void	grow_token_at_offset(t_arena *arena, size_t offset)
+{
+	t_token	*token;
+
+	token = get_token_from_offset(arena, offset);
 	++(token->content.len);
 }
 
