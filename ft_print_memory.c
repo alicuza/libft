@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 16:21:53 by sancuta           #+#    #+#             */
-/*   Updated: 2026/03/17 11:46:59 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/06/01 11:49:49 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void	dec_to_hex_n(char *hex, unsigned long dec, int length)
 	}
 }
 
-static void	print_hex_addr(void *addr)
+static void	print_hex_addr(int fd, void *addr)
 {
 	char	buffer[16];
 	int		counter;
@@ -37,11 +37,11 @@ static void	print_hex_addr(void *addr)
 		counter++;
 	}
 	dec_to_hex_n(buffer, (unsigned long) addr, 16);
-	write(1, buffer, 16);
-	write(1, ": ", 2);
+	write(fd, buffer, 16);
+	write(fd, ": ", 2);
 }
 
-static void	print_hex_string(void *addr, unsigned int size)
+static void	print_hex_string(int fd, void *addr, unsigned int size)
 {
 	int		counter;
 	int		index;
@@ -68,10 +68,10 @@ static void	print_hex_string(void *addr, unsigned int size)
 		if (index % 2 == 0)
 			buffer[counter++] = ' ';
 	}
-	write(1, buffer, 40);
+	write(fd, buffer, 40);
 }
 
-static void	print_char_dot(void *addr, unsigned int size)
+static void	print_char_dot(int fd, void *addr, unsigned int size)
 {
 	int		counter;
 	char	*value;
@@ -83,15 +83,15 @@ static void	print_char_dot(void *addr, unsigned int size)
 		if (counter < (int)size)
 		{
 			if (value[counter] < 32 || value[counter] > 126)
-				write(1, ".", 1);
+				write(fd, ".", 1);
 			else
-				write(1, value + counter, 1);
+				write(fd, value + counter, 1);
 		}
 		counter++;
 	}
 }
 
-void	*ft_print_memory(void *addr, size_t size)
+void	*ft_print_memory(int fd, void *addr, size_t size)
 {
 	int	lines;
 	int	counter;
@@ -102,16 +102,16 @@ void	*ft_print_memory(void *addr, size_t size)
 	counter = 0;
 	while (counter < lines - 1)
 	{
-		print_hex_addr(addr + counter * 16);
-		print_hex_string(addr + counter * 16, size - counter * 16);
-		print_char_dot(addr + counter * 16, size - counter * 16);
-		write(1, "\n", 1);
+		print_hex_addr(fd, addr + counter * 16);
+		print_hex_string(fd, addr + counter * 16, size - counter * 16);
+		print_char_dot(fd, addr + counter * 16, size - counter * 16);
+		write(fd, "\n", 1);
 		counter++;
 	}
-	print_hex_addr(addr + counter * 16);
-	print_hex_string(addr + counter * 16, size - counter * 16);
-	print_char_dot(addr + counter * 16, size - counter * 16);
-	write(1, "\n", 1);
+	print_hex_addr(fd, addr + counter * 16);
+	print_hex_string(fd, addr + counter * 16, size - counter * 16);
+	print_char_dot(fd, addr + counter * 16, size - counter * 16);
+	write(2, "\n", 1);
 	return (addr);
 }
 
