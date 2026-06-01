@@ -160,6 +160,8 @@ rl_gets ()
 - some basic testing and refactoring done -> the annoying bugs are waiting in the dark edges of my code for sure.
 - added colour to the prompt so we can differentiate it better from the usual shell
 
+**2026.05.31.**
+- attempting to add rule 9 (comments) to the tokenizer - unnecessary, so maybe commented out
 #### personal
 **2026.04.30**
 
@@ -200,7 +202,9 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 ### Schedule
 
 - starting on 2026.05.07. Nikita is on vacation until the 2026.05.22.
-
+- 1.4. - 7.4.:
+  - finish tokenization for here-doc
+  - work on implementing the shell grammar
 ### TODO
 
 #### minishell
@@ -208,8 +212,8 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 **research & documentation**
 - [p] research built-ins
 - [p] research interactive mode
+- [p] research git workflow for working in a team
 - [ ] research `posix sh`
-- [ ] research git workflow for working in a team
 - [x] ~~compile documentation on signals~~
 - [x] ~~research managing memory with multiple arenas, because there are actual multiple lifetimes~~
 - [x] ~~research how to implement the variable content size for tokens in the context of expansion~~
@@ -219,35 +223,35 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 - [-] ~~compile documentation on `curses.h` and `term.h`~~
 
 **implementation**
-- [d] add `arena_grow` function to arena library // on phone branch
-- [ ] write a simple `flex` and `bison` based lexer and parser
-- [d] add github remote, and github action workflow
-- [ ] work on arenas - prepare prompt arena for `getcwd`
-- [p] rework makefile to create/use separate folders (`src`, `include`, `bin`, `debug`, `test`)
+- [p] create harness for automatic unit testing (tdd)
+- [p] work on arenas - prepare prompt arena for `getcwd`
 - [p] include the additional info in the make section.
 - [p] draft the data structure and core architecture
-- [ ] add github action workflow
-- [ ] add push/pull mirroring on remote
-- [ ] create harness for automatic unit testing (tdd)
+- [ ] add push/pull mirroring on remote: could be hard, since i have added libft as a submodule
+  - [ ] talk to nikita about it, whether he wants to work with it or not
 - [ ] consider error handling according to posix
 - [ ] finish writing the readme file
-- [x] ~~add github remote~~
+- [x] ~~rework makefile to create/use separate folders (`src`, `include`, `bin`, `debug`, `test`)~~
+- [x] ~~add `arena_grow` function to arena library~~
+- [x] ~~add github remote, and github action workflow~~
 - [x] ~~write a simple `flex` and `bison` based lexer and parser~~
 
 **questions**
+- [ ] is it necessary to track what a token was delimited by?
+      seems to only be relevant for `io_number` and `io_location` which are optional
+	  *see [2.10.1 Shell Grammar Lexical Conventions](https://pubs.opengroup.org/onlinepubs/9799919799/)*
 - [ ] what does this mean in the context of Shell Grammar: "This formal syntax shall take precedence over the preceding text syntax description"
 
 #### longterm
 
-- [ ] test automation for checking the repo before pushing
-- [ ] create a dotfile repo
+- [p] test automation for checking the repo before pushing
 - [p] create a resources repo
+- [ ] create a dotfile repo
 - [ ] create a README.md template
 - [ ] create a script to automate initializing a git repo with remotes and templates
-- [ ] create templates for the header(s), main.c and README.md
 - [ ] create project website with git pages
 - [ ] play around with `sh vi mode`
-- [ ] migrate libft to its own repo and extract history from the repos it is in now
+- [x] ~~migrate libft to its own repo and extract history from the repos it is in now~~
 
 ### Documentation
 
@@ -384,7 +388,25 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 
 Input is read in terms of lines in 2 different circumstances:
 
-**here-doc processing**
+**here-tokendoc processing**
+*see [2.7.4 Here-Document](https://pubs.opengroup.org/onlinepubs/9799919799/)*
+
+	step 1.
+	if
+		`io_here` has been "recognized" (returned)
+	do
+		search for next `\n`-token: corresponding `here-doc` starts on the next line
+		&& non-`\n`-tokens get saved for processing after `here-doc` finished parsing
+	step 2.
+	if
+		`io-here` was among tokens saved
+	do
+		start corresponding `here-doc` on the line after the `delimitor`
+	step 3.
+	if
+		`\n`-token found
+	do
+		start `here-doc` on the next line
 
 **ordinary token recognition**
 apply the first applicable rule from the list:
@@ -460,6 +482,8 @@ apply the first applicable rule from the list:
 Once delimited, a token gets lexed according to the Shell Grammar.
 
 "In situations where the shell parses its input as a program, once a `complete_command` has been recognized by the grammar (see 2.10 Shell Grammar), the `complete_command` shall be executed before the next `complete_command` is tokenized and parsed."
+
+Tokens that are empty after delimiting get discarded.
 
 #### Grammar
 *see [2.10 Shell Grammar](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html#tag_19_10)*

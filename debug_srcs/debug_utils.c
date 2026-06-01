@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   debug_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nribakov <nribakov@student.42vienna.com    +#+  +:+       +#+        */
+/*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 21:48:29 by sancuta           #+#    #+#             */
-/*   Updated: 2026/06/03 21:40:34 by nribakov         ###   ########.fr       */
+/*   Updated: 2026/06/01 11:46:46 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,11 @@ void	print_arena(t_arena *arena)
 	}
 	else
 		name = "arena not initialized";
-	printf("\n%s\n\tbuffer address = %p\n\toffset = %lu\n\tcapacity = %lu\n\tsentinel = %lu\n", name, arena->buf, arena->offset, arena->cap, arena->sentinel);
-	printf("head:\n");
-	ft_print_memory(arena, sizeof(t_arena));
-	printf("buffer:\n");
-	ft_print_memory(arena->buf, arena->cap + arena->sentinel);
+	fprintf(stderr, "\n%s\n\tbuffer address = %p\n\toffset = %lu\n\tcapacity = %lu\n\tsentinel = %lu\n", name, arena->buf, arena->offset, arena->cap, arena->sentinel);
+	fprintf(stderr, "head:\n");
+	ft_print_memory(STDERR_FILENO, arena, sizeof(t_arena));
+	fprintf(stderr, "buffer:\n");
+	ft_print_memory(STDERR_FILENO, arena->buf, arena->cap + arena->sentinel);
 }
 
 void	poison_sentinel(t_arena *arena)
@@ -52,6 +52,21 @@ void	print_token(t_ctx *c, size_t token_idx)
 		name = "OPERATOR";
 	else
 		name = "TOKEN";
-	printf("\ntoken\n\tstart = %lu\n\tlen = %lu\n\ttype = %u\n\tnext = %lu\n", token->content.start, token->content.len, token->type, token->next);
-	printf("%s(\"%.*s\")\n", name, (int)token->content.len, input->buf + token->content.start);
+	fprintf(stderr, "\ntoken\n\tstart = %lu\n\tlen = %lu\n\ttype = %u\n\tnext = %lu\n", token->content.start, token->content.len, token->type, token->next);
+	fprintf(stderr, "%s(\"%.*s\")\n", name, (int)token->content.len, input->buf + token->content.start);
+}
+
+char *get_token_content(t_ctx *c, size_t token_idx)
+{
+	t_arena	*input;
+	t_token	*token;
+	char	*content;
+
+	input = &(c->arena[AT_STRING]);
+	token = get_token_from_idx(&(c->arena[AT_TOKEN]), token_idx);
+	content = malloc(token->content.len + 1);
+	if (!content)
+		return (NULL);
+	ft_strlcpy(content, input->buf + token->content.start, token->content.len + 1);
+	return (content);
 }
