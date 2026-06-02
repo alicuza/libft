@@ -6,7 +6,7 @@
 #    By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/16 23:38:42 by sancuta           #+#    #+#              #
-#    Updated: 2026/03/30 15:41:56 by sancuta          ###   ########.fr        #
+#    Updated: 2026/06/02 16:16:09 by sancuta          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -83,6 +83,7 @@ SRCS = \
 		$(ARENA_DIR)/arena_init_free.c \
 		$(ARENA_DIR)/arena_save_restore.c \
 		$(ARENA_DIR)/arena_strings.c \
+		$(ARENA_DIR)/arena_itoa.c \
 		$(ARENA_DIR)/arena_split.c \
 		$(ARENA_DIR)/arena_pointer.c
 

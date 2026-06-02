@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/09 09:41:35 by sancuta           #+#    #+#             */
-/*   Updated: 2026/05/25 16:57:57 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/06/02 16:08:47 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ size_t	arena_memset(t_arena *data, int c, size_t size);
 size_t	arena_memcpy(t_arena *dest, const void *src, size_t size);
 size_t	arena_strlcpy(t_arena *dest, const void *src, size_t size);
 size_t	arena_strlcat(t_arena *dest, const void *src, size_t size);
+size_t	arena_itoa(t_arena *dest, const int nbr);
 size_t	arena_split(t_arena *dest, const char *src, char del);
 size_t	arena_save(t_arena *arena);
 void	arena_restore(t_arena *arena, size_t idx);
