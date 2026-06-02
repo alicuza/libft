@@ -64,7 +64,7 @@ size_t	get_next_token_idx(t_ctx *c)
 	t_arena			*tokens = &(c->arena[AT_TOKEN]);
 
 	if (!cur_char_idx)
-		cur_char_idx = input->sentinel;
+		cur_char_idx = input->stride;
 #ifdef DEBUG
 	fprintf(stderr, "cur_char_idx: %c '%i'\n", input->buf[cur_char_idx], input->buf[cur_char_idx]);
 	fprintf(stderr, "cur_char_idx: %s\n", input->buf + cur_char_idx);

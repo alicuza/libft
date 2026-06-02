@@ -12,12 +12,12 @@
 
 #include "minishell.h"
 
-size_t	get_user_input(t_ctx *c, bool is_here_doc)
+size_t	get_user_input(t_ctx *c, bool is_continuation)
 {
 	size_t	offset;
 	char	*prompt;
 
-	if (is_here_doc)
+	if (is_continuation)
 		prompt = "> ";
 	else
 		prompt = get_prompt(c, true);
@@ -26,9 +26,9 @@ size_t	get_user_input(t_ctx *c, bool is_here_doc)
 		return (0);
 	if (*(c->read_line))
 		add_history(c->read_line);
-	offset =
-		arena_strlcpy(&(c->arena[AT_STRING]), c->read_line, ft_strlen(c->read_line) + 1);
-	if (is_here_doc)
+	offset = arena_strlcpy(&(c->arena[AT_STRING]),
+			c->read_line, ft_strlen(c->read_line) + 1);
+	if (is_continuation)
 		arena_strlcat(&(c->arena[AT_STRING]), "\n", 2);
 	free(c->read_line);
 	return (offset);

@@ -15,7 +15,7 @@
 size_t	start_token(t_arena *arena, size_t start, t_token_type type)
 {
 	t_token	*token;
-	size_t offset;
+	size_t	offset;
 
 	offset = arena_alloc(arena, sizeof(t_token), _Alignof(t_token));
 #ifdef DEBUG

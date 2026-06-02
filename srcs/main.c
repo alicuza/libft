@@ -34,7 +34,7 @@ int	main(int argc, char **argv, char **envp)
 	c = init_ctx(envp);
 	while (true)
 	{
-		if (!get_user_input(&c, DEFAULT_INPUT))
+		if (!get_user_input(&c, INPUT_DEFAULT))
 			break ;
 #ifdef DEBUG
 		print_arena(&c.arena[AT_PROMPT]);
@@ -46,7 +46,7 @@ int	main(int argc, char **argv, char **envp)
 			if (!token_idx)
 				break;
 			if (!ft_strncmp(c.arena[AT_STRING].buf + get_token_from_idx(&c.arena[AT_TOKEN], token_idx)->content.start, "<<", 2))
-				get_user_input(&c, HERE_DOC);
+				get_user_input(&c, INPUT_CONTINUATION);
 #ifdef DEBUG
 			print_token(&c, token_idx);
 			print_arena(&c.arena[AT_TOKEN]);

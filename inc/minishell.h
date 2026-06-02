@@ -9,8 +9,6 @@
 /*   Updated: 2026/06/02 16:13:44 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -38,7 +36,6 @@
 # include <limits.h>			// PATH_MAX
 # include <stdint.h>			// TODO: consider for the saner type names
 
-
 # include "libft.h"
 # include "arena.h"
 
@@ -58,9 +55,9 @@
 # define WITH_CWD true
 # define NO_CWD false
 
-/* ----- is_here_doc ------------------------------------------------------- */
-# define DEFAULT_INPUT 0
-# define HERE_DOC 1
+/* ----- prompt type ------------------------------------------------------- */
+# define INPUT_DEFAULT 0
+# define INPUT_CONTINUATION 1
 
 /* ----- sets -------------------------------------------------------------- */
 # define OPERATOR_SET "<>&|()\n"
@@ -87,7 +84,7 @@ typedef enum e_arena_type
 	AT_STACK,
 	AT_CMD,
 	AT_COUNT,
-} t_arena_type;
+}	t_arena_type;
 
 typedef struct s_env
 {
@@ -116,14 +113,15 @@ typedef enum e_token_type
 	TT_WORD,
 	TT_OPERATOR,
 	TT_COUNT,
-} t_token_type;
+}	t_token_type;
 
 typedef struct s_token
 {
 	t_slice			content;
 /* TODO: probably unnecessary, because the expansion will happen directly before
  * passing to execution, so if a '$' is found in a WORD, it will be expanded
- */	size_t			next;
+ */
+	size_t			next;
 	t_token_type	token_type;
 /* TODO: probably unnecessary, but nice to think about, could make adding
  * features easy and it is the POSIX way to track the delimiter of a TOKEN.
@@ -132,7 +130,7 @@ typedef struct s_token
 
 /* -------- main.c ---------------------------------------------------------- */
 char		*get_prompt(t_ctx *c, bool with_cwd);
-size_t		get_user_input(t_ctx *c, bool is_here_doc);
+size_t		get_user_input(t_ctx *c, bool is_continuation);
 
 /* -------- token.c --------------------------------------------------------- */
 size_t		get_next_token_idx(t_ctx *c);
@@ -142,7 +140,7 @@ size_t		get_idx_from_offset(t_arena *arena, size_t offset);
 size_t		get_offset_from_idx(t_arena *arena, size_t idx);
 t_token		*get_token_from_offset(t_arena *arena, size_t offset);
 t_token		*get_token_from_idx(t_arena *arena, size_t idx);
-char *get_token_content(t_ctx *c, size_t token_idx);
+char		*get_token_content(t_ctx *c, size_t token_idx);
 
 /* -------- token_utils.c --------------------------------------------------- */
 size_t		start_token(t_arena *arena, size_t start, t_token_type type);
@@ -158,13 +156,12 @@ const char	**get_operator_strs(void);
 bool		is_str_in_set(char *c, const char **set);
 
 /* ------------------------------ env_utils.c ------------------------------ */
-t_env	init_env(t_env env, char **envp);
+t_env		init_env(t_env env, char **envp);
 
 /* ------------------------------ token_processor.c ------------------------------ */
-int	process_token(t_ctx *c, size_t token_idx);
+int			process_token(t_ctx *c, size_t token_idx);
 
 /* ------------------------------ env.c ------------------------------ */
-void	env(t_ctx *c);
-
+void		env(t_ctx *c);
 
 #endif

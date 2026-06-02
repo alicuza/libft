@@ -18,7 +18,7 @@
 #define LOGNAME "LOGNAME"
 #define ANON "anonymous"
 
-static bool add_hostname_to_prompt(t_arena *prompt)
+static bool	add_hostname_to_prompt(t_arena *prompt)
 {
 	int		fd;
 	size_t	offset;
@@ -41,8 +41,8 @@ static bool add_hostname_to_prompt(t_arena *prompt)
 		read_len = read(fd, prompt->buf + offset, size);
 	}
 	close(fd);
-	prompt->offset =
-		prompt->sentinel + word_len(prompt->buf + prompt->sentinel, '\n') + 1;
+	prompt->offset = prompt->stride
+		+ word_len(prompt->buf + prompt->stride, '\n') + 1;
 	return (true);
 }
 
@@ -89,8 +89,8 @@ static bool	add_cwd_to_prompt(t_ctx *c)
 		errno = 0;
 		cwd = getcwd(prompt->buf + tmp_offset, size);
 	}
-	prompt->offset =
-		prompt->sentinel + word_len(prompt->buf + prompt->sentinel, ' ') + 1;
+	prompt->offset = prompt->stride
+		+ word_len(prompt->buf + prompt->stride, ' ') + 1;
 	return (true);
 }
 
@@ -115,7 +115,7 @@ char	*get_prompt(t_ctx *c, bool with_cwd)
 	if (with_cwd && !add_cwd_to_prompt(c))
 		return (get_prompt(c, NO_CWD));
 	end_prompt(prompt, c->return_status);
-	return ((char *)get_arena_ptr(prompt, prompt->sentinel));
+	return ((char *)get_arena_ptr(prompt, prompt->stride));
 }
 
 /* backup in case of other prompt related problems.

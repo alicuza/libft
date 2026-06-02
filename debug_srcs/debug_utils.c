@@ -10,32 +10,31 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "minishell.h"
 
 void	print_arena(t_arena *arena)
 {
 	char	*name;
 
-	if (arena->sentinel == 1)
+	if (arena->stride == 1)
 		name = "string (or prompt) arena";
-	else if (arena->sentinel == sizeof(t_token))
+	else if (arena->stride == sizeof(t_token))
 	{
 		name = "token arena";
-		poison_sentinel(arena);
+		poison_stride(arena);
 	}
 	else
 		name = "arena not initialized";
-	fprintf(stderr, "\n%s\n\tbuffer address = %p\n\toffset = %lu\n\tcapacity = %lu\n\tsentinel = %lu\n", name, arena->buf, arena->offset, arena->cap, arena->sentinel);
+	fprintf(stderr, "\n%s\n\tbuffer address = %p\n\toffset = %lu\n\tcapacity = %lu\n\tstride = %lu\n", name, arena->buf, arena->offset, arena->cap, arena->stride);
 	fprintf(stderr, "head:\n");
 	ft_print_memory(STDERR_FILENO, arena, sizeof(t_arena));
 	fprintf(stderr, "buffer:\n");
-	ft_print_memory(STDERR_FILENO, arena->buf, arena->cap + arena->sentinel);
+	ft_print_memory(STDERR_FILENO, arena->buf, arena->cap + arena->stride);
 }
 
-void	poison_sentinel(t_arena *arena)
+void	poison_stride(t_arena *arena)
 {
-	arena->buf[arena->sentinel - 1] = 0xFF;
+	arena->buf[arena->stride - 1] = 0xFF;
 }
 
 void	print_token(t_ctx *c, size_t token_idx)
@@ -56,7 +55,7 @@ void	print_token(t_ctx *c, size_t token_idx)
 	fprintf(stderr, "%s(\"%.*s\")\n", name, (int)token->content.len, input->buf + token->content.start);
 }
 
-char *get_token_content(t_ctx *c, size_t token_idx)
+char	*get_token_content(t_ctx *c, size_t token_idx)
 {
 	t_arena	*input;
 	t_token	*token;

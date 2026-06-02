@@ -9,8 +9,6 @@
 /*   Updated: 2026/06/02 16:15:02 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-
 #ifndef DEBUG_H
 # define DEBUG_H
 
@@ -25,18 +23,17 @@ typedef enum e_arena_type
 	AT_STACK,
 	AT_CMD,
 	AT_COUNT,
-} t_arena_type;
-
+}	t_arena_type;
 
 typedef struct s_ctx
 {
 	t_arena	arena[AT_COUNT];
-	char  	*read_line;
+	char	*read_line;
 	int		return_status;
 }	t_ctx;
 
 void	print_arena(t_arena *arena);
 void	print_token(t_ctx *c, size_t token_idx);
-void	poison_sentinel(t_arena *arena);
+void	poison_stride(t_arena *arena);
 
 #endif
