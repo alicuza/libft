@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 13:03:51 by sancuta           #+#    #+#             */
-/*   Updated: 2026/06/01 11:12:31 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/06/02 13:34:01 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ size_t	start_token(t_arena *arena, size_t start, t_token_type type)
 	token = get_token_from_offset(arena, offset);
 	token->content.start = start;
 	token->content.len = 1;
-	token->type = type;
+	token->token_type = type;
 	return (offset);
 }
 

@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 21:48:29 by sancuta           #+#    #+#             */
-/*   Updated: 2026/06/01 11:46:46 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/06/02 13:35:55 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,13 @@ void	print_token(t_ctx *c, size_t token_idx)
 
 	input = &(c->arena[AT_STRING]);
 	token = get_token_from_idx(&(c->arena[AT_TOKEN]), token_idx);
-	if (token->type == TT_WORD)
+	if (token->token_type == TT_WORD)
 		name = "WORD";
-	else if (token->type == TT_OPERATOR)
+	else if (token->token_type == TT_OPERATOR)
 		name = "OPERATOR";
 	else
 		name = "TOKEN";
-	fprintf(stderr, "\ntoken\n\tstart = %lu\n\tlen = %lu\n\ttype = %u\n\tnext = %lu\n", token->content.start, token->content.len, token->type, token->next);
+	fprintf(stderr, "\ntoken\n\tstart = %lu\n\tlen = %lu\n\ttype = %u\n\tnext = %lu\n", token->content.start, token->content.len, token->token_type, token->next);
 	fprintf(stderr, "%s(\"%.*s\")\n", name, (int)token->content.len, input->buf + token->content.start);
 }
 

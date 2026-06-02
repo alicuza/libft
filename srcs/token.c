@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 13:37:40 by sancuta           #+#    #+#             */
-/*   Updated: 2026/06/01 11:12:02 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/06/02 13:33:34 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ size_t	get_next_token_idx(t_ctx *c)
 			cur_token_idx = 0;
 			return (token_idx);
 		}
-		else if ((get_token_from_idx(tokens, cur_token_idx)->type == TT_OPERATOR)
+		else if ((get_token_from_idx(tokens, cur_token_idx)->token_type == TT_OPERATOR)
 			&& is_str_in_set(input->buf + cur_char_idx - 1, get_operator_strs()))	// rule 2
 		{
 #ifdef DEBUG
@@ -96,7 +96,7 @@ size_t	get_next_token_idx(t_ctx *c)
 				return (token_idx);
 			}
 		}
-		else if ((get_token_from_idx(tokens, cur_token_idx)->type == TT_OPERATOR)
+		else if ((get_token_from_idx(tokens, cur_token_idx)->token_type == TT_OPERATOR)
 			&& !is_str_in_set(input->buf + cur_char_idx - 1, get_operator_strs()))	// rule 3
 		{
 #ifdef DEBUG
@@ -169,7 +169,7 @@ size_t	get_next_token_idx(t_ctx *c)
 			}
 			++cur_char_idx;
 		}
-		else if (get_token_from_idx(tokens, cur_token_idx)->type == TT_WORD) 		// rule 8
+		else if (get_token_from_idx(tokens, cur_token_idx)->token_type == TT_WORD) 		// rule 8
 		{
 #ifdef DEBUG
 			fprintf(stderr, "rule 8\n");
