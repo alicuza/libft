@@ -21,12 +21,12 @@ typedef struct s_arena
 	char	*buf;
 	size_t	offset;
 	size_t	cap;
-	size_t	sentinel;
+	size_t	stride;
 	void	(*clean)(void *);
 	void	*env;
 }	t_arena;
 
-t_arena	arena_init(size_t cap, size_t sentinel);
+t_arena	arena_init(size_t cap, size_t stride);
 size_t	arena_alloc(t_arena *arena, size_t size, size_t align);
 void	arena_reset(t_arena *arena);
 void	arena_clear(t_arena *arena);

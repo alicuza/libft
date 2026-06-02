@@ -13,20 +13,20 @@
 #include "arena.h"
 #include "../libft.h"
 
-t_arena	arena_init(size_t size, size_t sentinel)
+t_arena	arena_init(size_t size, size_t stride)
 {
 	t_arena	arena;
 
 	ft_memset(&arena, 0, sizeof(t_arena));
-	arena.sentinel = sentinel;
+	arena.stride = stride;
 	if (!size)
 		return (arena);
-	arena.buf = malloc(size + sentinel);
+	arena.buf = malloc(size + stride);
 	if (!arena.buf)
 		return (arena);
-	ft_memset(arena.buf, 0, size + sentinel);
+	ft_memset(arena.buf, 0, size + stride);
 	arena.cap = size;
-	arena.offset = arena.sentinel;
+	arena.offset = arena.stride;
 	return (arena);
 }
 
