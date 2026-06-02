@@ -93,7 +93,7 @@ In situations where the shell parses its input as a program, once a complete_com
 
 **2026.05.19**
 - read from the readline manual, [2.1 Basic Behavior](https://tiswww.cwru.edu/php/chet/readline/readline.html#Basic-Behavior)
-  - seems pretty straightforward considering the number of functions we are allowed to use. there is another example inf the manual that also handles signals, i still have to look into those more. since the handlers mostly just modify the global variable we're allowed to use, this shouldn't be that hard to implement.
+  - seems pretty straightforward considering the number of functions we are allowed to use. there is another example in the manual that also handles signals, i still have to look into those more. since the handlers mostly just modify the global variable we're allowed to use, this shouldn't be that hard to implement.
   - this can be the basis for the entrypoint:
 
 ```
@@ -161,7 +161,27 @@ rl_gets ()
 - added colour to the prompt so we can differentiate it better from the usual shell
 
 **2026.05.31.**
-- attempting to add rule 9 (comments) to the tokenizer - unnecessary, so maybe commented out
+- attempting to add rule 9 (comments) to the tokenizer - not required, so maybe commented out
+
+**2026.06.01.**
+- issue with corrupted redisplay of lines from history discovered and fixed
+  *see [2.4.6 Redisplay - rl_expand_prompt](https://tiswww.case.edu/php/chet/readline/readline.html#index-rl_005fexpand_005fprompt)*
+```
+Applications may indicate that the prompt contains characters that take up no physical screen space when displayed by bracketing a sequence of such characters with the special markers RL_PROMPT_START_IGNORE and RL_PROMPT_END_IGNORE (declared in readline.h as ‘\001’ and ‘\002’, respectively). This may be used to embed terminal-specific escape sequences in prompts. If you don’t use these indicators, redisplay will likely produce screen contents that don’t match the line buffer.
+```
+
+  - wrapping the escape sequences in `\001`, `\002` fixed it
+  - should have noticed that it started happening after I implemented colours
+- stated adding `here-doc` processing steps to documentation
+  - might need to rethink my flow: added a proposal to [Parsing](#parsing)
+- started implementing `here-doc`
+
+**2026.06.02.**
+- added return value (default of 0 for now) and hostname to the prompt
+- made the prompt more robust. can handle any size of hostname or cwd, that the system permits
+- added `arena_itoa.c` to `libft/arena/`
+- renamed `token->type` to `token->token_type`, in preparation for potentially implementing `token->delim_type`
+
 #### personal
 **2026.04.30**
 
@@ -241,10 +261,25 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
       seems to only be relevant for `io_number` and `io_location` which are optional
 	  *see [2.10.1 Shell Grammar Lexical Conventions](https://pubs.opengroup.org/onlinepubs/9799919799/)*
 - [ ] what does this mean in the context of Shell Grammar: "This formal syntax shall take precedence over the preceding text syntax description"
+- [ ] how i want to handle the strings when i pass them to execution, because i need an array of pointers to real C strings:
+	1. reference the input and just add \0 after each token delimiting.
+	   problem: - i might not have the room to replace a discarded char with a `\0`
+                - memmoving stuff around is costly
+	2. copy over the input from the read_line to my arena after a token is delimited.
+       problem: i already implemented the tokenizer this way. would be some refactoring
+
+
+
+- [ ] how do i treat single char operators that I don't need to handle, but that are part of operator strings: `&`
+- [ ] what is this paragraph saying?
+      *see [2.6 Word Expansions](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html#tag_19_06)*
+	```
+	When the expansions in this section are performed other than in the context of preparing a command for execution, they shall be carried out in the current shell execution environment.
+	```
 
 #### longterm
 
-- [p] test automation for checking the repo before pushing
+- [p] test automation for checking the repo before pushing to main (make + norminette for now)
 - [p] create a resources repo
 - [ ] create a dotfile repo
 - [ ] create a README.md template
@@ -344,12 +379,12 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 - `make fclean`: additionally removes the binary and libs
 - `make re`: recompiles the entire project from scratch
 - `make debug`: compiles with the `-g` flag for debugging
-- // TODO: complete the description with debugging funtionality;
+- // TODO: complete the description with debugging funtionality
 - // TODO: also add descriptions about the linking of binaries
 
 **Options:**
-- `make ARENA_SIZE=N`: overrides the arena initial capacity (default `64`)
-- `make debug ARENA_SIZE=N`: debug build with custom arena size
+- `make [target] ARENA_SIZE=N`: overrides the arena initial capacity (default `64`)
+// TODO: doesn't recompile with with e different `ARENA_SIZE`
 
 **Dependencies:**
 - libft (bundled)
@@ -377,19 +412,57 @@ export LESS_TERMCAP_ue=$'\e[0m'           # end underline
 
 - stack based parsing, similar to how bash does it, but with hard coded rules.
 
+
 ### Core Data Structure
 
 ```c
 ```
 
+### User Input
+
+
+
 ### Parsing
+
+**possible implementation**
+
+```
+1. call readline with PS1 prompt
+2. tokenize the readline:
+2. a. if a token exists and is delimited -> add token string to the string arena, if WORD token -> append `\0`
+3. process the token (attempt to reduce token sequence according to the shell grammar; order up for debate, need to consult posix):
+3. a. if `cur_token` not empty -> create a command struct with the token type, if there is no command struct that the token can be reduced to; track the "grammar structure" type as the type of this command struct; it gets delimited when the next token is a `control operator` (need to still figure out how this works with parentheses)
+3. b. if processing reduces token to `io_here` (a token sequence of `<<` and `WORD`):
+3. b. i. tokenize rest of line -> do 2.
+3. b. ii. free read_line
+3. b. iii. call readline with PS2 prompt
+3. b. iv. if the current read_line doesn't contain only `delimiter\n` -> create WORD token and copy the whole read_line into the string arena
+3. b. v. else  -> delimit `here-doc` WORD token, if it exists (maybe the conditions in d. and f. could be switched)
+3. b. vi. if other `io_here` in saved tokens -> repeat from b.
+3. b. free read_line
+3. c. process each saved token
+3. d. if `current_token` is empty: there are no more tokens to be processed, current command structure gets delimited, if it exists -> sent to execution
+4. if there are no more command structures -> wait for the status of the execution
+```
+
+relevant rules from [2.10.2 Shell Grammar Rules](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html#tag_19_10_02)
+1. command name: `token` -> `WORD`
+2. redirection to/from filename: expansions according to [2.7. Redirection](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html#tag_19_07)
+3. redirection from here-doc: quote removal on `WORD` -> `delimiter`
+~~4. case state termination: not relevant~~
+~~5. `NAME` in `for`: not relevant~~
+~~6. third word of `for` (`in`, `do`) and `case` (`in`): not relevant~~
+7. assignment preceeding command name:
+7. a. not relevant
+7. b. worth looking into
+~~8. `NAME` in function: not relevant~~
+~~9. Body of function: not relevant~~
 
 #### Token Recognition
 
 Input is read in terms of lines in 2 different circumstances:
 
-**here-tokendoc processing**
-*see [2.7.4 Here-Document](https://pubs.opengroup.org/onlinepubs/9799919799/)*
+**here-doc processing**
 
 	step 1.
 	if
@@ -397,16 +470,33 @@ Input is read in terms of lines in 2 different circumstances:
 	do
 		search for next `\n`-token: corresponding `here-doc` starts on the next line
 		&& non-`\n`-tokens get saved for processing after `here-doc` finished parsing
+
 	step 2.
-	if
-		`io-here` was among tokens saved
-	do
-		start corresponding `here-doc` on the line after the `delimitor`
-	step 3.
 	if
 		`\n`-token found
 	do
 		start `here-doc` on the next line
+
+	step 3.
+	if
+		`io-here` was among tokens saved
+	do
+		start corresponding `here-doc` on the line after the `delimiter\n`
+
+	step 4. // TODO: not sure what exactly is meant with processing further, applying the grammar rules?
+	if
+		there are saved tokens
+	do
+		process them further
+
+*see [2.7.4 Here-Document](https://pubs.opengroup.org/onlinepubs/9799919799/)*
+- the `here-doc` is treated as a single word starting after the first `\n`
+- continues until a line containing only the `delimiter` and a `\n`, no `blank`s
+- if there is another `here-doc`, it starts immediately after the `delimiter\n`
+- expansion happens during `redirection evaluation`
+- expansion of `here-doc`s has the same rules as `"`-expansion
+  - except for the `"`, which has no special meaning in a `here-doc`
+- the order of `here-doc`s corresponds to the order of `io_here` tokens
 
 **ordinary token recognition**
 apply the first applicable rule from the list:
