@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 21:48:29 by sancuta           #+#    #+#             */
-/*   Updated: 2026/06/01 11:47:00 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/06/02 16:15:02 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct s_ctx
 {
 	t_arena	arena[AT_COUNT];
 	char  	*read_line;
+	int		return_status;
 }	t_ctx;
 
 void	print_arena(t_arena *arena);
