@@ -589,7 +589,7 @@ Lexing happens immediately following the `token` being delimited.
 ```
 
 ```
-2.	if
+2.	if	// we skip this
 		`cur_token` is only `digits`
 		&& `delimiter` is `<` or `>`
 	do
@@ -597,7 +597,15 @@ Lexing happens immediately following the `token` being delimited.
 ```
 
 ```
-3.	do	# actually rule 4, but we do not implement `IO_LOCATION`
+3.	if	// we skip this
+		`cur_token` is `{LOCATION}`
+		&& `delimiter` is `<` or `>`
+	do
+		identify as `IO_LOCATION`
+```
+
+```
+4.	do
 		identify as `TOKEN`
 ```
 
