@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 13:37:40 by sancuta           #+#    #+#             */
-/*   Updated: 2026/06/02 13:33:34 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/06/03 20:44:53 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ size_t	get_next_token_idx(t_ctx *c)
 				--len;
 			}
 			grow_token_times_at_idx(tokens, cur_token_idx, len);
-			cur_char_idx += len + 1;
+			cur_char_idx += len;
 		}
 		else if (is_char_in_set(input->buf[cur_char_idx], OPERATOR_SET))			// rule 6
 		{
