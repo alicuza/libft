@@ -3,10 +3,9 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
+/*   By: nribakov <nribakov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 21:48:28 by sancuta           #+#    #+#             */
-/*   Updated: 2026/05/30 11:54:32 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +74,16 @@ typedef enum e_arena_type
 	AT_COUNT,
 } t_arena_type;
 
+typedef struct s_env
+{
+	char **envp;
+}	t_env;
+
 typedef struct s_ctx
 {
 	t_arena	arena[AT_COUNT];
 	char  	*read_line;
+	t_env	env;
 }	t_ctx;
 # endif
 
@@ -115,6 +120,7 @@ size_t		get_idx_from_offset(t_arena *arena, size_t offset);
 size_t		get_offset_from_idx(t_arena *arena, size_t idx);
 t_token		*get_token_from_offset(t_arena *arena, size_t offset);
 t_token		*get_token_from_idx(t_arena *arena, size_t idx);
+char *get_token_content(t_ctx *c, size_t token_idx);
 
 /* ----------------------------- token_utils.c ------------------------------ */
 size_t		start_token(t_arena *arena, size_t start, t_token_type type);
@@ -128,5 +134,15 @@ void		restore_token_len(t_token *arena, size_t len);
 bool		is_char_in_set(char c, const char *set);
 const char	**get_operator_strs(void);
 bool		is_str_in_set(char *c, const char **set);
+
+/* ------------------------------ env_utils.c ------------------------------ */
+t_env	init_env(t_env env, char **envp);
+
+/* ------------------------------ token_processor.c ------------------------------ */
+int	process_token(t_ctx *c, size_t token_idx);
+
+/* ------------------------------ env.c ------------------------------ */
+void	env(t_ctx *c);
+
 
 #endif

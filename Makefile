@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+         #
+#    By: nribakov <nribakov@student.42vienna.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/22 21:29:56 by sancuta           #+#    #+#              #
-#    Updated: 2026/05/27 19:18:38 by sancuta          ###   ########.fr        #
+#    Updated: 2026/06/04 20:56:08 by nribakov         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,11 @@ SRCS        = \
 			token.c \
 			token_utils.c \
 			token_char.c \
-			token_transform.c
+			token_transform.c \
+			env/env_utils.c \
+			token_processor/token_processor.c \
+			builtin/env.c
+			
 DEBUG_SRCS  = debug_utils.c
 
 RELEASE_OBJS = $(addprefix $(RELEASE_DIR)/, $(SRCS:.c=.o))
@@ -114,6 +118,9 @@ compile_flags.txt:
 		echo $$flag >> $@ ; \
 	done
 
+test: $(NAME)
+	./test/runner.sh
+
 clean:
 	$(MAKE) -C $(LIBFT_DIR) clean
 	rm -rf build docs/Doxyfile
@@ -123,11 +130,12 @@ fclean: clean
 	rm -f $(NAME) $(NAME)-debug
 	rm -rf docs
 	rm -f compile_flags
+	rm -rf log
 
 re: fclean all
 
 # ---- phony targets ------------------------------------------------------- #
-.PHONY: all debug run run-debug doc clean fclean re FORCE
+.PHONY: all debug run run-debug doc test clean fclean re FORCE
 
 # ---- dependencies -------------------------------------------------------- #
 -include $(RELEASE_OBJS:.o=.d)
