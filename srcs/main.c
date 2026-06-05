@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 21:47:55 by sancuta           #+#    #+#             */
-/*   Updated: 2026/06/02 16:14:31 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/06/05 16:55:05 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ int	main(int argc, char **argv, char **envp)
 			print_token(&c, token_idx);
 			print_arena(&c.arena[AT_TOKEN]);
 #endif
+		process_token(&c, token_idx);
 		}
 		arena_reset(&c.arena[AT_STRING]);
 		arena_reset(&c.arena[AT_TOKEN]);
