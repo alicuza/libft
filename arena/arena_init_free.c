@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/09 08:36:13 by sancuta           #+#    #+#             */
-/*   Updated: 2026/05/12 16:51:00 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/06/12 13:49:38 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ t_arena	arena_init(size_t size, size_t stride)
 	return (arena);
 }
 
-void	arena_free_buf(t_arena *arena)
+void	arena_free(t_arena *arena)
 {
 	free(arena->buf);
 	ft_memset(arena, 0, sizeof(t_arena));
