@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 13:23:08 by sancuta           #+#    #+#             */
-/*   Updated: 2025/11/22 18:36:48 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/06/13 09:52:01 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	ft_make_next_line(char **next_line, size_t *nl_len, t_stash *buffer)
 	ssize_t	nl_ind;
 	int		buffer_status;
 
-	while (1)
+	while (true)
 	{
 		nl_ind = ft_indchr(buffer->content + buffer->offset, '\n');
 		if (nl_ind != -1)
