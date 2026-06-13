@@ -6,14 +6,15 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/09 09:27:38 by sancuta           #+#    #+#             */
-/*   Updated: 2026/05/27 21:18:09 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/06/12 17:59:52 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
-#include "arena.h"
-#include <errno.h>
+#include <stdio.h>
 #include <string.h>
+#include <errno.h>
+#include "arena.h"
 
 /*
  * natural alignment of 64bit systems is 8
@@ -23,14 +24,14 @@ static inline void	arena_align(t_arena *arena, size_t align)
 {
 	arena->offset = (arena->offset + (align - 1)) & ~(align - 1);
 }
-/* static void	arena_grow_error_handler(t_arena *arena)
+static void	arena_grow_error_handler(t_arena *arena)
 {
 	perror("arena_grow");
 	if (arena->clean && arena->env)
 		arena->clean(arena->env);
 	arena_free(arena);
 	exit(EXIT_FAILURE);
-} */
+}
 
 static bool	arena_grow(t_arena *arena, size_t size)
 {
@@ -60,7 +61,7 @@ size_t	arena_alloc(t_arena *arena, size_t size, size_t align)
 	arena_align(arena, align);
 	if (size > (arena->cap + arena->stride - arena->offset)
 		&& !arena_grow(arena, size))
-		arena->offset = 0;
+		arena_grow_error_handler(arena);
 	offset = arena->offset;
 	arena->offset += size;
 	return (offset);
