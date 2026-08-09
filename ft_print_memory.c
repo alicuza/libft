@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 16:21:53 by sancuta           #+#    #+#             */
-/*   Updated: 2026/06/01 11:49:49 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/08/09 13:22:15 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,17 +54,14 @@ static void	print_hex_string(int fd, void *addr, unsigned int size)
 	while (index < 16)
 	{
 		if (index < (int)size)
-		{
 			dec_to_hex_n(&buffer[counter], (unsigned char)value[index], 2);
-			index++;
-			counter += 2;
-		}
-	else
+		else
 		{
-			buffer[counter++] = ' ';
-			buffer[counter++] = ' ';
-			index++;
+			buffer[counter] = ' ';
+			buffer[counter + 1] = ' ';
 		}
+		index++;
+		counter += 2;
 		if (index % 2 == 0)
 			buffer[counter++] = ' ';
 	}
