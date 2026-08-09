@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/09 09:27:38 by sancuta           #+#    #+#             */
-/*   Updated: 2026/06/12 17:59:52 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/08/09 13:11:51 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ static inline void	arena_align(t_arena *arena, size_t align)
 {
 	arena->offset = (arena->offset + (align - 1)) & ~(align - 1);
 }
+
 static void	arena_grow_error_handler(t_arena *arena)
 {
 	perror("arena_grow");
@@ -65,15 +66,4 @@ size_t	arena_alloc(t_arena *arena, size_t size, size_t align)
 	offset = arena->offset;
 	arena->offset += size;
 	return (offset);
-}
-
-void	arena_reset(t_arena *arena)
-{
-	arena->offset = arena->stride;
-}
-
-void	arena_clear(t_arena *arena)
-{
-	ft_memset(arena->buf + arena->stride, 0, arena->offset - arena->stride);
-	arena->offset = arena->stride;
 }

@@ -85,7 +85,8 @@ SRCS = \
 		$(ARENA_DIR)/arena_strings.c \
 		$(ARENA_DIR)/arena_itoa.c \
 		$(ARENA_DIR)/arena_split.c \
-		$(ARENA_DIR)/arena_pointer.c
+		$(ARENA_DIR)/arena_pointer.c \
+		$(ARENA_DIR)/arena_cleanup.c
 
 OBJS = $(SRCS:.c=.o)
 DEPS = $(SRCS:.c=.d)
