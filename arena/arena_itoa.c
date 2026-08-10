@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/02 14:55:53 by sancuta           #+#    #+#             */
-/*   Updated: 2026/06/02 17:00:28 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/08/10 18:34:45 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ size_t	arena_itoa(t_arena *dest, const int nbr)
 	while (n)
 	{
 		len--;
-		dest->buf[len] = (char)((n % 10) + 48);
+		dest->buf[offset + len] = (char)((n % 10) + 48);
 		n /= 10;
 	}
 	return (offset);
