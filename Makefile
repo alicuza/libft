@@ -68,6 +68,7 @@ SRCS = \
 		ft_lstiter.c \
 		ft_lstmap.c \
 		handle_exit.c \
+		sig_digits_strlen.c \
 		$(PRINTF_DIR)/ft_get_form_spec.c \
 		$(PRINTF_DIR)/ft_printf.c \
 		$(PRINTF_DIR)/ft_printf_padding.c \

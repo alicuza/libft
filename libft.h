@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 16:39:55 by sancuta           #+#    #+#             */
-/*   Updated: 2026/06/01 11:39:42 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/08/21 14:54:30 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ int		ft_atoi(const char *nptr);
 long	ft_atol(const char *nptr);
 size_t	word_len(const char *s, char del);
 size_t	count_words(const char *s, char del);
+size_t	sig_digits_strlen(const char *nbr);
 
 /* libc functions that rely on malloc */
 
