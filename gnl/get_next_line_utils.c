@@ -70,6 +70,7 @@ void	ft_free_all(t_stash **head)
 		free(buffer);
 		buffer = tmp;
 	}
+	*head = NULL;
 }
 
 void	ft_free_buf(t_stash **head, int fd)
