@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 16:39:55 by sancuta           #+#    #+#             */
-/*   Updated: 2026/08/21 14:54:30 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/10/27 19:05:29 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <stdlib.h>
 # include <stdint.h>
 # include <stdbool.h>
+# include <errno.h>
 
 /* bonus: linked list*/
 
@@ -34,12 +35,17 @@ typedef struct s_str
 
 typedef struct s_exit_data
 {
-	char	*prefix;
-	char	*name;
-	char	*message;
-	int		status;
+	const char	*prefix;
+	const char	*name;
+	const char	*message;
+	int			status;
 }	t_exit_data;
 
+typedef enum e_write_type
+{
+	WT_CHAR,
+	WT_STR
+}	t_write_type;
 /* libc functions without external functions */
 
 int		ft_isalpha(int c);
@@ -86,9 +92,10 @@ char	*ft_itoa(int n);
 char	*ft_strmapi(const char *s, char (*f)(unsigned int, char));
 void	ft_striteri(char *s, void (*f)(unsigned int, char*));
 void	*ft_print_memory(int fd, void *addr, size_t size);
+ssize_t	ft_write(int fd, const char *c, t_write_type wt);
 void	ft_putchar_fd(char c, int fd);
-void	ft_putstr_fd(char *s, int fd);
-void	ft_putendl_fd(char *s, int fd);
+void	ft_putstr_fd(const char *s, int fd);
+void	ft_putendl_fd(const char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
 
 /* bonus functions for linked lists */
@@ -104,6 +111,5 @@ void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 
 /* generic exit handling*/
-void	handle_status_msg(char *prefix, char *name, char *message, int status);
-void	just_error(void);
+void	handle_status_msg(t_exit_data exit_data);
 #endif

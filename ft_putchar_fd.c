@@ -6,7 +6,7 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 20:09:34 by sancuta           #+#    #+#             */
-/*   Updated: 2025/10/15 20:15:00 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/10/27 18:44:56 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,5 @@
 
 void	ft_putchar_fd(char c, int fd)
 {
-	write(fd, &c, 1);
-	return ;
+	ft_write(fd, &c, WT_CHAR);
 }

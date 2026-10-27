@@ -6,10 +6,9 @@
 /*   By: sancuta <sancuta@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 22:19:28 by sancuta           #+#    #+#             */
-/*   Updated: 2026/09/12 23:38:51 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/10/27 08:05:06 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "libft.h"
 #include <errno.h>

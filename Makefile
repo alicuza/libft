@@ -6,7 +6,7 @@
 #    By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/16 23:38:42 by sancuta           #+#    #+#              #
-#    Updated: 2026/06/02 16:16:09 by sancuta          ###   ########.fr        #
+#    Updated: 2026/10/27 19:04:54 by sancuta          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,6 +54,7 @@ SRCS = \
 		ft_strmapi.c \
 		ft_striteri.c \
 		ft_print_memory.c \
+		ft_write.c \
 		ft_putchar_fd.c \
 		ft_putstr_fd.c \
 		ft_putendl_fd.c \

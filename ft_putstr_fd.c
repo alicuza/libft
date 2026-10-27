@@ -6,14 +6,13 @@
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 22:20:58 by sancuta           #+#    #+#             */
-/*   Updated: 2025/10/16 14:56:47 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/10/27 18:54:59 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_putstr_fd(char *c, int fd)
+void	ft_putstr_fd(const char *c, int fd)
 {
-	write(fd, c, ft_strlen(c));
-	return ;
+	ft_write(fd, c, WT_STR);
 }
