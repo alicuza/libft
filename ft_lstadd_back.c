@@ -1,26 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_back_bonus.c                             :+:      :+:    :+:   */
+/*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 15:20:31 by sancuta           #+#    #+#             */
-/*   Updated: 2025/10/20 21:07:19 by sancuta          ###   ########.fr       */
+/*   Updated: 2026/11/01 13:52:31 by sancuta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstadd_back(t_list **lst, t_list *new)
+void	ft_lstadd_back(t_list **lst, t_list *node)
 {
-	if (!(new && lst))
+	if (!(node && lst))
 		return ;
 	if (!*lst)
 	{
-		*lst = new;
+		*lst = node;
 		return ;
 	}
-	ft_lstlast(*lst)->next = new;
-	return ;
+	ft_lstlast(*lst)->next = node;
 }
