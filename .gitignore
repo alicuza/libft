@@ -1,8 +1,5 @@
 # build artifacts
-*.o
-*.d
-.release
-.debug
+build/
 
 # vim swap files
 *.sw?

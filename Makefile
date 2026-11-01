@@ -6,18 +6,41 @@
 #    By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/16 23:38:42 by sancuta           #+#    #+#              #
-#    Updated: 2026/10/27 19:04:54 by sancuta          ###   ########.fr        #
+#    Updated: 2026/11/01 17:44:14 by sancuta          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = libft.a
-CC ?= cc
-CFLAGS ?= -MMD -MP -Wall -Wextra -Werror
-ARFLAGS = -rcs
-PRINTF_DIR = printf
-GNL_DIR    = gnl
-ARENA_DIR  = arena
+# ---- project ------------------------------------------------------------- #
+NAME	= libft.a
 
+# ---- compiler / linker --------------------------------------------------- #
+CC				?= cc
+CFLAGS			?= -MMD -MP -Wall -Wextra -Werror
+AR				= ar
+ARFLAGS			= -rcs
+RM				= rm
+RMFLAGS			= -rf
+
+# ---- build flags --------------------------------------------------------- #
+RELEASE_FLAGS	?= -O2
+DEBUG_FLAGS		?= -O0 -g3 -DDEBUG
+
+# ---- make ---------------------------------------------------------------- #
+ifeq ($(filter -j% --jobs%,$(MAKEFLAGS)),)
+MAKEFLAGS += -j$(shell nproc 2>/dev/null || echo 1)
+endif
+
+# ---- build directories --------------------------------------------------- #
+PRINTF_DIR		= printf
+GNL_DIR			= gnl
+ARENA_DIR		= arena
+BUILD_DIR		= build
+RELEASE_DIR		= $(BUILD_DIR)/release
+DEBUG_DIR		= $(BUILD_DIR)/debug
+RELEASE_NAME	= $(RELEASE_DIR)/$(NAME)
+DEBUG_NAME		= $(DEBUG_DIR)/$(NAME)
+
+# ---- sources ------------------------------------------------------------- #
 SRCS = \
 		ft_isalpha.c \
 		ft_issign.c \
@@ -90,33 +113,45 @@ SRCS = \
 		$(ARENA_DIR)/arena_pointer.c \
 		$(ARENA_DIR)/arena_cleanup.c
 
-OBJS = $(SRCS:.c=.o)
-DEPS = $(SRCS:.c=.d)
+# ---- objects / dependencies ---------------------------------------------- #
+OBJS		= $(addprefix $(RELEASE_DIR)/, $(SRCS:.c=.o))
+DEBUG_OBJS	= $(addprefix $(DEBUG_DIR)/, $(SRCS:.c=.o))
+DEPS		= $(OBJS:.o=.d) $(DEBUG_OBJS:.o=.d)
 
-all: .release $(NAME)
+# ---- targets ------------------------------------------------------------- #
+all: $(RELEASE_NAME)
 
-.release:
-	if [ -f .debug ]; then $(MAKE) fclean; fi
-	touch .release
+debug: $(DEBUG_NAME)
 
-$(NAME): $(OBJS)
-	ar $(ARFLAGS) $@ $^
+$(RELEASE_NAME): $(OBJS)
+	$(AR) $(ARFLAGS) $@ $^
 
+$(DEBUG_NAME): $(DEBUG_OBJS)
+	$(AR) $(ARFLAGS) $@ $^
+
+# ---- object compilation -------------------------------------------------- #
+$(RELEASE_DIR)/%.o: %.c
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) $(RELEASE_FLAGS) -c $< -o $@
+
+$(DEBUG_DIR)/%.o: %.c
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) $(DEBUG_FLAGS) -c $< -o $@
+
+# ---- utility targets ----------------------------------------------------- #
 clean:
-	rm -f $(OBJS) $(DEPS)
+	$(RM) $(RMFLAGS) $(OBJS) $(DEBUG_OBJS) $(DEPS)
 
-fclean: clean
-	rm -f $(NAME) .debug .release
+fclean:
+	$(MAKE) clean
+	$(RM) $(RMFLAGS) $(BUILD_DIR)
 
-re: fclean all
+re:
+	$(MAKE) fclean
+	$(MAKE) all
 
-debug: CFLAGS += -g
-debug: .debug $(NAME)
-
-.debug:
-	if [ -f .release ]; then $(MAKE) fclean; fi
-	touch .debug
-
+# ---- phony targets ------------------------------------------------------- #
 .PHONY: all clean fclean re debug
 
+# ---- dependencies -------------------------------------------------------- #
 -include $(DEPS)
