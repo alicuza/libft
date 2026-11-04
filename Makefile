@@ -6,7 +6,7 @@
 #    By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/16 23:38:42 by sancuta           #+#    #+#              #
-#    Updated: 2026/11/01 17:44:14 by sancuta          ###   ########.fr        #
+#    Updated: 2026/11/04 17:21:17 by sancuta          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,11 @@ DEBUG_FLAGS		?= -O0 -g3 -DDEBUG
 # ---- make ---------------------------------------------------------------- #
 ifeq ($(filter -j% --jobs%,$(MAKEFLAGS)),)
 MAKEFLAGS += -j$(shell nproc 2>/dev/null || echo 1)
+endif
+
+# ---- sanitizer ----------------------------------------------------------- #
+ifdef SAN
+CFLAGS += -fsanitize=address
 endif
 
 # ---- build directories --------------------------------------------------- #
@@ -120,6 +125,9 @@ DEPS		= $(OBJS:.o=.d) $(DEBUG_OBJS:.o=.d)
 
 # ---- targets ------------------------------------------------------------- #
 all: $(RELEASE_NAME)
+
+asan:
+	$(MAKE) debug SAN=1
 
 debug: $(DEBUG_NAME)
 
