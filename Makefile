@@ -6,7 +6,7 @@
 #    By: sancuta <sancuta@student.42vienna.com      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/16 23:38:42 by sancuta           #+#    #+#              #
-#    Updated: 2026/11/04 17:21:17 by sancuta          ###   ########.fr        #
+#    Updated: 2026/11/04 20:57:19 by sancuta          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -72,6 +72,7 @@ SRCS = \
 		ft_strnstr.c \
 		ft_atoi.c \
 		ft_atol.c \
+		ft_atod.c \
 		ft_calloc.c \
 		ft_strdup.c \
 		ft_substr.c \
